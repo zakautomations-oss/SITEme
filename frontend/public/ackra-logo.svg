@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="rg" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="52%"  stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#6B6FE8"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="200" height="200" rx="40" fill="#0c0c0e"/>
+  <!-- Left leg (white) -->
+  <polygon points="107,34 93,34 50,150 72,150" fill="#ffffff"/>
+  <!-- Right leg (white → periwinkle) -->
+  <polygon points="93,34 107,34 150,150 128,150" fill="url(#rg)"/>
+  <!-- ACKRA wordmark -->
+  <text x="82" y="183"
+        text-anchor="middle"
+        font-family="'Helvetica Neue','Arial',sans-serif"
+        font-size="13" font-weight="300"
+        fill="white" letter-spacing="9" opacity="0.88">ACKRA</text>
+</svg>

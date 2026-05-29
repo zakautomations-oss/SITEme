@@ -1,0 +1,97 @@
+{
+  "theme": "dark",
+  "archetype": "5 (Jewel & Luxury) mixed with 4 (Swiss & High-Contrast)",
+  "design_vision": "Cinematic Dark Tech. A premium, futuristic AI agency website using pure black/near-black backgrounds, glowing periwinkle (#7B7FE8) accents, and sharp typography. Avoiding standard SaaS-slop by leaning into editorial asymmetry, high-contrast text, generous negative space, and high-fidelity 3D interactions.",
+  "colors": {
+    "background_primary": "#05050A",
+    "background_secondary": "#0A0A0F",
+    "surface_glass": "rgba(255, 255, 255, 0.02)",
+    "surface_glass_hover": "rgba(255, 255, 255, 0.05)",
+    "accent_primary": "#7B7FE8",
+    "accent_hover": "#5D62D9",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#A1A1AA",
+    "text_muted": "#52525B",
+    "border_subtle": "rgba(123, 127, 232, 0.15)",
+    "border_glow": "rgba(123, 127, 232, 0.4)"
+  },
+  "typography": {
+    "heading_font": "'Outfit', sans-serif",
+    "body_font": "'Plus Jakarta Sans', sans-serif",
+    "h1": "text-5xl md:text-6xl lg:text-7xl tracking-tighter font-medium text-white",
+    "h2": "text-3xl md:text-4xl lg:text-5xl tracking-tight font-medium text-white",
+    "h3": "text-xl md:text-2xl font-medium text-white",
+    "body": "text-base md:text-lg leading-relaxed text-zinc-400",
+    "overline": "uppercase tracking-[0.2em] text-xs text-[#7B7FE8] font-bold",
+    "instructions": "Never use Inter or Roboto. Maintain strict left-alignment for dense content. Use tight line-heights for headings (leading-none or leading-tight). Ensure a maximum heading size of text-6xl/7xl for hero sections. Always ensure contrast ratios against dark backgrounds."
+  },
+  "layout_and_spacing": {
+    "container": "max-w-7xl mx-auto px-6 md:px-12",
+    "section_padding": "py-24 md:py-32",
+    "bento_grid": "grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-6",
+    "card_padding": "p-8 md:p-10",
+    "radius": "rounded-2xl",
+    "borders": "1px solid border-subtle",
+    "instructions": "Use generous padding. Avoid tight clustering. Wrap sections in dark atmospheric backgrounds without harsh linear gradients. Use 'glassmorphism' panels with high blur (backdrop-blur-2xl) and 1px borders."
+  },
+  "motion_and_interactions": {
+    "smooth_scroll": "Use Lenis for momentum scrolling.",
+    "hover_states": "Cards should lift slightly (-translate-y-1) and their border should glow subtly using the accent color. Text within buttons should shift color appropriately.",
+    "page_transitions": "Framer Motion: fade in and subtle slide up (y: 20 -> y: 0) for route changes.",
+    "staggered_lists": "Use Framer Motion to stagger the entrance of stat cards and service items."
+  },
+  "three_d_scene_blueprint": {
+    "library": "react-three-fiber, @react-three/drei, three",
+    "location": "Hero Section (Right side on desktop, subtle background on mobile)",
+    "elements": {
+      "globe": "SphereGeometry or IcosahedronGeometry (args=[2, 32, 32]) with wireframe=true, transparent, opacity=0.15, color='#7B7FE8'. Slow constant rotation.",
+      "nodes": "3-5 small orbiting spheres (radius=0.04) acting as 'AI nodes'. Emissive material, color='#FFFFFF', emissive='#7B7FE8', emissiveIntensity=2.0. Animate their positions in a circular orbit using useFrame.",
+      "lighting": "AmbientLight (intensity=0.1), PointLight (color='#7B7FE8', intensity=4.0) placed inside the globe for a central glow.",
+      "controls": "Optional subtle mouse parallax or use autoRotate=true on the mesh directly."
+    }
+  },
+  "media": {
+    "logo_url": "https://customer-assets.emergentagent.com/job_8c5757cb-f46f-487d-8a58-8476b14c25ee/artifacts/gbkul6rj_ACKRACROPPED.png",
+    "service_text_agent": "https://static.prod-images.emergentagent.com/jobs/8c5757cb-f46f-487d-8a58-8476b14c25ee/images/b77c99e14f7c6778609852372d98d1bd1f0218c652a1e896e1fc10d9b1fbbfcc.png",
+    "service_workflow": "https://static.prod-images.emergentagent.com/jobs/8c5757cb-f46f-487d-8a58-8476b14c25ee/images/8bbee58811293d20eac8cf1650b0d196a06cbafc7dbda29f30f3356a11b2f15d.png",
+    "service_voice_agent": "https://static.prod-images.emergentagent.com/jobs/8c5757cb-f46f-487d-8a58-8476b14c25ee/images/2ef5163b59326fec1c8d9bf3d12506b7d7c5ae58b31719f67a9fabf8a76021a2.png",
+    "service_review": "https://static.prod-images.emergentagent.com/jobs/8c5757cb-f46f-487d-8a58-8476b14c25ee/images/2d6e0afee7d67c9b4a02110bbc3b1e1f9dc7f109334f3174291a51ee5be0ceff.png",
+    "about_mission": "https://static.prod-images.emergentagent.com/jobs/8c5757cb-f46f-487d-8a58-8476b14c25ee/images/70e47ce28af04d30dc8677aaadae560698063f69543124df01f6371f3e704f71.png"
+  },
+  "pages_and_routing": {
+    "Home (/)": {
+      "Hero": "Asymmetric layout. Left: H1 'Increase Revenue & Cut Costs Up to 50% With Our AI Systems', Tagline: 'We build AI Agents for businesses.', CTA: 'Get Free Automation Audit'. Right: The 3D R3F Canvas.",
+      "Stats_Bar": "Horizontal staggered grid: 50% cost reduction, 24/7 availability, 50+ businesses served, <1hr response.",
+      "Services_Teaser": "Bento grid of 4 services. Cards feature icons (lucide-react), title, short description, and an arrow link.",
+      "Why_Us": "Large typography section highlighting value props: 'Reduce operational costs', 'Capture leads 24/7', 'Respond in seconds'.",
+      "Footer_CTA": "Full width dark panel. 'The Future is Automated. Are You Ready?'"
+    },
+    "Services (/services)": {
+      "Header": "Large typographic header: 'AI solutions that scale your business.'",
+      "Listings": "Alternating blocks (Left text, Right Image). 1. Google Review Automation (use service_review image), 2. 24/7 AI Voice Agents (use service_voice_agent image), 3. AI Text Agents (use service_text_agent image), 4. Custom Workflow Automation (use service_workflow image)."
+    },
+    "About (/about)": {
+      "Header": "Clean, spacious text layout: 'We're your automation partner.' Subtext: 'Helping you work smarter, serve faster, and grow bigger.'",
+      "Values_Grid": "3 column layout for values: Result-Driven, Innovation First, Partner Approach.",
+      "Hero_Image": "Use 'about_mission' image inside a wide, rounded-2xl container with a subtle parallax effect."
+    },
+    "Contact (/contact)": {
+      "Layout": "Two columns. Left: Contact Information (Kabir.shah@akautomations.org, +1 (646) 944-2162). Right: Contact Form.",
+      "Form": "Fields: Name, Email, Phone, Company, Message. Submit button with hover glow.",
+      "Backend": "Submits payload to backend API which saves to MongoDB."
+    },
+    "Admin (/admin)": {
+      "Layout": "Dashboard view. Simple top nav, main content area with a Shadcn Table component displaying contact form submissions from MongoDB.",
+      "Styling": "Strict 'Control Room' grid. Pure functional design, pure black background, border-zinc-800."
+    }
+  },
+  "components": {
+    "Navigation": "Fixed top bar. glassmorphism background (backdrop-blur-xl bg-[#05050A]/70). Left: Ackra Logo. Center: Links (Home, Services, About, Contact). Right: 'Get Audit' CTA button.",
+    "Footer": "Large bottom padding (py-24). Contains logo, quick links, contact email/phone, copyright.",
+    "Buttons": "Primary CTA: bg-[#7B7FE8] text-white hover:bg-[#5D62D9]. Secondary: transparent with 1px border-[#7B7FE8] text-[#7B7FE8] hover:bg-[#7B7FE8]/10.",
+    "Cards": "bg-transparent border border-white/5 hover:border-[#7B7FE8]/40 transition-colors duration-300 rounded-2xl p-8."
+  },
+  "testing": {
+    "data_testid_rules": "All interactive and key informational elements MUST include a data-testid attribute in kebab-case. Examples: data-testid='nav-home-link', data-testid='hero-cta-button', data-testid='contact-form-submit'."
+  }
+}

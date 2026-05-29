@@ -1,0 +1,6 @@
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  background: #000000;
+  overflow-x: hidden;
+}

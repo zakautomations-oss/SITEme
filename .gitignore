@@ -1,0 +1,10 @@
+node_modules/
+build/
+.env
+__pycache__/
+.claude/
+memory/
+test_reports/
+zi4NaPl4
+zii4qeX5
+.emergent/
