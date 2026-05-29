@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ackra.ai/sitemap.xml
