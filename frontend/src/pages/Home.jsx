@@ -86,7 +86,7 @@ export default function Home() {
           <Reveal immediate delay={0.6} className="mt-8 max-w-2xl mx-auto text-white/55 text-[17px] leading-relaxed">
             <p>
               Ackra builds the AI agents that answer your leads, reply to texts
-              in seconds, automate your workflows, and grow your reviews —
+              in seconds, automate your workflows, and grow your reviews,
               fully managed, live in 3&nbsp;weeks.
             </p>
           </Reveal>
