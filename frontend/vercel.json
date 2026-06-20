@@ -3,6 +3,6 @@
   "outputDirectory": "build",
   "framework": "create-react-app",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!_/backend).*)", "destination": "/index.html" }
   ]
 }
