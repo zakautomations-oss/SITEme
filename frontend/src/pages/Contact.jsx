@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Reveal, Words } from "../components/AnimatedText";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API = `${process.env.REACT_APP_BACKEND_URL || ''}/api`;
 const CALENDLY = "https://calendly.com/evoskin9/ak-automations-meeting-s";
 
 const initial = { name: "", email: "", phone: "", company: "", message: "" };
