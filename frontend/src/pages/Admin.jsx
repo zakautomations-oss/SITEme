@@ -3,34 +3,106 @@ import axios from "axios";
 import { Reveal, Words } from "../components/AnimatedText";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const SESSION_KEY = "ackra_admin_token";
+
+function PasswordGate({ onAuth }) {
+  const [pw, setPw] = useState("");
+  const [wrong, setWrong] = useState(false);
+  const [checking, setChecking] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setChecking(true);
+    try {
+      await axios.get(`${API}/contact`, {
+        headers: { Authorization: `Bearer ${pw}` },
+      });
+      sessionStorage.setItem(SESSION_KEY, pw);
+      onAuth(pw);
+    } catch {
+      setWrong(true);
+      setPw("");
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  return (
+    <div data-testid="admin-gate" className="bg-ink min-h-screen flex items-center justify-center">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm px-8">
+        <p className="mono text-[10px] tracking-mono uppercase text-white/40 mb-8">
+          §00 / Admin access
+        </p>
+        <input
+          type="password"
+          value={pw}
+          onChange={(e) => { setPw(e.target.value); setWrong(false); }}
+          placeholder="Admin token"
+          autoFocus
+          className="w-full bg-transparent border-b border-white/20 text-white py-3 text-[15px] outline-none focus:border-white/60 transition placeholder:text-white/25"
+        />
+        {wrong && (
+          <p className="mono text-[10px] tracking-mono uppercase text-red-400 mt-3">
+            Incorrect token.
+          </p>
+        )}
+        <button
+          type="submit"
+          disabled={checking || !pw}
+          className="mt-8 w-full mono text-[11px] tracking-mono uppercase text-white/70 hover:text-white py-3 transition disabled:opacity-40"
+          style={{ border: "1px solid var(--rule-hard)" }}
+        >
+          {checking ? "Checking…" : "Enter"}
+        </button>
+      </form>
+    </div>
+  );
+}
 
 export default function Admin() {
+  const [token, setToken] = useState(() => sessionStorage.getItem(SESSION_KEY) || "");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const authHeaders = { Authorization: `Bearer ${token}` };
+
+  const evict = () => {
+    sessionStorage.removeItem(SESSION_KEY);
+    setToken("");
+  };
 
   const load = async () => {
     setLoading(true);
     setError("");
     try {
-      const r = await axios.get(`${API}/contact`);
+      const r = await axios.get(`${API}/contact`, { headers: authHeaders });
       setItems(r.data || []);
     } catch (e) {
-      setError("Failed to load.");
+      if (e?.response?.status === 401) { evict(); return; }
+      setError(`Failed to load. (${e?.response?.status ?? "network error"})`);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    load();
-  }, []);
+    if (token) load();
+  }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remove = async (id) => {
     if (!window.confirm("Delete this submission?")) return;
-    await axios.delete(`${API}/contact/${id}`);
-    setItems((arr) => arr.filter((i) => i.id !== id));
+    try {
+      await axios.delete(`${API}/contact/${id}`, { headers: authHeaders });
+      setItems((arr) => arr.filter((i) => i.id !== id));
+    } catch (e) {
+      if (e?.response?.status === 401) evict();
+    }
   };
+
+  if (!token) {
+    return <PasswordGate onAuth={(tok) => setToken(tok)} />;
+  }
 
   return (
     <div data-testid="page-admin" className="bg-ink">

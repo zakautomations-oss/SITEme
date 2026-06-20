@@ -4,8 +4,9 @@ from datetime import datetime, timezone
 from typing import List, Optional
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, EmailStr, Field
 
@@ -13,11 +14,21 @@ load_dotenv()
 
 MONGO_URL = os.environ["MONGO_URL"]
 DB_NAME = os.environ["DB_NAME"]
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
 
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
 app = FastAPI(title="Ackra AI API")
+
+_bearer = HTTPBearer(auto_error=False)
+
+
+async def _require_admin(
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(_bearer),
+) -> None:
+    if ADMIN_TOKEN and (creds is None or creds.credentials != ADMIN_TOKEN):
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 app.add_middleware(
     CORSMiddleware,
@@ -73,14 +84,14 @@ async def create_contact(payload: ContactSubmissionIn):
 
 
 @app.get("/api/contact", response_model=List[ContactSubmission])
-async def list_contacts():
+async def list_contacts(_: None = Depends(_require_admin)):
     cursor = db.contacts.find({}, {"_id": 0}).sort("created_at", -1).limit(500)
     items = await cursor.to_list(length=500)
     return [ContactSubmission(**i) for i in items]
 
 
 @app.delete("/api/contact/{contact_id}")
-async def delete_contact(contact_id: str):
+async def delete_contact(contact_id: str, _: None = Depends(_require_admin)):
     res = await db.contacts.delete_one({"id": contact_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Not found")
