@@ -14,7 +14,7 @@ function PasswordGate({ onAuth }) {
     e.preventDefault();
     setChecking(true);
     try {
-      await axios.get(`${API}/contact`, {
+      await axios.get(`${API}/admin/check`, {
         headers: { Authorization: `Bearer ${pw}` },
       });
       sessionStorage.setItem(SESSION_KEY, pw);

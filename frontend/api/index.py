@@ -69,6 +69,12 @@ async def health():
     }
 
 
+@app.get("/api/admin/check")
+async def admin_check(_: None = Depends(_require_admin)):
+    # DB-free token validation for the admin gate.
+    return {"ok": True}
+
+
 @app.post("/api/contact", response_model=ContactSubmission)
 async def create_contact(payload: ContactSubmissionIn):
     if db is None:
