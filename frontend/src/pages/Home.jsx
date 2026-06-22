@@ -98,7 +98,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="hero-cta-book"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-periwinkle text-white mono text-[11px] tracking-mono uppercase rounded-sm transition-all hover:shadow-[0_0_30px_rgba(123,127,232,0.45)]"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-periwinkle text-black mono text-[11px] tracking-mono uppercase rounded-sm transition-all hover:shadow-[0_0_30px_rgba(123,127,232,0.45)]"
             >
               Book a 30-min scoping call ↗
             </a>
@@ -267,7 +267,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="home-bottom-cta"
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-periwinkle text-white mono text-[11px] tracking-mono uppercase rounded-sm hover:shadow-[0_0_30px_rgba(123,127,232,0.45)] transition-all"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-periwinkle text-black mono text-[11px] tracking-mono uppercase rounded-sm hover:shadow-[0_0_30px_rgba(123,127,232,0.45)] transition-all"
               >
                 Book a 30-min scoping call ↗
               </a>

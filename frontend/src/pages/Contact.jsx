@@ -5,7 +5,7 @@ import { Reveal, Words } from "../components/AnimatedText";
 const API = "/api";
 const CALENDLY = "https://calendly.com/evoskin9/ak-automations-meeting-s";
 
-const initial = { name: "", email: "", phone: "", company: "", message: "" };
+const initial = { name: "", email: "", phone: "", company: "", message: "", website: "" };
 
 export default function Contact() {
   const [form, setForm] = useState(initial);
@@ -29,16 +29,13 @@ export default function Contact() {
         phone: form.phone || null,
         company: form.company || null,
         message: form.message,
+        website: form.website || "",
       });
       setStatus("success");
       setForm(initial);
     } catch (err) {
       setStatus("error");
-      setError(
-        err?.response?.data?.detail?.[0]?.msg ||
-          err?.response?.data?.detail ||
-          "Something went wrong. Try again."
-      );
+      setError("Something went wrong. Please check your details and try again.");
     }
   };
 
@@ -192,10 +189,22 @@ export default function Contact() {
                 onChange={update("message")}
                 rows={6}
                 placeholder="Be specific. Name the tool, the volume, the hour of day it bleeds."
-                className="w-full bg-transparent px-5 py-3 text-white placeholder:text-white/30 text-[15px] focus:outline-none resize-none"
+                className="w-full bg-transparent px-5 py-3 text-white placeholder:text-white/50 text-[15px] focus:outline-none resize-none"
                 required
               />
             </div>
+
+            {/* Honeypot: hidden from humans, catches bots. Leave empty. */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={form.website}
+              onChange={update("website")}
+              style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+            />
 
             {error && (
               <div
@@ -209,18 +218,28 @@ export default function Contact() {
 
             <div className="mt-6 flex items-center gap-4">
               {status === "success" ? (
-                <p
-                  data-testid="contact-success"
-                  className="mono text-[11px] tracking-mono uppercase text-periwinkle"
-                >
-                  Sent. We reply within the business hour.
-                </p>
+                <>
+                  <p
+                    data-testid="contact-success"
+                    className="mono text-[11px] tracking-mono uppercase text-periwinkle"
+                  >
+                    Sent. We reply within the business hour.
+                  </p>
+                  <button
+                    type="button"
+                    data-testid="contact-send-another"
+                    onClick={() => { setStatus("idle"); setError(""); }}
+                    className="mono text-[10px] tracking-mono uppercase text-white/55 hover:text-white transition"
+                  >
+                    Send another
+                  </button>
+                </>
               ) : (
                 <button
                   type="submit"
                   data-testid="contact-submit"
                   disabled={status === "loading"}
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black mono text-[11px] tracking-mono uppercase hover:bg-periwinkle hover:text-white transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black mono text-[11px] tracking-mono uppercase hover:bg-periwinkle hover:text-black transition-colors disabled:opacity-50"
                 >
                   {status === "loading" ? "Sending…" : "Send the note ↗"}
                 </button>
@@ -256,7 +275,7 @@ function Field({ id, label, value, onChange, placeholder, type = "text", require
         placeholder={placeholder}
         required={required}
         data-testid={`contact-input-${id}`}
-        className="w-full bg-transparent px-5 py-3 text-white placeholder:text-white/30 text-[15px] focus:outline-none"
+        className="w-full bg-transparent px-5 py-3 text-white placeholder:text-white/50 text-[15px] focus:outline-none"
       />
     </div>
   );

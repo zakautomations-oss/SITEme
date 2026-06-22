@@ -1,3 +1,4 @@
+import hmac
 import os
 import uuid
 from datetime import datetime, timezone
@@ -24,14 +25,16 @@ _bearer = HTTPBearer(auto_error=False)
 async def _require_admin(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(_bearer),
 ) -> None:
-    if ADMIN_TOKEN and (creds is None or creds.credentials != ADMIN_TOKEN):
+    if ADMIN_TOKEN and (
+        creds is None or not hmac.compare_digest(creds.credentials, ADMIN_TOKEN)
+    ):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["https://ackra.ai", "https://www.ackra.ai"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -43,6 +46,9 @@ class ContactSubmissionIn(BaseModel):
     phone: Optional[str] = Field(default=None, max_length=40)
     company: Optional[str] = Field(default=None, max_length=160)
     message: str = Field(..., min_length=1, max_length=4000)
+    # Honeypot: real users never fill this hidden field. Bots that do are
+    # silently accepted (fake 200) and never written to the database.
+    website: Optional[str] = Field(default=None, max_length=200)
 
 
 class ContactSubmission(BaseModel):
@@ -77,8 +83,6 @@ async def admin_check(_: None = Depends(_require_admin)):
 
 @app.post("/api/contact", response_model=ContactSubmission)
 async def create_contact(payload: ContactSubmissionIn):
-    if db is None:
-        raise HTTPException(status_code=503, detail="Database not configured")
     doc = {
         "id": str(uuid.uuid4()),
         "name": payload.name.strip(),
@@ -88,6 +92,11 @@ async def create_contact(payload: ContactSubmissionIn):
         "message": payload.message.strip(),
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
+    # Honeypot tripped: pretend success without storing, so bots get no signal.
+    if (payload.website or "").strip():
+        return ContactSubmission(**doc)
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database not configured")
     await db.contacts.insert_one(doc)
     doc.pop("_id", None)
     return ContactSubmission(**doc)

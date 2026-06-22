@@ -24,6 +24,34 @@ body,
   box-sizing: border-box;
 }
 
+/* Visible keyboard focus (keyboard nav only, not mouse clicks).
+   Backstops inputs/buttons that use focus:outline-none with no replacement. */
+:focus-visible {
+  outline: 2px solid #7B7FE8;
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+/* Respect reduced-motion: stop the always-on marquee/drift loops and
+   neutralize entrance transitions for users who opt out. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-drift-1,
+  .animate-drift-2,
+  .animate-drift-3,
+  .animate-pulse-slow {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 ::selection {
   background: #7B7FE8;
   color: #000000;

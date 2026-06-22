@@ -72,7 +72,7 @@ export default function Footer() {
       <div className="rule-top">
         <div className="max-w-[1320px] mx-auto px-6 md:px-10 py-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mono text-[10px] tracking-mono uppercase text-white/40">
           <div className="flex items-center gap-3">
-            <img src={LOGO} alt="Ackra" className="h-5 w-5" />
+            <img src={LOGO} alt="" className="h-5 w-5" />
             <span>Ackra © {new Date().getFullYear()}</span>
           </div>
           <p>v1.2 / built in nyc</p>

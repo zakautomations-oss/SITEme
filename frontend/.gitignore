@@ -1,0 +1,22 @@
+# dependencies
+/node_modules
+
+# production build
+/build
+
+# env files (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# local tooling / design-sync output
+/ds-bundle
+/.ds-sync
+/.design-sync
+
+# alternate lockfile (this project uses yarn)
+package-lock.json
+
+# misc
+.DS_Store
+*.log

@@ -46,7 +46,7 @@ export default function Navigation() {
     >
       <div className="max-w-[1320px] mx-auto px-6 md:px-10 h-14 md:h-16 flex items-center justify-between">
         <Link to="/" data-testid="nav-logo" className="flex items-center gap-2.5">
-          <img src={LOGO} alt="Ackra" className="h-7 w-7 object-cover" />
+          <img src={LOGO} alt="" className="h-7 w-7 object-cover" />
           <span className="font-serif text-white text-[15px] tracking-tightest leading-none mt-0.5">
             Ackra<span className="text-periwinkle">.</span>
           </span>
@@ -61,6 +61,8 @@ export default function Navigation() {
             <button
               onClick={() => setSolOpen((s) => !s)}
               data-testid="nav-solutions-toggle"
+              aria-haspopup="true"
+              aria-expanded={solOpen}
               className={`inline-flex items-center gap-1.5 transition-colors ${
                 inSolutions ? "text-white" : "text-white/55 hover:text-white"
               }`}
@@ -100,7 +102,7 @@ export default function Navigation() {
           target="_blank"
           rel="noopener noreferrer"
           data-testid="nav-cta-book"
-          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-[12px] text-black bg-white hover:bg-periwinkle hover:text-white transition-colors mono tracking-mono uppercase"
+          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-[12px] text-black bg-white hover:bg-periwinkle hover:text-black transition-colors mono tracking-mono uppercase"
         >
           Book a 30-min call
           <span aria-hidden>↗</span>

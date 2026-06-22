@@ -115,7 +115,7 @@ export default function LogoA3D({ className = "", height = 520 }) {
             color="#ffffff"
           />
           <pointLight position={[1, -0.5, 1.5]} intensity={1.2} color="#7B7FE8" />
-          <Environment preset="city" />
+          <Environment files="/potsdamer_platz_1k.hdr" />
           <ALogo />
           <ContactShadows
             position={[0, -2.0, 0]}
