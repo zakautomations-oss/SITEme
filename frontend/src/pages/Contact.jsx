@@ -1,282 +1,164 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Reveal, Words } from "../components/AnimatedText";
-
-const API = "/api";
-const CALENDLY = "https://calendly.com/evoskin9/ak-automations-meeting-s";
+import { ArrowUpRight, Check } from "lucide-react";
+import { BOOKING_LABEL, BOOKING_URL, CONTACT_EMAIL, CONTACT_PHONE } from "../config/site";
+import "../components/functional.css";
 
 const initial = { name: "", email: "", phone: "", company: "", message: "", website: "" };
+const limits = { name: 120, email: 254, phone: 40, company: 160, message: 4000, website: 200 };
+const labels = { name: "Name", email: "Email", phone: "Phone", company: "Company", message: "Message" };
+
+export function validateContact(form) {
+  const errors = {};
+  for (const key of ["name", "email", "message"]) {
+    if (!form[key].trim()) errors[key] = `Enter your ${key === "message" ? "workflow or message" : key}.`;
+  }
+  for (const key of Object.keys(labels)) {
+    if (form[key].trim().length > limits[key]) errors[key] = `${labels[key]} must be ${limits[key]} characters or fewer.`;
+  }
+  if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errors.email = "Enter a valid email address.";
+  return errors;
+}
 
 export default function Contact() {
   const [form, setForm] = useState(initial);
   const [status, setStatus] = useState("idle");
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState("");
+  const formRef = useRef(null);
+  const successRef = useRef(null);
+  const requestRef = useRef(null);
+  const inFlightRef = useRef(false);
+  useEffect(() => () => requestRef.current?.abort(), []);
+  useEffect(() => { if (status === "success") successRef.current?.focus(); }, [status]);
 
-  const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const update = (key) => (event) => {
+    setForm((previous) => ({ ...previous, [key]: event.target.value }));
+    setErrors((previous) => { const next = { ...previous }; delete next[key]; return next; });
+  };
+  const focusError = (fieldErrors) => formRef.current?.elements.namedItem(Object.keys(fieldErrors)[0])?.focus();
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const submit = async (event) => {
+    event.preventDefault();
+    if (inFlightRef.current) return;
     setError("");
-    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      setError("Name, email, and message are required.");
-      return;
-    }
+    const fieldErrors = validateContact(form);
+    setErrors(fieldErrors);
+    if (Object.keys(fieldErrors).length) { focusError(fieldErrors); return; }
+    inFlightRef.current = true;
     setStatus("loading");
+    const controller = new AbortController();
+    requestRef.current = controller;
     try {
-      await axios.post(`${API}/contact`, {
-        name: form.name,
-        email: form.email,
-        phone: form.phone || null,
-        company: form.company || null,
-        message: form.message,
-        website: form.website || "",
-      });
+      await axios.post("/api/contact", {
+        name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim() || null,
+        company: form.company.trim() || null, message: form.message.trim(), website: form.website,
+      }, { timeout: 15000, signal: controller.signal });
+      if (controller.signal.aborted) return;
       setStatus("success");
       setForm(initial);
-    } catch (err) {
+    } catch (failure) {
+      if (controller.signal.aborted) return;
       setStatus("error");
-      setError("Something went wrong. Please check your details and try again.");
+      const responseStatus = failure.response?.status;
+      if (responseStatus === 422 && Array.isArray(failure.response?.data?.detail)) {
+        const serverErrors = {};
+        failure.response.data.detail.forEach((item) => {
+          const key = item.loc?.[item.loc.length - 1];
+          if (labels[key]) serverErrors[key] = key === "email" ? "Enter a valid email address." : `Check your ${key} and try again.`;
+        });
+        setErrors(serverErrors);
+        setTimeout(() => focusError(serverErrors), 0);
+        setError("Please check the highlighted fields and send your note again.");
+      } else if (responseStatus === 429) {
+        setError("Too many attempts. Please wait a few minutes before trying again, or email us directly.");
+      } else if (failure.code === "ECONNABORTED" || failure.code === "ETIMEDOUT") {
+        setError("Sending took too long. Your note is still here. Please try again or email us directly.");
+      } else {
+        setError("We could not send your note. Your details are still here. Please try again or email us directly.");
+      }
+    } finally {
+      inFlightRef.current = false;
+      if (requestRef.current === controller) requestRef.current = null;
     }
   };
 
   return (
-    <div data-testid="page-contact" className="bg-ink">
-      <section className="pt-24 md:pt-28 pb-12 md:pb-20">
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 grid grid-cols-12 gap-x-6">
-          <div className="col-span-12 md:col-span-3">
-            <p className="mono text-[10px] tracking-mono uppercase text-white/40">
-              §01 / Contact
-            </p>
-          </div>
-          <div className="col-span-12 md:col-span-9">
-            <h1 className="font-serif text-white text-[44px] md:text-[72px] lg:text-[88px] leading-[0.92] tracking-tightest">
-              <Words text="Write us" immediate />{" "}
-              <Words text="a note." className="serif-italic text-periwinkle" delay={0.2} immediate />
-            </h1>
-            <Reveal immediate delay={0.5} className="mt-8 max-w-xl text-white/70 text-[17px] leading-relaxed">
-              <p>
-                Want the call before the call? Send a paragraph about the
-                workflow that costs you the most time. We will reply inside one
-                business hour with a sample agent spec.
-              </p>
-            </Reveal>
-          </div>
-        </div>
+    <div data-testid="page-contact" className="contact-page">
+      <section className="site-container contact-heading">
+        <h1>What would you<br />like to hand off?</h1>
+        <p>Tell us about a workflow that takes too much time. We will discuss what an agent could do.</p>
       </section>
-
-      <section className="rule-top pb-24">
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 grid grid-cols-12 gap-x-6 pt-12">
-          {/* Direct info, no icons in squares */}
-          <div className="col-span-12 md:col-span-4 space-y-10">
-            <Reveal>
-              <p className="mono text-[10px] tracking-mono uppercase text-white/40">
-                Direct
-              </p>
-              <ul className="mt-4 space-y-2.5 text-white/85 text-[15px]">
-                <li>
-                  <a
-                    href="mailto:ackra@ackraai.com"
-                    data-testid="contact-email"
-                    className="hover:text-periwinkle transition"
-                  >
-                    ackra@ackraai.com
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="tel:+16469442162"
-                    data-testid="contact-phone"
-                    className="hover:text-periwinkle transition"
-                  >
-                    +1 (646) 944 2162
-                  </a>
-                </li>
-                <li className="text-white/55">New York City</li>
-              </ul>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mono text-[10px] tracking-mono uppercase text-white/40">
-                Or skip the form
-              </p>
-              <a
-                href={CALENDLY}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-2 mono text-[11px] tracking-mono uppercase text-periwinkle hover:text-white transition"
-                style={{ borderBottom: "1px solid var(--rule-hard)" }}
-              >
-                Book the call directly →
-              </a>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="mono text-[10px] tracking-mono uppercase text-white/40">
-                What happens next
-              </p>
-              <ol className="mt-4 space-y-2 text-white/65 text-[14px] leading-relaxed">
-                <li>
-                  <span className="mono text-periwinkle mr-2">01.</span>
-                  We read your note within the business hour.
-                </li>
-                <li>
-                  <span className="mono text-periwinkle mr-2">02.</span>
-                  You get a 1-page agent spec sketched against your workflow.
-                </li>
-                <li>
-                  <span className="mono text-periwinkle mr-2">03.</span>
-                  If it fits, we book the 30-min call. If not, no follow-up.
-                </li>
-              </ol>
-            </Reveal>
+      <section className="site-container contact-layout" aria-label="Contact Ackra">
+        <aside className="contact-details">
+          <h2>Start with a note.</h2>
+          <p>Share the tools you use, the work involved, and what you would like to change.</p>
+          <div className="contact-direct">
+            <a href={`mailto:${CONTACT_EMAIL}`} data-testid="contact-email">{CONTACT_EMAIL}</a>
+            <a href={`tel:${CONTACT_PHONE.replace(/[^+\d]/g, "")}`} data-testid="contact-phone">{CONTACT_PHONE}</a>
+            <span>New York City</span>
           </div>
-
-          {/* Form: sharp edges, hairline borders, mono labels, no rounded-2xl */}
-          <form
-            onSubmit={submit}
-            data-testid="contact-form"
-            className="col-span-12 md:col-span-8 mt-12 md:mt-0"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              <Field
-                id="name"
-                label="Name"
-                value={form.name}
-                onChange={update("name")}
-                placeholder="Jane Doe"
-                required
-                edge="left"
-              />
-              <Field
-                id="email"
-                label="Email"
-                type="email"
-                value={form.email}
-                onChange={update("email")}
-                placeholder="jane@company.com"
-                required
-              />
-              <Field
-                id="phone"
-                label="Phone"
-                value={form.phone}
-                onChange={update("phone")}
-                placeholder="+1"
-                edge="left top"
-              />
-              <Field
-                id="company"
-                label="Company"
-                value={form.company}
-                onChange={update("company")}
-                placeholder="Acme Inc."
-                edge="top"
-              />
+          <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="footer-book-link">
+            {BOOKING_LABEL}<ArrowUpRight size={17} strokeWidth={1.6} aria-hidden="true" />
+          </a>
+        </aside>
+        <form ref={formRef} onSubmit={submit} noValidate data-testid="contact-form" className="contact-form" aria-busy={status === "loading"}>
+          {status === "success" ? (
+            <div className="contact-success" ref={successRef} tabIndex={-1} role="status" data-testid="contact-success">
+              <Check size={26} strokeWidth={1.6} aria-hidden="true" />
+              <h2>Your note is with us.</h2>
+              <p>Thank you for sharing the details. We will follow up at the email address you provided.</p>
+              <button type="button" className="button button-secondary" data-testid="contact-send-another"
+                onClick={() => { setStatus("idle"); setError(""); setTimeout(() => formRef.current?.elements.namedItem("name")?.focus(), 0); }}>
+                Send another note
+              </button>
             </div>
-
-            <div
-              className="mt-0"
-              style={{ borderLeft: "1px solid var(--rule)", borderTop: "1px solid var(--rule)" }}
-            >
-              <label
-                htmlFor="message"
-                className="block px-5 pt-5 mono text-[10px] tracking-mono uppercase text-white/40"
-              >
-                Workflow that costs you the most time*
-              </label>
-              <textarea
-                id="message"
-                data-testid="contact-input-message"
-                value={form.message}
-                onChange={update("message")}
-                rows={6}
-                placeholder="Be specific. Name the tool, the volume, the hour of day it bleeds."
-                className="w-full bg-transparent px-5 py-3 text-white placeholder:text-white/50 text-[15px] focus:outline-none resize-none"
-                required
-              />
-            </div>
-
-            {/* Honeypot: hidden from humans, catches bots. Leave empty. */}
-            <input
-              type="text"
-              name="website"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              value={form.website}
-              onChange={update("website")}
-              style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
-            />
-
-            {error && (
-              <div
-                data-testid="contact-error"
-                className="mt-4 text-[13px] text-red-400 px-4 py-3"
-                style={{ border: "1px solid rgba(239,68,68,0.35)" }}
-              >
-                {String(error)}
-              </div>
-            )}
-
-            <div className="mt-6 flex items-center gap-4">
-              {status === "success" ? (
-                <>
-                  <p
-                    data-testid="contact-success"
-                    className="mono text-[11px] tracking-mono uppercase text-periwinkle"
-                  >
-                    Sent. We reply within the business hour.
-                  </p>
-                  <button
-                    type="button"
-                    data-testid="contact-send-another"
-                    onClick={() => { setStatus("idle"); setError(""); }}
-                    className="mono text-[10px] tracking-mono uppercase text-white/55 hover:text-white transition"
-                  >
-                    Send another
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="submit"
-                  data-testid="contact-submit"
-                  disabled={status === "loading"}
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-white text-black mono text-[11px] tracking-mono uppercase hover:bg-periwinkle hover:text-black transition-colors disabled:opacity-50"
-                >
-                  {status === "loading" ? "Sending…" : "Send the note ↗"}
+          ) : (
+            <>
+              <p className="contact-required-note">Fields marked * are required.</p>
+              <fieldset disabled={status === "loading"}>
+                <legend className="sr-only">Your contact details and workflow</legend>
+                <div className="contact-fields">
+                  <Field id="name" label="Name" value={form.name} onChange={update("name")} autoComplete="name" placeholder="Your name" required error={errors.name} />
+                  <Field id="email" label="Email" type="email" value={form.email} onChange={update("email")} autoComplete="email" placeholder="you@yourcompany.com" required error={errors.email} />
+                  <Field id="phone" label="Phone" type="tel" value={form.phone} onChange={update("phone")} autoComplete="tel" placeholder="Your phone number" error={errors.phone} />
+                  <Field id="company" label="Company" value={form.company} onChange={update("company")} autoComplete="organization" placeholder="Your company" error={errors.company} />
+                </div>
+                <div className="field contact-message-field">
+                  <label htmlFor="message" className="field-label">Workflow that costs you the most time <span aria-hidden="true">*</span></label>
+                  <textarea id="message" name="message" data-testid="contact-input-message" value={form.message} onChange={update("message")}
+                    rows={6} maxLength={limits.message} placeholder="Which tools are involved? How often does this work come up?" className="input"
+                    required aria-invalid={Boolean(errors.message)} aria-describedby={`message-hint${errors.message ? " message-error" : ""}`} />
+                  <p id="message-hint" className="field-hint">Up to 4,000 characters.</p>
+                  {errors.message && <p id="message-error" className="field-error">{errors.message}</p>}
+                </div>
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={form.website} onChange={update("website")} maxLength={limits.website} className="contact-honeypot" />
+              </fieldset>
+              {error && <div data-testid="contact-error" className="contact-error" role="alert"><p>{error}</p><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div>}
+              <div className="contact-form-actions">
+                <button type="submit" data-testid="contact-submit" disabled={status === "loading"} className="button">
+                  {status === "loading" ? "Sending..." : "Send the note"}
+                  {status !== "loading" && <ArrowUpRight size={16} strokeWidth={1.6} aria-hidden="true" />}
                 </button>
-              )}
-            </div>
-          </form>
-        </div>
+                <span role="status" aria-live="polite" className="sr-only">{status === "loading" ? "Sending your note." : Object.keys(errors).length ? "Please correct the highlighted fields." : ""}</span>
+                <p className="field-hint contact-data-note">Your contact details and message are stored for Ackra to review your inquiry.</p>
+              </div>
+            </>
+          )}
+        </form>
       </section>
     </div>
   );
 }
 
-function Field({ id, label, value, onChange, placeholder, type = "text", required, edge = "" }) {
-  const style = {
-    borderTop: edge.includes("top") ? "1px solid var(--rule)" : "1px solid var(--rule)",
-    borderLeft: edge.includes("left") ? "1px solid var(--rule)" : "1px solid var(--rule)",
-    borderRight: "1px solid var(--rule)",
-  };
+function Field({ id, label, value, onChange, placeholder, autoComplete, type = "text", required, error }) {
   return (
-    <div style={style}>
-      <label
-        htmlFor={id}
-        className="block px-5 pt-4 mono text-[10px] tracking-mono uppercase text-white/40"
-      >
-        {label}
-        {required && <span className="text-periwinkle">*</span>}
-      </label>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-        data-testid={`contact-input-${id}`}
-        className="w-full bg-transparent px-5 py-3 text-white placeholder:text-white/50 text-[15px] focus:outline-none"
-      />
+    <div className="field">
+      <label htmlFor={id} className="field-label">{label}{required && <span aria-hidden="true"> *</span>}</label>
+      <input id={id} name={id} type={type} value={value} onChange={onChange} placeholder={placeholder} autoComplete={autoComplete}
+        maxLength={limits[id]} required={required} data-testid={`contact-input-${id}`} className="input"
+        aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-error` : undefined} />
+      {error && <p id={`${id}-error`} className="field-error">{error}</p>}
     </div>
   );
 }

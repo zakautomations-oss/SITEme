@@ -1,211 +1,208 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Reveal, Words } from "../components/AnimatedText";
 
 const API = "/api";
 const SESSION_KEY = "ackra_admin_token";
+const PAGE_SIZE = 25;
+const muted = { color: "var(--muted)" };
+const border = { borderColor: "var(--line)" };
+
+function savedToken() {
+  try { return typeof window === "undefined" ? "" : sessionStorage.getItem(SESSION_KEY) || ""; }
+  catch { return ""; }
+}
 
 function PasswordGate({ onAuth }) {
   const [pw, setPw] = useState("");
-  const [wrong, setWrong] = useState(false);
+  const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!pw || checking) return;
     setChecking(true);
+    setError("");
     try {
       await axios.get(`${API}/admin/check`, {
-        headers: { Authorization: `Bearer ${pw}` },
+        headers: { Authorization: `Bearer ${pw}` }, timeout: 10000,
       });
-      sessionStorage.setItem(SESSION_KEY, pw);
+      try { sessionStorage.setItem(SESSION_KEY, pw); } catch { /* Current-tab state still works. */ }
       onAuth(pw);
-    } catch {
-      setWrong(true);
-      setPw("");
-    } finally {
-      setChecking(false);
-    }
+    } catch (err) {
+      setError(err?.response?.status === 401
+        ? "That token was not accepted."
+        : "We could not verify access. Please try again.");
+    } finally { setChecking(false); }
   };
 
   return (
-    <div data-testid="admin-gate" className="bg-ink min-h-screen flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm px-8">
-        <p className="mono text-[10px] tracking-mono uppercase text-white/40 mb-8">
-          §00 / Admin access
-        </p>
-        <input
-          type="password"
-          value={pw}
-          onChange={(e) => { setPw(e.target.value); setWrong(false); }}
-          placeholder="Admin token"
-          autoFocus
-          className="w-full bg-transparent border-b border-white/20 text-white py-3 text-[15px] outline-none focus:border-white/60 transition placeholder:text-white/25"
-        />
-        {wrong && (
-          <p className="mono text-[10px] tracking-mono uppercase text-red-400 mt-3">
-            Incorrect token.
-          </p>
-        )}
-        <button
-          type="submit"
-          disabled={checking || !pw}
-          className="mt-8 w-full mono text-[11px] tracking-mono uppercase text-white/70 hover:text-white py-3 transition disabled:opacity-40"
-          style={{ border: "1px solid var(--rule-hard)" }}
-        >
-          {checking ? "Checking…" : "Enter"}
+    <section data-testid="admin-gate" className="min-h-[75vh] flex items-center justify-center px-6 py-24">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm">
+        <p className="text-xs uppercase tracking-[0.16em] mb-5" style={muted}>Private workspace</p>
+        <h1 className="font-serif text-4xl mb-3">Contact inbox</h1>
+        <p className="text-sm leading-relaxed mb-8" style={muted}>Enter your admin token to read and manage inquiries.</p>
+        <label htmlFor="admin-token" className="field-label block mb-2">Admin token</label>
+        <input id="admin-token" name="admin-token" type="password" value={pw}
+          onChange={(event) => { setPw(event.target.value); setError(""); }}
+          autoComplete="current-password" required className="input w-full" autoFocus
+          aria-describedby={error ? "admin-auth-error" : undefined} />
+        {error && <p id="admin-auth-error" role="alert" className="mt-3 text-sm" style={{ color: "var(--error)" }}>{error}</p>}
+        <button type="submit" disabled={checking || !pw} className="button mt-6 w-full">
+          {checking ? "Checking access…" : "Open inbox"}
         </button>
       </form>
+    </section>
+  );
+}
+
+function Message({ text }) {
+  const [expanded, setExpanded] = useState(false);
+  const needsExpansion = text.length > 180;
+  return (
+    <div>
+      <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+        {needsExpansion && !expanded ? `${text.slice(0, 180)}…` : text}
+      </p>
+      {needsExpansion && <button type="button" aria-expanded={expanded}
+        onClick={() => setExpanded((value) => !value)}
+        className="mt-3 text-sm underline underline-offset-4" style={{ color: "var(--accent)" }}>
+        {expanded ? "Show less" : "Read full message"}
+      </button>}
     </div>
   );
 }
 
 export default function Admin() {
-  const [token, setToken] = useState(() => sessionStorage.getItem(SESSION_KEY) || "");
+  const [token, setToken] = useState(savedToken);
   const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(null);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleting, setDeleting] = useState("");
+  const [notice, setNotice] = useState("");
+  const requestSequence = useRef(0);
 
-  const authHeaders = { Authorization: `Bearer ${token}` };
-
-  const evict = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+  const evict = useCallback(() => {
+    requestSequence.current += 1;
+    try { sessionStorage.removeItem(SESSION_KEY); } catch { /* Clear React state regardless. */ }
     setToken("");
-  };
+    setItems([]);
+    setTotal(null);
+    setPage(1);
+    setNotice("");
+    setError("");
+  }, []);
 
-  const load = async () => {
+  const load = useCallback(async (nextPage = 1, signal) => {
+    const request = ++requestSequence.current;
     setLoading(true);
     setError("");
     try {
-      const r = await axios.get(`${API}/contact`, { headers: authHeaders });
-      setItems(r.data || []);
-    } catch (e) {
-      if (e?.response?.status === 401) { evict(); return; }
-      setError(`Failed to load. (${e?.response?.status ?? "network error"})`);
+      const { data } = await axios.get(`${API}/admin/contacts`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { page: nextPage, page_size: PAGE_SIZE }, timeout: 15000, signal,
+      });
+      if (request !== requestSequence.current) return;
+      setItems(data.items);
+      setTotal(data.total);
+      setPage(data.page);
+    } catch (err) {
+      if (axios.isCancel(err) || request !== requestSequence.current) return;
+      if (err?.response?.status === 401) { evict(); return; }
+      setError("The inbox could not be loaded. Please try refreshing.");
     } finally {
-      setLoading(false);
+      if (request === requestSequence.current) setLoading(false);
     }
-  };
+  }, [token, evict]);
 
   useEffect(() => {
-    if (token) load();
-  }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!token) return undefined;
+    const controller = new AbortController();
+    load(1, controller.signal);
+    return () => controller.abort();
+  }, [token, load]);
 
   const remove = async (id) => {
-    if (!window.confirm("Delete this submission?")) return;
+    if (deleting || !window.confirm("Permanently delete this inquiry?")) return;
+    setDeleting(id);
+    setError("");
+    setNotice("");
     try {
-      await axios.delete(`${API}/contact/${id}`, { headers: authHeaders });
-      setItems((arr) => arr.filter((i) => i.id !== id));
-    } catch (e) {
-      if (e?.response?.status === 401) evict();
-    }
+      await axios.delete(`${API}/contact/${encodeURIComponent(id)}`, {
+        headers: { Authorization: `Bearer ${token}` }, timeout: 10000,
+      });
+      setNotice("Inquiry deleted.");
+      await load(page);
+    } catch (err) {
+      if (err?.response?.status === 401) evict();
+      else setError("The inquiry could not be deleted. Please refresh before trying again.");
+    } finally { setDeleting(""); }
   };
 
-  if (!token) {
-    return <PasswordGate onAuth={(tok) => setToken(tok)} />;
-  }
+  if (!token) return <PasswordGate onAuth={setToken} />;
+  const pages = Math.max(1, Math.ceil((total || 0) / PAGE_SIZE));
+  const first = total ? (page - 1) * PAGE_SIZE + 1 : 0;
+  const last = total ? first + items.length - 1 : 0;
+  const busy = loading || Boolean(deleting);
 
   return (
-    <div data-testid="page-admin" className="bg-ink">
-      <section className="pt-24 md:pt-28 pb-12">
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 grid grid-cols-12 gap-x-6">
-          <div className="col-span-12 md:col-span-3">
-            <p className="mono text-[10px] tracking-mono uppercase text-white/40">
-              §01 / Inbox
-            </p>
-          </div>
-          <div className="col-span-12 md:col-span-9 flex items-end justify-between">
-            <div>
-              <h1 className="font-serif text-white text-[44px] md:text-[80px] leading-[0.95] tracking-tightest">
-                <Words text="Contact" immediate />{" "}
-                <Words text="inbox." className="serif-italic text-periwinkle" delay={0.15} immediate />
-              </h1>
-              <Reveal immediate delay={0.4} className="mt-3">
-                <p className="mono text-[11px] tracking-mono uppercase text-white/45">
-                  {items.length} {items.length === 1 ? "entry" : "entries"} / live from mongo
-                </p>
-              </Reveal>
-            </div>
-            <button
-              onClick={load}
-              data-testid="admin-refresh"
-              className="mono text-[11px] tracking-mono uppercase text-white/70 hover:text-white px-4 py-2"
-              style={{ border: "1px solid var(--rule-hard)" }}
-            >
-              Refresh
-            </button>
-          </div>
+    <div data-testid="page-admin" className="max-w-6xl mx-auto px-6 md:px-10 py-24" style={{ color: "var(--text)" }}>
+      <div className="flex flex-wrap items-end justify-between gap-6 pb-8 border-b" style={border}>
+        <div>
+          <p className="text-xs uppercase tracking-[0.16em] mb-4" style={muted}>Private workspace</p>
+          <h1 className="font-serif text-4xl md:text-6xl">Contact inbox</h1>
+          <p className="mt-3 text-sm" style={muted} data-testid="admin-count">
+            {total === null ? "Loading inquiries…" : `${total} ${total === 1 ? "inquiry" : "inquiries"} total`}
+          </p>
         </div>
-      </section>
-
-      <section className="rule-top">
-        <div className="max-w-[1320px] mx-auto px-6 md:px-10 pt-10 pb-24">
-          {loading ? (
-            <p data-testid="admin-loading" className="mono text-[11px] tracking-mono uppercase text-white/40 py-10">
-              Loading…
-            </p>
-          ) : error ? (
-            <p className="text-red-400 py-10">{error}</p>
-          ) : items.length === 0 ? (
-            <div data-testid="admin-empty" className="py-16">
-              <p className="font-serif text-white text-[40px] tracking-tightest">
-                Nothing yet.
-              </p>
-              <p className="mt-2 text-white/50 text-[15px]">
-                When someone writes in, it lands here.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-[14px]" data-testid="admin-table">
-                <thead>
-                  <tr className="rule-bottom text-left mono text-[10px] tracking-mono uppercase text-white/40">
-                    <th className="py-3 pr-6">Received</th>
-                    <th className="py-3 pr-6">Name</th>
-                    <th className="py-3 pr-6">Contact</th>
-                    <th className="py-3 pr-6">Company</th>
-                    <th className="py-3 pr-6">Message</th>
-                    <th className="py-3"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((c) => (
-                    <tr
-                      key={c.id}
-                      data-testid={`admin-row-${c.id}`}
-                      className="rule-bottom hover:bg-white/[0.02] transition align-top"
-                    >
-                      <td className="py-4 pr-6 mono text-[11px] text-white/50 whitespace-nowrap">
-                        {new Date(c.created_at).toLocaleString()}
-                      </td>
-                      <td className="py-4 pr-6 text-white">{c.name}</td>
-                      <td className="py-4 pr-6 text-white/70">
-                        <div>{c.email}</div>
-                        {c.phone && <div className="text-white/45">{c.phone}</div>}
-                      </td>
-                      <td className="py-4 pr-6 text-white/70">
-                        {c.company || <span className="text-white/30">/</span>}
-                      </td>
-                      <td className="py-4 pr-6 text-white/80 max-w-md">
-                        <p className="line-clamp-3">{c.message}</p>
-                      </td>
-                      <td className="py-4">
-                        <button
-                          onClick={() => remove(c.id)}
-                          data-testid={`admin-delete-${c.id}`}
-                          className="mono text-[10px] tracking-mono uppercase text-white/50 hover:text-red-400 transition px-3 py-1.5"
-                          style={{ border: "1px solid var(--rule)" }}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+        <div className="flex flex-wrap gap-3">
+          <button type="button" onClick={() => load(page)} disabled={busy} data-testid="admin-refresh" className="button button-secondary">Refresh</button>
+          <button type="button" onClick={evict} disabled={Boolean(deleting)} className="button button-secondary">Sign out</button>
         </div>
-      </section>
+      </div>
+      {error && <p role="alert" className="my-6 text-sm" style={{ color: "var(--error)" }}>{error}</p>}
+      <p role="status" aria-live="polite" className="mt-4 text-sm" style={{ color: "var(--success)" }}>{notice}</p>
+      {loading ? (
+        <p data-testid="admin-loading" role="status" className="py-16" style={muted}>Loading inquiries…</p>
+      ) : items.length === 0 && !error ? (
+        <div data-testid="admin-empty" className="py-16">
+          <h2 className="font-serif text-3xl">The inbox is clear.</h2>
+          <p className="mt-3" style={muted}>New contact form inquiries will appear here.</p>
+        </div>
+      ) : (
+        <div data-testid="admin-table" className="divide-y" style={border}>
+          {items.map((contact) => (
+            <article key={contact.id} data-testid={`admin-row-${contact.id}`}
+              className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6 py-8 border-b" style={border}>
+              <div className="min-w-0">
+                <h2 className="font-medium break-words">{contact.name}</h2>
+                {contact.company && <p className="text-sm mt-1 break-words" style={muted}>{contact.company}</p>}
+                <a className="block text-sm mt-3 underline underline-offset-4 break-all" href={`mailto:${contact.email}`}>{contact.email}</a>
+                {contact.phone && <p className="text-sm mt-2" style={muted}>{contact.phone}</p>}
+                <time dateTime={contact.created_at} className="block text-xs mt-4" style={muted}>
+                  {new Date(contact.created_at).toLocaleString()}
+                </time>
+              </div>
+              <div className="min-w-0">
+                <Message text={contact.message} />
+                <button type="button" onClick={() => remove(contact.id)} disabled={busy}
+                  aria-label={`Delete inquiry from ${contact.name}`} data-testid={`admin-delete-${contact.id}`}
+                  className="mt-5 text-xs underline underline-offset-4 disabled:opacity-50" style={muted}>
+                  {deleting === contact.id ? "Deleting…" : "Delete inquiry"}
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+      {total > 0 && <nav aria-label="Inbox pages" className="flex flex-wrap items-center justify-between gap-4 pt-7">
+        <p className="text-sm" style={muted} aria-live="polite">{first}–{last} of {total} · Page {page} of {pages}</p>
+        <div className="flex gap-3">
+          <button type="button" className="button button-secondary" disabled={busy || page <= 1} onClick={() => load(page - 1)}>Previous</button>
+          <button type="button" className="button button-secondary" disabled={busy || page >= pages} onClick={() => load(page + 1)}>Next</button>
+        </div>
+      </nav>}
     </div>
   );
 }

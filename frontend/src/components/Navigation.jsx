@@ -1,189 +1,170 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-
-const LOGO = "/ackra-logo.svg";
-
-const CALENDLY = "https://calendly.com/evoskin9/ak-automations-meeting-s";
+import { ArrowUpRight, ChevronDown, Menu, Monitor, Moon, Sun, X } from "lucide-react";
+import { BOOKING_LABEL, BOOKING_URL } from "../config/site";
+import "./functional.css";
 
 const SOLUTIONS = [
   { to: "/solutions/reduce-workload", label: "Reduce workload" },
   { to: "/solutions/increase-conversion", label: "Increase conversion" },
 ];
-
 const LINKS = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Process" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
+const THEMES = ["system", "light", "dark"];
+
+function readThemePreference() {
+  if (typeof window === "undefined") return "system";
+  try {
+    const stored = localStorage.getItem("ackra-theme");
+    return THEMES.includes(stored) ? stored : "system";
+  } catch { return "system"; }
+}
+
+export function ThemeToggle() {
+  const [preference, setPreference] = useState(null);
+  useEffect(() => { setPreference(readThemePreference()); }, []);
+  useEffect(() => {
+    if (!preference) return;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const apply = () => {
+      const theme = preference === "system" ? (media.matches ? "dark" : "light") : preference;
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themePreference = preference;
+      window.dispatchEvent(new CustomEvent("ackra-theme-change", { detail: { preference, theme } }));
+    };
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, [preference]);
+  const current = preference || "system";
+  const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+  const Icon = current === "system" ? Monitor : current === "light" ? Sun : Moon;
+  return (
+    <button
+      type="button" className="theme-toggle" data-testid="theme-toggle"
+      aria-label={`Theme: ${current}. Switch to ${next} theme`}
+      title={`Theme: ${current}. Switch to ${next}`}
+      onClick={() => {
+        try { localStorage.setItem("ackra-theme", next); } catch { /* Theme works without storage. */ }
+        setPreference(next);
+      }}
+    >
+      <Icon size={18} strokeWidth={1.6} aria-hidden="true" />
+    </button>
+  );
+}
 
 export default function Navigation() {
   const [open, setOpen] = useState(false);
   const [solOpen, setSolOpen] = useState(false);
+  const headerRef = useRef(null);
+  const mobileRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const solRef = useRef(null);
-  const loc = useLocation();
+  const solButtonRef = useRef(null);
+  const { pathname } = useLocation();
 
+  useEffect(() => { setOpen(false); setSolOpen(false); }, [pathname]);
   useEffect(() => {
-    setOpen(false);
-    setSolOpen(false);
-  }, [loc.pathname]);
-
-  useEffect(() => {
-    const onDocClick = (e) => {
-      if (solRef.current && !solRef.current.contains(e.target)) setSolOpen(false);
+    const onPointer = (event) => {
+      if (!solRef.current?.contains(event.target)) setSolOpen(false);
+      if (!headerRef.current?.contains(event.target)) setOpen(false);
     };
-    document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
+    const onEscape = (event) => {
+      if (event.key !== "Escape") return;
+      if (open) { setOpen(false); menuButtonRef.current?.focus(); }
+      else if (solOpen) { setSolOpen(false); solButtonRef.current?.focus(); }
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [open, solOpen]);
+  useEffect(() => { if (open) mobileRef.current?.querySelector("a")?.focus(); }, [open]);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const reset = () => { setOpen(false); setSolOpen(false); };
+    desktop.addEventListener("change", reset);
+    return () => desktop.removeEventListener("change", reset);
   }, []);
 
-  const inSolutions = loc.pathname.startsWith("/solutions");
-
   return (
-    <header
-      data-testid="site-nav"
-      className="fixed top-0 left-0 right-0 z-50 bg-[#05050A]/80 backdrop-blur-xl"
-      style={{ borderBottom: "1px solid var(--rule)" }}
-    >
-      <div className="max-w-[1320px] mx-auto px-6 md:px-10 h-14 md:h-16 flex items-center justify-between">
-        <Link to="/" data-testid="nav-logo" className="flex items-center gap-2.5">
-          <img src={LOGO} alt="" className="h-7 w-7 object-cover" />
-          <span className="font-serif text-white text-[15px] tracking-tightest leading-none mt-0.5">
-            Ackra<span className="text-periwinkle">.</span>
-          </span>
+    <header ref={headerRef} data-testid="site-nav" className="site-header"
+      onBlur={(event) => {
+        if (open && event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+      }}>
+      <div className="site-container header-inner">
+        <Link to="/" data-testid="nav-logo" className="brand-lockup" aria-label="Ackra home">
+          <img src="/ackra-logo.svg" alt="" width="30" height="30" />
+          <span>Ackra<span className="brand-period">.</span></span>
         </Link>
-
-        <nav className="hidden md:flex items-center gap-7 text-[13px]">
-          {LINKS.slice(0, 1).map((l) => (
-            <NavItem key={l.to} link={l} />
-          ))}
-
-          <div ref={solRef} className="relative">
-            <button
-              onClick={() => setSolOpen((s) => !s)}
-              data-testid="nav-solutions-toggle"
-              aria-haspopup="true"
-              aria-expanded={solOpen}
-              className={`inline-flex items-center gap-1.5 transition-colors ${
-                inSolutions ? "text-white" : "text-white/55 hover:text-white"
-              }`}
-            >
-              Solutions
-              <span className="mono text-[10px] mt-px opacity-70">{solOpen ? "−" : "+"}</span>
+        <nav className="desktop-navigation" aria-label="Main navigation">
+          <NavItem link={LINKS[0]} />
+          <div className="solutions-disclosure" ref={solRef}
+            onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setSolOpen(false); }}>
+            <button type="button" ref={solButtonRef} onClick={() => setSolOpen((value) => !value)}
+              data-testid="nav-solutions-toggle" aria-expanded={solOpen} aria-controls="solutions-navigation"
+              className={`nav-link solutions-toggle ${pathname.startsWith("/solutions") ? "is-active" : ""}`}>
+              Solutions <ChevronDown size={14} strokeWidth={1.6} aria-hidden="true" />
             </button>
             {solOpen && (
-              <div
-                data-testid="nav-solutions-menu"
-                className="absolute top-full mt-3 left-0 w-[300px] bg-[#05050A] backdrop-blur-xl"
-                style={{ border: "1px solid var(--rule-hard)" }}
-              >
-                {SOLUTIONS.map((s, i) => (
-                  <Link
-                    key={s.to}
-                    to={s.to}
-                    data-testid={`nav-solutions-${s.to.split("/").pop()}`}
-                    className="block px-5 py-4 hover:bg-white/[0.04] transition"
-                    style={{ borderTop: i === 0 ? "none" : "1px solid var(--rule)" }}
-                  >
-                    <span className="mono text-[10px] text-white/40">0{i + 1}</span>
-                    <p className="mt-1 text-white text-[14px]">{s.label}</p>
+              <div id="solutions-navigation" data-testid="nav-solutions-menu" className="solutions-menu">
+                {SOLUTIONS.map((solution) => (
+                  <Link key={solution.to} to={solution.to} data-testid={`nav-solutions-${solution.to.split("/").pop()}`}>
+                    {solution.label}<ArrowUpRight size={16} strokeWidth={1.6} aria-hidden="true" />
                   </Link>
                 ))}
               </div>
             )}
           </div>
-
-          {LINKS.slice(1).map((l) => (
-            <NavItem key={l.to} link={l} />
-          ))}
+          {LINKS.slice(1).map((link) => <NavItem key={link.to} link={link} />)}
         </nav>
-
-        <a
-          href={CALENDLY}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="nav-cta-book"
-          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-[12px] text-black bg-white hover:bg-periwinkle hover:text-black transition-colors mono tracking-mono uppercase"
-        >
-          Book a 30-min call
-          <span aria-hidden>↗</span>
-        </a>
-
-        <button
-          data-testid="nav-mobile-toggle"
-          onClick={() => setOpen((s) => !s)}
-          className="md:hidden p-2 text-white mono text-xs"
-          aria-label="Toggle menu"
-        >
-          {open ? "CLOSE" : "MENU"}
-        </button>
+        <div className="header-actions">
+          <ThemeToggle />
+          <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" data-testid="nav-cta-book" className="button header-book">
+            {BOOKING_LABEL}<ArrowUpRight size={16} strokeWidth={1.6} aria-hidden="true" />
+          </a>
+          <button type="button" ref={menuButtonRef} data-testid="nav-mobile-toggle"
+            onClick={() => setOpen((value) => !value)} className="mobile-menu-toggle"
+            aria-label={open ? "Close menu" : "Open menu"} aria-controls="mobile-navigation" aria-expanded={open}>
+            {open ? <X size={23} strokeWidth={1.6} aria-hidden="true" /> : <Menu size={23} strokeWidth={1.6} aria-hidden="true" />}
+          </button>
+        </div>
       </div>
-
       {open && (
-        <div
-          data-testid="nav-mobile-panel"
-          className="md:hidden bg-[#05050A]"
-          style={{ borderTop: "1px solid var(--rule)" }}
-        >
-          <div className="px-6 py-6 flex flex-col">
-            {LINKS.map((l, i) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                end={l.to === "/"}
-                data-testid={`nav-mobile-link-${l.label.toLowerCase()}`}
-                className={({ isActive }) =>
-                  `flex items-center justify-between py-4 text-base ${
-                    isActive ? "text-white" : "text-white/60"
-                  }`
-                }
-                style={{ borderBottom: i < LINKS.length - 1 ? "1px solid var(--rule)" : "none" }}
-              >
-                <span>{l.label}</span>
-                <span className="mono text-[10px] text-white/30">0{i + 1}</span>
-              </NavLink>
-            ))}
-            <p className="mt-6 mono text-[10px] tracking-mono text-white/30 uppercase">
-              Solutions
-            </p>
-            {SOLUTIONS.map((s) => (
-              <NavLink
-                key={s.to}
-                to={s.to}
-                data-testid={`nav-mobile-solutions-${s.to.split("/").pop()}`}
-                className={({ isActive }) =>
-                  `py-3 text-[15px] ${isActive ? "text-white" : "text-white/55"}`
-                }
-              >
-                {s.label}
-              </NavLink>
-            ))}
-            <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="nav-mobile-cta-book"
-              className="mt-6 inline-flex items-center justify-center px-4 py-3 bg-white text-black mono text-xs tracking-mono uppercase"
-            >
-              Book a 30-min call ↗
+        <nav ref={mobileRef} id="mobile-navigation" aria-label="Mobile navigation" data-testid="nav-mobile-panel" className="mobile-navigation">
+          <div className="site-container mobile-navigation-inner">
+            <div className="mobile-primary-links">
+              {LINKS.map((link) => (
+                <NavLink key={link.to} to={link.to} end={link.to === "/"} data-testid={`nav-mobile-link-${link.label.toLowerCase()}`} onClick={() => setOpen(false)}>
+                  {link.label}
+                </NavLink>
+              ))}
+            </div>
+            <div className="mobile-solutions">
+              <p>Solutions</p>
+              {SOLUTIONS.map((solution) => (
+                <NavLink key={solution.to} to={solution.to} data-testid={`nav-mobile-solutions-${solution.to.split("/").pop()}`} onClick={() => setOpen(false)}>
+                  {solution.label}
+                </NavLink>
+              ))}
+            </div>
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" data-testid="nav-mobile-cta-book" className="button">
+              {BOOKING_LABEL}<ArrowUpRight size={16} strokeWidth={1.6} aria-hidden="true" />
             </a>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );
 }
 
 function NavItem({ link }) {
-  return (
-    <NavLink
-      to={link.to}
-      end={link.to === "/"}
-      data-testid={`nav-link-${link.label.toLowerCase()}`}
-      className={({ isActive }) =>
-        `transition-colors ${isActive ? "text-white" : "text-white/55 hover:text-white"}`
-      }
-    >
-      {link.label}
-    </NavLink>
-  );
+  return <NavLink to={link.to} end={link.to === "/"} data-testid={`nav-link-${link.label.toLowerCase()}`} className={({ isActive }) => `nav-link ${isActive ? "is-active" : ""}`}>{link.label}</NavLink>;
 }

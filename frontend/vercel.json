@@ -1,16 +1,91 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "yarn build",
+  "installCommand": "yarn install --frozen-lockfile",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path((?!services$)[sS][eE][rR][vV][iI][cC][eE][sS])",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!about$)[aA][bB][oO][uU][tT])",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!contact$)[cC][oO][nN][tT][aA][cC][tT])",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!solutions/reduce-workload$)[sS][oO][lL][uU][tT][iI][oO][nN][sS]/[rR][eE][dD][uU][cC][eE]-[wW][oO][rR][kK][lL][oO][aA][dD])",
+      "destination": "/solutions/reduce-workload",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!solutions/increase-conversion$)[sS][oO][lL][uU][tT][iI][oO][nN][sS]/[iI][nN][cC][rR][eE][aA][sS][eE]-[cC][oO][nN][vV][eE][rR][sS][iI][oO][nN])",
+      "destination": "/solutions/increase-conversion",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!admin$)[aA][dD][mM][iI][nN])",
+      "destination": "/admin",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        }
+      ]
+    },
+    {
+      "source": "/admin",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/404",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
       ]
     }
   ]
