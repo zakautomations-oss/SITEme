@@ -1,4 +1,5 @@
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import { Rotate3d } from "lucide-react";
 import { projectAckra } from "./ackraGeometry";
 import "./AckraMark.css";
 
@@ -6,11 +7,11 @@ const REST = { yaw: -0.32, pitch: 0.08 };
 const VIEWS = [-0.32, 0, 0.32];
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
-export default function AckraMark() {
+export default function AckraMark({ motionAreaRef }) {
   const id = useId();
-  const [mode, setMode] = useState("solid");
   const [pose, setPose] = useState(REST);
-  const [turn, setTurn] = useState(0);
+  const view = useRef(0);
+  const stageRef = useRef(null);
   const current = useRef(REST);
   const target = useRef(REST);
   const frame = useRef(null);
@@ -18,10 +19,10 @@ export default function AckraMark() {
   const pointer = useRef(null);
   const suppressClick = useRef(false);
 
-  const stop = () => {
+  const stop = useCallback(() => {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
     frame.current = null;
-  };
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia?.("(prefers-reduced-motion: reduce)");
@@ -32,7 +33,7 @@ export default function AckraMark() {
         current.current = REST;
         target.current = REST;
         setPose(REST);
-        setTurn(0);
+        view.current = 0;
       }
     };
     update();
@@ -41,9 +42,9 @@ export default function AckraMark() {
       stop();
       media?.removeEventListener("change", update);
     };
-  }, []);
+  }, [stop]);
 
-  const aim = (next) => {
+  const aim = useCallback((next) => {
     target.current = next;
     if (reducedMotion.current) {
       stop();
@@ -65,11 +66,33 @@ export default function AckraMark() {
       frame.current = settled ? null : requestAnimationFrame(tick);
     };
     frame.current = requestAnimationFrame(tick);
-  };
+  }, [stop]);
+
+  useEffect(() => {
+    const area = motionAreaRef?.current ?? stageRef.current;
+    if (!area) return;
+    const followPointer = (event) => {
+      if (reducedMotion.current || pointer.current || event.pointerType === "touch") return;
+      const bounds = area.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      const x = clamp((event.clientX - bounds.left) / bounds.width - 0.5, -0.5, 0.5);
+      const y = clamp((event.clientY - bounds.top) / bounds.height - 0.5, -0.5, 0.5);
+      aim({ yaw: VIEWS[view.current] + x * 0.64, pitch: REST.pitch - y * 0.24 });
+    };
+    const rest = () => {
+      if (!pointer.current && !reducedMotion.current) aim({ yaw: VIEWS[view.current], pitch: REST.pitch });
+    };
+    area.addEventListener("pointermove", followPointer, { passive: true });
+    area.addEventListener("pointerleave", rest);
+    return () => {
+      area.removeEventListener("pointermove", followPointer);
+      area.removeEventListener("pointerleave", rest);
+    };
+  }, [aim, motionAreaRef]);
 
   const rotate = (direction = 1) => {
-    const next = (turn + direction + VIEWS.length) % VIEWS.length;
-    setTurn(next);
+    const next = (view.current + direction + VIEWS.length) % VIEWS.length;
+    view.current = next;
     aim({ yaw: VIEWS[next], pitch: REST.pitch });
   };
 
@@ -89,11 +112,6 @@ export default function AckraMark() {
       }
       return;
     }
-    if (event.pointerType === "touch") return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-    aim({ yaw: VIEWS[turn] + x * 0.38, pitch: REST.pitch - y * 0.24 });
   };
 
   const finishPointer = (event) => {
@@ -103,8 +121,9 @@ export default function AckraMark() {
 
   const faces = projectAckra(pose.yaw, pose.pitch);
   return (
-    <figure className="ackra-mark" data-mode={mode} data-testid="hero-ackra-mark">
+    <figure className="ackra-mark" data-testid="hero-ackra-mark">
       <button
+        ref={stageRef}
         type="button"
         className="ackra-mark-stage"
         aria-label="Rotate the Ackra mark"
@@ -120,7 +139,6 @@ export default function AckraMark() {
         onLostPointerCapture={() => { pointer.current = null; }}
         onPointerLeave={() => {
           if (pointer.current && !pointer.current.dragging) pointer.current = null;
-          if (!pointer.current && !reducedMotion.current) aim({ yaw: VIEWS[turn], pitch: REST.pitch });
         }}
         onClick={(event) => {
           if (suppressClick.current && event.detail !== 0) { suppressClick.current = false; return; }
@@ -131,7 +149,7 @@ export default function AckraMark() {
             event.preventDefault();
             rotate(event.key === "ArrowLeft" ? -1 : 1);
           }
-          if (event.key === "Escape") { setTurn(0); aim(REST); }
+          if (event.key === "Escape") { view.current = 0; aim(REST); }
         }}
       >
         <svg className="ackra-mark-art" viewBox="0 0 600 560" aria-hidden="true" focusable="false">
@@ -155,23 +173,18 @@ export default function AckraMark() {
           </defs>
           <ellipse className="ackra-mark-shadow" cx="300" cy="493" rx="166" ry="25" fill={`url(#${id}-shadow)`} />
           <g className="ackra-mark-object">
-            {faces.filter(face => mode === "structure" || face.facing).map(face => <polygon
+            {faces.filter(face => face.facing).map(face => <polygon
               key={face.id}
               points={face.polygon}
               className={`ackra-mark-face ackra-mark-face-${face.surface}`}
               fill={face.surface === "front" ? `url(#${id}-${face.leg === 0 ? "left" : "right"})` : undefined}
-              style={{ "--face-light": face.illumination, "--edge-opacity": face.facing ? 0.85 : 0.24 }}
+              style={{ "--face-light": face.illumination }}
             />)}
           </g>
         </svg>
+        <Rotate3d className="ackra-mark-hint" size={18} strokeWidth={1.25} aria-hidden="true" />
       </button>
-      <figcaption className="ackra-mark-caption">
-        <span id={`${id}-help`} className="ackra-mark-help"><span className="mark-pointer-hint">Drag to turn</span><span className="mark-touch-hint">Tap to turn</span><span className="sr-only">. Use Enter or the left and right arrow keys to change the view.</span></span>
-        <div className="ackra-mark-modes" role="group" aria-label="Mark appearance">
-          <button type="button" aria-pressed={mode === "solid"} onClick={() => setMode("solid")}>Solid</button>
-          <button type="button" aria-pressed={mode === "structure"} onClick={() => setMode("structure")}>Structure</button>
-        </div>
-      </figcaption>
+      <figcaption id={`${id}-help`} className="sr-only">Move your pointer or drag to rotate. Use Enter or the left and right arrow keys to change the view. Escape resets the view.</figcaption>
     </figure>
   );
 }

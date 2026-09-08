@@ -6,10 +6,10 @@ import userEvent from "@testing-library/user-event";
 import CapabilitiesAccordion from "./CapabilitiesAccordion";
 
 describe("capabilities accordion", () => {
-  it("starts with workflow expanded and preserves all four service descriptions", () => {
+  it("starts with workflow expanded and includes custom agents after the existing services", () => {
     render(<CapabilitiesAccordion />);
     expect(screen.getAllByRole("button").map((button) => button.textContent)).toEqual([
-      "Workflow automation", "Text agents", "Voice agents", "Review follow-ups",
+      "Workflow automation", "Text agents", "Voice agents", "Review follow-ups", "Custom agents",
     ]);
     expect(screen.getByRole("button", { name: "Workflow automation" })).toHaveAttribute("aria-expanded", "true");
     expect(screen.getAllByRole("region")).toHaveLength(1);
@@ -28,6 +28,9 @@ describe("capabilities accordion", () => {
     await userEvent.click(voice);
     expect(voice).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Custom agents" }));
+    expect(screen.getAllByRole("region")).toHaveLength(1);
+    expect(screen.getByRole("region", { name: "Custom agents" })).toHaveTextContent("Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.");
   });
 
   it("supports Enter, Space, arrow keys, Home and End without moving focus into hidden content", async () => {
@@ -44,23 +47,28 @@ describe("capabilities accordion", () => {
     await user.keyboard(" ");
     expect(text).toHaveAttribute("aria-expanded", "false");
     await user.keyboard("{End}");
-    expect(screen.getByRole("button", { name: "Review follow-ups" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveAttribute("aria-expanded", "true");
     await user.keyboard("{ArrowRight}");
     expect(screen.getByRole("button", { name: "Workflow automation" })).toHaveFocus();
     await user.keyboard("{ArrowUp}");
-    expect(screen.getByRole("button", { name: "Review follow-ups" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveFocus();
     await user.keyboard("{Home}");
     expect(screen.getByRole("button", { name: "Workflow automation" })).toHaveFocus();
+    await user.keyboard("{ArrowLeft}");
+    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveFocus();
     expect(document.querySelectorAll('.capabilities-panel:not([open]) .capabilities-content :is(a, button, input, [tabindex="0"])')).toHaveLength(0);
   });
 
   it("provides native disclosures with all copy in server-rendered HTML", () => {
     const markup = renderToStaticMarkup(<CapabilitiesAccordion />);
     const document = new DOMParser().parseFromString(markup, "text/html");
-    expect(document.querySelectorAll("details")).toHaveLength(4);
+    expect(document.querySelectorAll("details")).toHaveLength(5);
     expect(document.querySelectorAll("details[open]")).toHaveLength(1);
     expect(document.querySelectorAll("summary[aria-expanded]")).toHaveLength(0);
     expect(document.body.textContent).toContain("Ask customers for honest reviews and bring service issues to the right person.");
+    expect(document.body.textContent).toContain("Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.");
     document.querySelectorAll("summary").forEach((summary) => {
       expect(document.getElementById(summary.getAttribute("aria-controls"))).not.toBeNull();
     });

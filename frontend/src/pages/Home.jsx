@@ -20,10 +20,11 @@ const statement = "Connect your tools. Give your team room to think.";
 
 export default function Home() {
   const pageRef = useRef(null);
+  const heroRef = useRef(null);
   const motionEnabled = useHomeMotionEnabled();
   return (
     <div ref={pageRef} data-testid="page-home" className="home-page">
-      <section className="home-hero site-container">
+      <section ref={heroRef} className="home-hero site-container">
         <div className="hero-copy">
           <h1 className="max-w-6xl">AI systems.<br /><span>Built for your work.</span></h1>
           <p className="hero-description">Custom AI systems that connect your tools, automate complex workflows, and support your team. Built and managed by Ackra.</p>
@@ -32,7 +33,7 @@ export default function Home() {
             <Link to="/services" data-testid="hero-cta-services" className="button button-secondary">How it works <ArrowRight aria-hidden="true" size={17} /></Link>
           </div>
         </div>
-        <div className="hero-media"><AckraMark /></div>
+        <div className="hero-media"><AckraMark motionAreaRef={heroRef} /></div>
       </section>
       <IntegrationMarquee />
       <section className="home-chapter site-container" aria-labelledby="capabilities-heading">

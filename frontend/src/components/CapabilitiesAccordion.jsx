@@ -28,6 +28,11 @@ const CAPABILITIES = [
     title: "Make feedback part of the process.",
     text: "Ask customers for honest reviews and bring service issues to the right person.",
   },
+  {
+    label: "Custom agents",
+    title: "Built for your specific work.",
+    text: "Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.",
+  },
 ];
 
 /** Native disclosure markup stays usable while JavaScript loads. */

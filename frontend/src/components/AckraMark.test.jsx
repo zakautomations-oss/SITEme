@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React, { createRef, StrictMode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
@@ -72,28 +72,44 @@ describe("interactive Ackra mark", () => {
     expect(container.querySelector("svg")).not.toBeNull();
     expect(container.querySelectorAll("polygon").length).toBeGreaterThan(0);
     expect(container.querySelector("img, image, canvas, script")).toBeNull();
-    expect(html).not.toMatch(/https?:\/\//);
+    expect(html).not.toMatch(/(?:src|href)="https?:\/\//);
     expect(geometry(container)).not.toMatch(/NaN|Infinity/);
     expect(container.querySelector("button").getAttribute("aria-label")).toBe("Rotate the Ackra mark");
     expect(window.matchMedia).not.toHaveBeenCalled();
     expect(requestAnimationFrame).not.toHaveBeenCalled();
   });
 
-  it("switches between solid and complete structure with exclusive pressed states", async () => {
+  it("shows only the solid mark with a quiet icon and screen-reader instructions", () => {
     render(<AckraMark />);
-    const solid = screen.getByRole("button", { name: "Solid" });
-    const structure = screen.getByRole("button", { name: "Structure" });
-    const solidFaceCount = stage().querySelectorAll("polygon").length;
-    expect(solid).toHaveAttribute("aria-pressed", "true");
-    expect(structure).toHaveAttribute("aria-pressed", "false");
-    await userEvent.click(structure);
-    expect(structure).toHaveAttribute("aria-pressed", "true");
-    expect(solid).toHaveAttribute("aria-pressed", "false");
-    expect(stage().querySelectorAll("polygon").length).toBeGreaterThan(solidFaceCount);
-    await userEvent.click(solid);
-    expect(solid).toHaveAttribute("aria-pressed", "true");
-    expect(structure).toHaveAttribute("aria-pressed", "false");
-    expect(stage().querySelectorAll("polygon")).toHaveLength(solidFaceCount);
+    const mark = stage();
+    expect(screen.getAllByRole("button")).toEqual([mark]);
+    expect(screen.queryByRole("group", { name: "Mark appearance" })).not.toBeInTheDocument();
+    expect(screen.queryByText("Drag to turn")).not.toBeInTheDocument();
+    expect(mark.querySelector('.ackra-mark-hint')).toHaveAttribute("aria-hidden", "true");
+    const help = document.getElementById(mark.getAttribute("aria-describedby"));
+    expect(help).toHaveClass("sr-only");
+    expect(help).toHaveTextContent("left and right arrow keys");
+    expect(mark.querySelector('.ackra-mark-face-front')).toHaveAttribute("fill", expect.stringContaining("url(#"));
+  });
+
+  it("follows pointer movement over the hero copy and removes those listeners on unmount", () => {
+    const areaRef = createRef();
+    const { unmount } = render(<section ref={areaRef}><p>Hero copy</p><AckraMark motionAreaRef={areaRef} /></section>);
+    const mark = stage();
+    areaRef.current.getBoundingClientRect = () => ({ left: 0, top: 0, width: 1200, height: 600 });
+    const copy = screen.getByText("Hero copy");
+    const resting = geometry(mark);
+    fireEvent.pointerMove(copy, { clientX: 100, clientY: 100 });
+    settleFrames();
+    expect(geometry(mark)).not.toBe(resting);
+    fireEvent.pointerLeave(areaRef.current);
+    settleFrames();
+    expect(geometry(mark)).toBe(resting);
+    const requested = requestAnimationFrame.mock.calls.length;
+    unmount();
+    fireEvent.pointerMove(copy, { clientX: 900, clientY: 100 });
+    expect(requestAnimationFrame).toHaveBeenCalledTimes(requested);
+    expect(frames.size).toBe(0);
   });
 
   it("supports click, Enter, arrow keys, and Escape without animation under reduced motion", async () => {

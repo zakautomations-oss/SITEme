@@ -1,17 +1,17 @@
 .ackra-mark{
  --mark-metal-bright:#777d8b;--mark-metal-mid:#444b5a;--mark-metal-low:#252c3d;
- --mark-side-low:#252b39;--mark-side-high:#a2a8b7;--mark-edge:#9298a6;--mark-wire:#454b64;
+ --mark-side-low:#252b39;--mark-side-high:#a2a8b7;--mark-edge:#9298a6;
  width:100%;margin:0;position:relative;border-radius:var(--radius);background:var(--surface-raised);overflow:hidden;
 }
 [data-theme="dark"] .ackra-mark{
  --mark-metal-bright:#f5f6fa;--mark-metal-mid:#a8aebd;--mark-metal-low:#707889;
- --mark-side-low:#31384a;--mark-side-high:#b2b9ca;--mark-edge:#d3d7e1;--mark-wire:#c5c9df;
+ --mark-side-low:#31384a;--mark-side-high:#b2b9ca;--mark-edge:#d3d7e1;
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]):not([data-theme="dark"]) .ackra-mark{
  --mark-metal-bright:#f5f6fa;--mark-metal-mid:#a8aebd;--mark-metal-low:#707889;
- --mark-side-low:#31384a;--mark-side-high:#b2b9ca;--mark-edge:#d3d7e1;--mark-wire:#c5c9df;
+ --mark-side-low:#31384a;--mark-side-high:#b2b9ca;--mark-edge:#d3d7e1;
 }}
-.ackra-mark-stage{display:block;width:100%;aspect-ratio:1.18;padding:0;border:0;background:transparent;color:var(--text);cursor:grab;touch-action:pan-y;position:relative}
+.ackra-mark-stage{display:block;width:100%;aspect-ratio:1.05;padding:0;border:0;background:transparent;color:var(--text);cursor:grab;touch-action:pan-y;position:relative}
 .ackra-mark-stage:active{cursor:grabbing}
 .ackra-mark-stage:focus-visible{outline:2px solid var(--accent);outline-offset:-6px}
 .ackra-mark-art{display:block;width:100%;height:100%;position:absolute;inset:0;overflow:visible}
@@ -20,19 +20,9 @@
 .mark-metal-low{stop-color:var(--mark-metal-low)}
 .ackra-mark-face{stroke:var(--mark-edge);stroke-width:.65;stroke-linejoin:round}
 .ackra-mark-face:not(.ackra-mark-face-front){fill:color-mix(in srgb,var(--mark-side-low),var(--mark-side-high) calc(var(--face-light)*100%))}
-.ackra-mark[data-mode="structure"] .ackra-mark-face{fill:none;stroke:var(--mark-wire);stroke-width:1.15;stroke-opacity:var(--edge-opacity)}
-.ackra-mark[data-mode="structure"] .ackra-mark-shadow{opacity:.4}
-.ackra-mark-caption{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 26px;padding-block:5px;border-top:1px solid var(--line);font-size:.79rem;line-height:1.4}
-.ackra-mark-help{color:var(--muted)}
-.mark-touch-hint{display:none}
-.ackra-mark-modes{display:flex;gap:18px;align-items:center}
-.ackra-mark-modes button{min-height:44px;padding:0 2px;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);font-size:inherit}
-.ackra-mark-modes button[aria-pressed="true"]{color:var(--text);border-bottom-color:var(--accent)}
-.ackra-mark-modes button:hover{color:var(--text)}
-@media(pointer:coarse),(prefers-reduced-motion:reduce){.mark-pointer-hint{display:none}.mark-touch-hint{display:inline}.ackra-mark-stage{cursor:pointer}}
+.ackra-mark-hint{position:absolute;right:20px;bottom:18px;color:var(--muted);opacity:.65;pointer-events:none}
+@media(pointer:coarse),(prefers-reduced-motion:reduce){.ackra-mark-stage{cursor:pointer}}
 @media(max-width:767px){
- .ackra-mark-stage{aspect-ratio:1.4;max-height:420px}
- .ackra-mark-caption{margin-inline:20px;font-size:.76rem}
- .ackra-mark-modes{gap:16px}
+ .ackra-mark-stage{aspect-ratio:1.14;max-height:420px}
+ .ackra-mark-hint{right:16px;bottom:16px}
 }
-@media(max-width:360px){.ackra-mark-caption{margin-inline:16px;gap:10px}.ackra-mark-modes{gap:12px}}
