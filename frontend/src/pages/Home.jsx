@@ -1,7 +1,8 @@
 import React, { lazy, Suspense, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
-import { BookingLink, EditorialImage } from "../components/PageElements";
+import { BookingLink } from "../components/PageElements";
+import AckraMark from "../components/AckraMark";
 import { BOOKING_DURATION } from "../config/site";
 import CapabilitiesAccordion from "../components/CapabilitiesAccordion";
 import IntegrationMarquee from "../components/IntegrationMarquee";
@@ -31,7 +32,7 @@ export default function Home() {
             <Link to="/services" data-testid="hero-cta-services" className="button button-secondary">How it works <ArrowRight aria-hidden="true" size={17} /></Link>
           </div>
         </div>
-        <div className="hero-media"><EditorialImage name="systems" alt="Interwoven metallic strands forming an abstract computational structure" priority className="hero-image" /></div>
+        <div className="hero-media"><AckraMark /></div>
       </section>
       <IntegrationMarquee />
       <section className="home-chapter site-container" aria-labelledby="capabilities-heading">
