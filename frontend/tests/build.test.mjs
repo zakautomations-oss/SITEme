@@ -39,9 +39,9 @@ for (const path of paths) {
   });
 }
 
-test("deep links preserve all four process steps", async () => {
+test("deep links preserve the three current process stages", async () => {
   const dom = new JSDOM(await (await fetch(origin + "/services")).text());
-  for (const id of ["step-01", "step-02", "step-03", "step-04"]) assert.ok(dom.window.document.getElementById(id), id);
+  for (const id of ["step-01", "step-02", "step-04"]) assert.ok(dom.window.document.getElementById(id), id);
   dom.window.close();
 });
 

@@ -4,7 +4,7 @@ import CalendlyInline from "../components/CalendlyInline";
 import { PageHero, ClosingSection } from "../components/PageElements";
 import { BOOKING_URL, BOOKING_LABEL, BOOKING_DURATION } from "../config/site";
 
-const stages = [["step-01","Book a call"],["step-02","Clarity session"],["step-03","Decide"],["step-04","Deploy"]];
+const stages = [["step-01","Book a call"],["step-02","Clarity session"],["step-04","Deploy"]];
 
 export default function Services() {
   return <div data-testid="page-services">
@@ -20,7 +20,6 @@ export default function Services() {
       <h2 className="section-title">Turn the problem into a plan.</h2><p className="section-intro">The clarity session maps the work, the tools, and the decisions an agent can reasonably handle.</p>
       <div className="deliverables-grid"><article><h3>The workflow</h3><p>Where work begins, where it gets stuck, and which parts are worth automating.</p></article><article><h3>The agent’s job</h3><p>Its inputs, actions, integrations, and the point where a person takes over.</p></article><article><h3>The measure of success</h3><p>A practical way to evaluate the build against the time, effort, or response quality you care about.</p></article></div>
     </div></section>
-    <section id="step-03" className="section-space site-container decision-section" data-testid="process-step-03"><div><h2 className="section-title">Decide with the details in hand.</h2><p className="section-intro">Review the scope, ask questions, and bring in your team. We agree on the work and cost before building.</p></div><p className="decision-statement">A useful first project has a clear job, a realistic scope, and a result you can assess.</p></section>
     <section id="step-04" className="section-space site-container" data-testid="process-step-04">
       <h2 className="section-title">Build carefully. Launch with support.</h2><p className="section-intro">A typical first build takes about three to four weeks after scope is agreed. Timing depends on the integrations and testing required.</p>
       <ol className="delivery-timeline">{[

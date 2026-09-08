@@ -13,7 +13,6 @@ const HomeMotion = lazy(() => import("../components/HomeMotion"));
 const process = [
   ["Talk through the work", "Bring the task that costs your team the most time. We’ll look at the people, tools, and decisions behind it.", "step-01"],
   ["Make a practical plan", "Agree on the integrations, success measures, and moments that need a human handoff.", "step-02"],
-  ["Decide what fits", "Review the scope, ask questions, and understand what the first release will do before committing.", "step-03"],
   ["Build, test, and launch", "Test against real scenarios, start with a focused rollout, and keep improving the system together.", "step-04"],
 ];
 const statement = "Connect your tools. Give your team room to think.";
