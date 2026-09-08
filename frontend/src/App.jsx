@@ -71,9 +71,8 @@ export function RouteMeta() {
   return null;
 }
 
-function RouteFocus() {
+function RouteFocus({ previousPath }) {
   const { pathname, hash } = useLocation();
-  const previousPath = useRef(pathname);
   useEffect(() => {
     const changed = previousPath.current !== pathname;
     previousPath.current = pathname;
@@ -82,7 +81,7 @@ function RouteFocus() {
       try { id = decodeURIComponent(hash.slice(1)); } catch { return; }
       document.getElementById(id)?.scrollIntoView();
     } else if (changed) {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       document.getElementById("main")?.focus({ preventScroll: true });
     }
   }, [pathname, hash]);
@@ -91,6 +90,8 @@ function RouteFocus() {
 
 export default function App() {
   const { pathname } = useLocation();
+  // Keep navigation history outside the error boundary, which remounts per page.
+  const previousPath = useRef(pathname);
   return (
     <AppErrorBoundary key={pathname}>
         <div className="app-shell" data-testid="app-shell">
@@ -109,7 +110,7 @@ export default function App() {
                 <Route path="/solutions/increase-conversion" element={<SolutionIncreaseConversion />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <RouteFocus />
+              <RouteFocus previousPath={previousPath} />
             </Suspense>
           </main>
           <Footer />
