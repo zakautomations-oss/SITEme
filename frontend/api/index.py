@@ -70,11 +70,19 @@ def _database_failure_category(exc):
         for phrase in ("authentication failed", "auth failed", "bad auth", "not authorized", "unauthorized")
     ):
         return "authentication"
-    if any(
-        phrase in message
-        for phrase in ("dns", "nxdomain", "getaddrinfo", "name does not exist", "name or service not known", "nodename nor servname")
+    if any(phrase in message for phrase in (
+        "nxdomain", "dns query name does not exist", "none of dns query names exist",
+        "name or service not known", "nodename nor servname",
+    )):
+        return "dns_not_found"
+    if "dns response does not contain an answer" in message:
+        return "dns_no_answer"
+    if "resolution lifetime expired" in message or (
+        "dns" in message and any(phrase in message for phrase in ("timed out", "timeout"))
     ):
-        return "dns"
+        return "dns_timeout"
+    if any(phrase in message for phrase in ("dns", "getaddrinfo", "nameserver", "name resolution")):
+        return "dns_other"
     if any(
         phrase in message
         for phrase in ("ssl", "tls", "certificate verify failed", "certificate_verify_failed", "certificate has expired")

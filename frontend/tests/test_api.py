@@ -257,7 +257,10 @@ class ApiTests(unittest.TestCase):
         private_detail = "mongodb+srv://private-user:private-password@private-host.example/private-db"
         cases = (
             (OperationFailure("Authentication failed: " + private_detail, code=18), "authentication", 18),
-            (ConfigurationError("DNS query name does not exist: " + private_detail), "dns", "none"),
+            (ConfigurationError("The DNS query name does not exist: " + private_detail), "dns_not_found", "none"),
+            (ConfigurationError("The DNS response does not contain an answer to the question: " + private_detail), "dns_no_answer", "none"),
+            (ConfigurationError("The resolution lifetime expired after 4.000 seconds: " + private_detail), "dns_timeout", "none"),
+            (ConfigurationError("All nameservers failed to answer the query: REFUSED " + private_detail), "dns_other", "none"),
             (ServerSelectionTimeoutError("SSL handshake failed: " + private_detail), "tls", "none"),
             (NetworkTimeout("Connection timed out: " + private_detail), "network_timeout", "none"),
             (OperationFailure("Unexpected driver failure: " + private_detail, code=12345), "database", 12345),
