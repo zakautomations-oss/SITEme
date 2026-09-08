@@ -1,5 +1,6 @@
 import asyncio
 import hmac
+import logging
 import os
 import uuid
 from datetime import datetime, timezone
@@ -11,11 +12,12 @@ from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
-from pymongo.errors import PyMongoError
+from pymongo.errors import ConnectionFailure, NetworkTimeout, PyMongoError, ServerSelectionTimeoutError
 
 MONGO_URL = os.environ.get("MONGO_URL", "")
 DB_NAME = os.environ.get("DB_NAME", "")
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
+logger = logging.getLogger("ackra.api")
 
 DB_TIMEOUT_SECONDS = 5
 client = (
@@ -53,18 +55,54 @@ async def _require_admin(
 
 def _require_db():
     if db is None:
+        logger.warning(
+            "database_unavailable category=configuration exception=DatabaseNotConfigured code=none"
+        )
         raise HTTPException(status_code=503, detail="Service temporarily unavailable")
     return db
+
+
+def _database_failure_category(exc):
+    # Inspect driver text only in memory. Return a fixed label, never its contents.
+    message = str(exc).lower()
+    if getattr(exc, "code", None) in (13, 18) or any(
+        phrase in message
+        for phrase in ("authentication failed", "auth failed", "bad auth", "not authorized", "unauthorized")
+    ):
+        return "authentication"
+    if any(
+        phrase in message
+        for phrase in ("dns", "nxdomain", "getaddrinfo", "name does not exist", "name or service not known", "nodename nor servname")
+    ):
+        return "dns"
+    if any(
+        phrase in message
+        for phrase in ("ssl", "tls", "certificate verify failed", "certificate_verify_failed", "certificate has expired")
+    ):
+        return "tls"
+    if isinstance(exc, (asyncio.TimeoutError, NetworkTimeout, ServerSelectionTimeoutError)):
+        return "network_timeout"
+    if isinstance(exc, ConnectionFailure):
+        return "network"
+    return "database"
 
 
 async def _db_call(operation):
     try:
         return await asyncio.wait_for(operation, timeout=DB_TIMEOUT_SECONDS)
     except (PyMongoError, asyncio.TimeoutError) as exc:
-        # Driver errors can contain connection details; keep them out of responses.
+        # Driver errors may contain credentials or hosts. Log only fixed categories,
+        # the exception class, and numeric codes; no traceback or exception message.
+        code = getattr(exc, "code", None)
+        logger.warning(
+            "database_unavailable category=%s exception=%s code=%s",
+            _database_failure_category(exc),
+            type(exc).__name__,
+            code if isinstance(code, int) else "none",
+        )
         raise HTTPException(
             status_code=503, detail="Service temporarily unavailable"
-        ) from exc
+        ) from None
 
 
 app.add_middleware(

@@ -11,7 +11,7 @@ import unittest
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
-from pymongo.errors import OperationFailure
+from pymongo.errors import ConfigurationError, NetworkTimeout, OperationFailure, ServerSelectionTimeoutError
 
 with patch.dict(os.environ, {"MONGO_URL": "", "DB_NAME": "", "ADMIN_TOKEN": ""}):
     spec = importlib.util.spec_from_file_location("ackra_api", Path(__file__).parents[1] / "api" / "index.py")
@@ -252,6 +252,42 @@ class ApiTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 503)
                 self.assertEqual(response.json(), {"detail": "Service temporarily unavailable"})
                 self.assertNotIn("secret", response.text)
+
+    def test_database_logs_classify_failures_without_logging_private_details(self):
+        private_detail = "mongodb+srv://private-user:private-password@private-host.example/private-db"
+        cases = (
+            (OperationFailure("Authentication failed: " + private_detail, code=18), "authentication", 18),
+            (ConfigurationError("DNS query name does not exist: " + private_detail), "dns", "none"),
+            (ServerSelectionTimeoutError("SSL handshake failed: " + private_detail), "tls", "none"),
+            (NetworkTimeout("Connection timed out: " + private_detail), "network_timeout", "none"),
+            (OperationFailure("Unexpected driver failure: " + private_detail, code=12345), "database", 12345),
+        )
+        for failure, category, code in cases:
+            with self.subTest(category=category):
+                self.database.ping_error = failure
+                with self.assertLogs("ackra.api", level="WARNING") as captured:
+                    response = self.client.get("/api/health")
+                self.assertEqual(response.status_code, 503)
+                self.assertEqual(len(captured.records), 1)
+                record = captured.records[0]
+                self.assertEqual(
+                    record.getMessage(),
+                    f"database_unavailable category={category} exception={type(failure).__name__} code={code}",
+                )
+                self.assertIsNone(record.exc_info)
+                self.assertIsNone(record.stack_info)
+                self.assertNotIn("private-", " ".join(captured.output))
+                self.assertNotIn("mongodb", " ".join(captured.output))
+                self.assertNotIn("private-", response.text)
+
+    def test_application_deadline_logs_only_a_sanitized_timeout(self):
+        self.database.ping_delay = 1
+        with patch.object(api, "DB_TIMEOUT_SECONDS", 0.01):
+            with self.assertLogs("ackra.api", level="WARNING") as captured:
+                response = self.client.get("/api/health")
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(captured.records[0].getMessage(),
+                         "database_unavailable category=network_timeout exception=TimeoutError code=none")
 
 
 if __name__ == "__main__":
