@@ -1,0 +1,256 @@
+.capabilities-accordion {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  border-block: 1px solid var(--line-strong);
+  color: var(--text);
+}
+
+.capabilities-panel {
+  min-width: 0;
+  background: var(--surface);
+}
+
+.capabilities-panel + .capabilities-panel {
+  border-top: 1px solid var(--line-strong);
+}
+
+.capabilities-panel[open] {
+  background: var(--surface-raised);
+}
+
+.capabilities-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 76px;
+  padding: 24px;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.35;
+  list-style: none;
+  cursor: pointer;
+}
+
+.capabilities-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.capabilities-trigger::marker {
+  content: "";
+}
+
+.capabilities-trigger > span:first-child {
+  max-width: 16ch;
+  min-width: 0;
+  overflow-wrap: normal;
+}
+
+.capabilities-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -5px;
+}
+
+.capabilities-toggle-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  color: var(--accent);
+}
+
+.capabilities-minus,
+.capabilities-panel[open] .capabilities-plus {
+  display: none;
+}
+
+.capabilities-panel[open] .capabilities-minus {
+  display: block;
+}
+
+.capabilities-content {
+  padding: 0 24px 32px;
+}
+
+/* Explicitly preserve native details hiding, including assistive technology. */
+.capabilities-panel:not([open]) > .capabilities-content,
+.capabilities-content[hidden] {
+  display: none;
+}
+
+.capabilities-image-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  margin: 0 0 28px;
+  overflow: hidden;
+  background: var(--surface-soft);
+}
+
+.capabilities-image-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 55%;
+}
+
+.capabilities-copy h3 {
+  max-width: 20ch;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.1;
+  letter-spacing: -.035em;
+}
+
+.capabilities-copy p {
+  max-width: 43ch;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+@media (min-width: 1024px) {
+  .capabilities-accordion {
+    --capability-min-height: 520px;
+    flex-direction: row;
+    min-height: var(--capability-min-height);
+  }
+
+  .capabilities-accordion:not(:has(.capabilities-panel[open])) {
+    min-height: 0;
+  }
+
+  .capabilities-panel {
+    flex: 1 1 0;
+    overflow: hidden;
+  }
+
+  .capabilities-panel[open] {
+    flex-grow: 3.75;
+  }
+
+  .capabilities-panel + .capabilities-panel {
+    border-top: 0;
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .capabilities-trigger {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    min-height: 142px;
+    padding: 28px 20px;
+    font-size: 19px;
+  }
+
+  .capabilities-trigger > span:first-child {
+    min-height: 52px;
+  }
+
+  .capabilities-accordion:has(.capabilities-panel[open]) .capabilities-panel:not([open]) .capabilities-trigger {
+    min-height: var(--capability-min-height);
+    justify-content: space-between;
+  }
+
+  .capabilities-panel[open] .capabilities-trigger {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    min-height: 98px;
+    padding-inline: 30px;
+  }
+
+  .capabilities-panel[open] .capabilities-trigger > span:first-child {
+    min-height: 0;
+  }
+
+  .capabilities-content {
+    padding: 0 30px 34px;
+  }
+
+  .capabilities-panel:not(:first-child) .capabilities-content {
+    padding-top: 120px;
+  }
+
+  .capabilities-image-wrap {
+    max-height: 180px;
+    margin-bottom: 26px;
+  }
+
+  @supports (width: 1cqw) {
+    .capabilities-accordion {
+      container-type: inline-size;
+    }
+
+    /* Keep the final line lengths while the panel reveals them. Four borders
+       separate the five flex items, whose expanded weights total 7.75. */
+    .capabilities-panel[open] > .capabilities-trigger,
+    .capabilities-content {
+      width: calc((100cqw - 4px) * 3.75 / 7.75);
+    }
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .capabilities-panel:not([open]) .capabilities-trigger {
+    padding-inline: 14px;
+    font-size: 16px;
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .capabilities-trigger:hover {
+    color: var(--accent);
+  }
+
+  .capabilities-image-wrap img {
+    transition: transform 650ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .capabilities-image-wrap:hover img {
+    transform: scale(1.035);
+  }
+}
+
+@keyframes capability-content-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Initial and server-rendered content stays visible. Only deliberate
+     disclosure changes get an entrance; outgoing content hides immediately. */
+  .capabilities-accordion[data-interacted] .capabilities-panel[open] > .capabilities-content {
+    animation: capability-content-enter 220ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .capabilities-trigger {
+    transition: color 180ms ease;
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .capabilities-panel {
+    transition: flex-grow 440ms cubic-bezier(.22, 1, .36, 1), background-color 280ms ease;
+  }
+
+  .capabilities-accordion[data-interacted] .capabilities-panel[open] > .capabilities-content {
+    animation-duration: 280ms;
+    animation-delay: 160ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capabilities-panel,
+  .capabilities-trigger,
+  .capabilities-content,
+  .capabilities-image-wrap img {
+    transition: none !important;
+    animation: none !important;
+  }
+}

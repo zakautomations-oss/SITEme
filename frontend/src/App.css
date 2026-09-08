@@ -1,6 +1,36 @@
-.app-shell {
-  position: relative;
-  min-height: 100vh;
-  background: #000000;
-  overflow-x: hidden;
+.app-shell{position:relative;min-height:100dvh;background:var(--surface);color:var(--text)}
+.app-shell>main{padding-top:var(--nav-height)}
+.route-content{min-width:0}
+.site-header{view-transition-name:ackra-header}
+.navigation-progress{position:fixed;top:var(--nav-height);left:0;right:0;height:2px;z-index:60;overflow:hidden;pointer-events:none;animation:progress-appear 1ms 150ms both}
+.navigation-progress::after{content:"";display:block;width:30%;height:100%;background:var(--accent)}
+@keyframes progress-appear{from{opacity:0}to{opacity:1}}
+
+@media(prefers-reduced-motion:no-preference){
+ @keyframes progress-travel{from{transform:translateX(-100%)}to{transform:translateX(340%)}}
+ .navigation-progress::after{animation:progress-travel 1.2s ease-in-out 150ms infinite}
+ @keyframes heading-arrive{from{transform:translateY(16px)}to{transform:translateY(0)}}
+ @keyframes detail-arrive{from{opacity:.65;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes artwork-arrive{from{opacity:.72;transform:translateY(14px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+ .route-entrance :is(.home-hero,.page-hero,.contact-heading) h1{animation:heading-arrive 620ms cubic-bezier(.22,1,.36,1) both}
+ .route-entrance :is(.hero-description,.contact-heading>p){animation:detail-arrive 520ms cubic-bezier(.22,1,.36,1) 65ms both}
+ .route-entrance .hero-actions{animation:detail-arrive 500ms cubic-bezier(.22,1,.36,1) 120ms both}
+ .route-entrance :is(.hero-media,.page-hero>.editorial-image){animation:artwork-arrive 720ms cubic-bezier(.22,1,.36,1) 60ms both}
+ .route-entrance .contact-layout{animation:detail-arrive 520ms cubic-bezier(.22,1,.36,1) 100ms both}
+ .solutions-menu,.mobile-navigation{animation:detail-arrive 180ms cubic-bezier(.22,1,.36,1) both}
+
+ @keyframes page-depart{to{opacity:0}}
+ @keyframes page-arrive{from{opacity:0}to{opacity:1}}
+ ::view-transition-old(root){animation:page-depart 180ms ease-out both}
+ ::view-transition-new(root){animation:page-arrive 280ms cubic-bezier(.22,1,.36,1) 35ms both}
+ ::view-transition-group(ackra-header){animation-duration:0s}
+ ::view-transition-old(ackra-header){display:none}
+ ::view-transition-new(ackra-header){animation:none}
 }
+@media(prefers-reduced-motion:reduce){
+ ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+
+.desktop-navigation .nav-link{position:relative}
+.desktop-navigation .nav-link::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;opacity:0;transition:transform 220ms ease,opacity 220ms ease}
+.desktop-navigation .nav-link.is-active::after{transform:scaleX(1);opacity:1}

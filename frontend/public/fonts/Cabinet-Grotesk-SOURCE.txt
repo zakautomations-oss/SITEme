@@ -1,0 +1,24 @@
+Cabinet Grotesk — source record
+
+Publisher: Indian Type Foundry (ITF), distributed through Fontshare
+Official family page: https://www.fontshare.com/fonts/cabinet-grotesk
+Official download: https://api.fontshare.com/v2/fonts/download/cabinet-grotesk
+Downloaded: 2026-09-08 UTC
+Archive member: CabinetGrotesk_Complete/Fonts/WEB/fonts/CabinetGrotesk-Variable.woff2
+Local asset: cabinet-grotesk-variable.woff2
+Bytes: 41860
+SHA-256: f71103771c9e32406026b6ea46c7e57cb977d5884e70d0f1beeab91ab2c7abb6
+
+The WOFF2 file is an unmodified copy of the official download. No subsetting,
+format conversion, or metadata changes were performed.
+
+Family: Cabinet Grotesk
+Style: normal
+Variable weight axis (wght): 100–900, including 500, 600, and 700.
+The official ZIP CSS uses the alias CabinetGrotesk-Variable. The Fontshare
+CSS API uses Cabinet Grotesk; the local @font-face family alias can match it.
+
+License: ITF Free Font License (FFL), Version 2.0 — 17 Aug 2026.
+Cabinet-Grotesk-FFL.txt is copied verbatim from the archive's License/FFL.txt.
+Section 01 expressly permits self-hosting for the licensee's own websites
+and applications through CSS @font-face. Keep the font file unmodified.
