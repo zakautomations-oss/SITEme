@@ -9,8 +9,9 @@ export default class AppErrorBoundary extends React.Component {
 
   render() {
     if (!this.state.failed) return this.props.children;
+    const Container = this.props.inline ? "div" : "main";
     return (
-      <main className="min-h-[100dvh] px-6 py-32" style={{ background: "var(--surface)", color: "var(--text)" }} role="alert">
+      <Container className="min-h-[100dvh] px-6 py-32" style={{ background: "var(--surface)", color: "var(--text)" }} role="alert">
         <div className="max-w-xl mx-auto">
           <p className="eyebrow">Ackra AI</p>
           <h1 className="mt-6 font-serif text-4xl md:text-6xl">Let’s try that again.</h1>
@@ -20,7 +21,7 @@ export default class AppErrorBoundary extends React.Component {
             <a href="/" className="text-link">Back to home</a>
           </div>
         </div>
-      </main>
+      </Container>
     );
   }
 }

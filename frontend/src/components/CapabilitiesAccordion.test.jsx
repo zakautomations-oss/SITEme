@@ -67,11 +67,42 @@ describe("capabilities accordion", () => {
     expect(document.querySelectorAll("details")).toHaveLength(5);
     expect(document.querySelectorAll("details[open]")).toHaveLength(1);
     expect(document.querySelectorAll("summary[aria-expanded]")).toHaveLength(0);
+    expect(document.querySelector("[data-interacted]")).toBeNull();
     expect(document.body.textContent).toContain("Ask customers for honest reviews and bring service issues to the right person.");
     expect(document.body.textContent).toContain("Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.");
     document.querySelectorAll("summary").forEach((summary) => {
       expect(document.getElementById(summary.getAttribute("aria-controls"))).not.toBeNull();
     });
+  });
+
+  it("keeps only the latest disclosure accessible when switched before an entrance finishes", async () => {
+    render(<CapabilitiesAccordion />);
+    const user = userEvent.setup();
+    const accordion = screen.getByTestId("capabilities-accordion");
+    // Hydration must not fade out content that was already readable in HTML.
+    expect(accordion).not.toHaveAttribute("data-interacted");
+    const text = screen.getByRole("button", { name: "Text agents" });
+    const custom = screen.getByRole("button", { name: "Custom agents" });
+    const workflow = screen.getByRole("button", { name: "Workflow automation" });
+
+    await user.click(text);
+    await user.click(custom);
+    await user.click(workflow);
+    expect(workflow).toHaveFocus();
+    expect(screen.getAllByRole("region")).toHaveLength(1);
+    expect(screen.getByRole("region", { name: "Workflow automation" })).toBeVisible();
+    expect(accordion.querySelectorAll("details[open]")).toHaveLength(1);
+    for (const closed of accordion.querySelectorAll("details:not([open])")) {
+      expect(closed.querySelector('[role="region"]')).toHaveAttribute("hidden");
+      expect(closed.querySelector("summary")).toHaveAttribute("aria-expanded", "false");
+    }
+
+    // A late animation event from the outgoing panel cannot restore it or
+    // delay a subsequent collapse. Motion never owns the disclosure state.
+    fireEvent.animationEnd(document.getElementById(custom.getAttribute("aria-controls")));
+    await user.keyboard("{Enter}");
+    expect(screen.queryByRole("region")).not.toBeInTheDocument();
+    expect(workflow).toHaveFocus();
   });
 
   it("keeps identifiers independent if more than one accordion is mounted", () => {

@@ -15,7 +15,7 @@ export default function SolutionIncreaseConversion() {
       [RefreshCw,"Relevant re-engagement","Reconnect with interested contacts using the context of their enquiry and respecting opt-outs."],
     ].map(([Icon,title,text])=><Reveal key={title} className="usecase-item"><Icon size={26} strokeWidth={1.5} aria-hidden="true" /><h3>{title}</h3><p>{text}</p></Reveal>)}</div></div></section>
     <section className="section-space site-container outcome-section"><h2 className="section-title">Look beyond the reply count.</h2><p className="section-intro">Track response time, qualified conversations, appointments, and handoff quality. Agree on the measures that matter to your business before launch.</p><div className="outcome-questions"><p>Did the customer get an answer?</p><p>Was the next step clear?</p><p>Did the right person take over?</p></div><Link to="/services" className="text-link">How it works<ArrowRight size={17} aria-hidden="true" /></Link></section>
-    <ClosingSection title="Make the next enquiry count." text="Bring us a customer journey you’d like to improve. We’ll explore where an agent can help." image />
+    <ClosingSection title="Make the next enquiry count." text="Bring us a customer journey you’d like to improve. We’ll explore where an agent can help." />
     <div className="site-container back-link-wrap"><Link to="/" data-testid="solution-back-link" className="text-link"><ArrowLeft size={17} aria-hidden="true" />Back to home</Link></div>
   </div>;
 }

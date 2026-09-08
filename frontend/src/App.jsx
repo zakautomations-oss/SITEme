@@ -1,19 +1,21 @@
-import React, { Suspense, lazy, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import AppErrorBoundary from "./components/AppErrorBoundary";
 import { canonicalPath, getRouteMeta } from "./config/routes.js";
+import { routePages } from "./routePages";
+import { usePageNavigation } from "./components/usePageNavigation";
 import "./App.css";
 
-const Home = lazy(() => import("./pages/Home"));
-const Services = lazy(() => import("./pages/Services"));
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Admin = lazy(() => import("./pages/Admin"));
-const SolutionReduceWorkload = lazy(() => import("./pages/SolutionReduceWorkload"));
-const SolutionIncreaseConversion = lazy(() => import("./pages/SolutionIncreaseConversion"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+const Home = routePages["/"].Component;
+const Services = routePages["/services"].Component;
+const About = routePages["/about"].Component;
+const Contact = routePages["/contact"].Component;
+const Admin = routePages["/admin"].Component;
+const SolutionReduceWorkload = routePages["/solutions/reduce-workload"].Component;
+const SolutionIncreaseConversion = routePages["/solutions/increase-conversion"].Component;
+const NotFound = routePages["*"].Component;
 
 function LoadingPage({ admin = false }) {
   return <div className="min-h-[65vh] px-6 pt-24" style={{ background: "var(--surface)", color: "var(--muted)" }} role="status">{admin ? "Loading admin access…" : "Loading page…"}</div>;
@@ -71,35 +73,40 @@ export function RouteMeta() {
   return null;
 }
 
-function RouteFocus({ previousPath }) {
-  const { pathname, hash } = useLocation();
+function RouteFocus({ previousPath, onPageReady }) {
+  const { pathname, hash, key } = useLocation();
   useEffect(() => {
     const changed = previousPath.current !== pathname;
     previousPath.current = pathname;
     if (hash) {
       let id;
-      try { id = decodeURIComponent(hash.slice(1)); } catch { return; }
-      document.getElementById(id)?.scrollIntoView();
+      try { id = decodeURIComponent(hash.slice(1)); } catch { id = null; }
+      if (id) document.getElementById(id)?.scrollIntoView();
     } else if (changed) {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       document.getElementById("main")?.focus({ preventScroll: true });
     }
-  }, [pathname, hash]);
+    onPageReady(pathname);
+  }, [pathname, hash, key, onPageReady]);
   return null;
 }
 
 export default function App() {
   const { pathname } = useLocation();
-  // Keep navigation history outside the error boundary, which remounts per page.
+  // The shell persists; only the page error boundary resets between routes.
   const previousPath = useRef(pathname);
+  const { onPageReady, navigationPending, ...navigationEvents } = usePageNavigation();
   return (
-    <AppErrorBoundary key={pathname}>
-        <div className="app-shell" data-testid="app-shell">
+    <AppErrorBoundary>
+        <div className="app-shell" data-testid="app-shell" {...navigationEvents}>
           <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] bg-white text-black px-4 py-2">Skip to content</a>
           <RouteMeta />
           <Navigation />
-          <main id="main" tabIndex={-1} className="relative z-10 outline-none" style={{ scrollMarginTop: "6rem" }}>
+          {navigationPending && <div className="navigation-progress" role="status"><span className="sr-only">Loading page…</span></div>}
+          <main id="main" tabIndex={-1} aria-busy={navigationPending} className="relative z-10 outline-none" style={{ scrollMarginTop: "6rem" }}>
             <Suspense fallback={<LoadingPage />}>
+              <AppErrorBoundary key={pathname} inline>
+              <div className={pathname === "/admin" ? "route-content" : "route-content route-entrance"}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/services" element={<Services />} />
@@ -110,7 +117,9 @@ export default function App() {
                 <Route path="/solutions/increase-conversion" element={<SolutionIncreaseConversion />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <RouteFocus previousPath={previousPath} />
+              </div>
+              </AppErrorBoundary>
+              <RouteFocus previousPath={previousPath} onPageReady={onPageReady} />
             </Suspense>
           </main>
           <Footer />

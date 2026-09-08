@@ -115,8 +115,9 @@
 
 @media (min-width: 1024px) {
   .capabilities-accordion {
+    --capability-min-height: 520px;
     flex-direction: row;
-    min-height: 520px;
+    min-height: var(--capability-min-height);
   }
 
   .capabilities-accordion:not(:has(.capabilities-panel[open])) {
@@ -125,6 +126,7 @@
 
   .capabilities-panel {
     flex: 1 1 0;
+    overflow: hidden;
   }
 
   .capabilities-panel[open] {
@@ -151,7 +153,7 @@
   }
 
   .capabilities-accordion:has(.capabilities-panel[open]) .capabilities-panel:not([open]) .capabilities-trigger {
-    min-height: 520px;
+    min-height: var(--capability-min-height);
     justify-content: space-between;
   }
 
@@ -179,6 +181,19 @@
     max-height: 180px;
     margin-bottom: 26px;
   }
+
+  @supports (width: 1cqw) {
+    .capabilities-accordion {
+      container-type: inline-size;
+    }
+
+    /* Keep the final line lengths while the panel reveals them. Four borders
+       separate the five flex items, whose expanded weights total 7.75. */
+    .capabilities-panel[open] > .capabilities-trigger,
+    .capabilities-content {
+      width: calc((100cqw - 4px) * 3.75 / 7.75);
+    }
+  }
 }
 
 @media (min-width: 1024px) and (max-width: 1199px) {
@@ -202,15 +217,38 @@
   }
 }
 
+@keyframes capability-content-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Initial and server-rendered content stays visible. Only deliberate
+     disclosure changes get an entrance; outgoing content hides immediately. */
+  .capabilities-accordion[data-interacted] .capabilities-panel[open] > .capabilities-content {
+    animation: capability-content-enter 220ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .capabilities-trigger {
+    transition: color 180ms ease;
+  }
+}
+
 @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
   .capabilities-panel {
-    transition: flex-grow 440ms cubic-bezier(.22, 1, .36, 1);
+    transition: flex-grow 440ms cubic-bezier(.22, 1, .36, 1), background-color 280ms ease;
+  }
+
+  .capabilities-accordion[data-interacted] .capabilities-panel[open] > .capabilities-content {
+    animation-duration: 280ms;
+    animation-delay: 160ms;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .capabilities-panel,
   .capabilities-trigger,
+  .capabilities-content,
   .capabilities-image-wrap img {
     transition: none !important;
     animation: none !important;

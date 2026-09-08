@@ -41,9 +41,13 @@ export default function CapabilitiesAccordion({ className = "" }) {
   const summaries = useRef([]);
   const [active, setActive] = useState(0);
   const [hydrated, setHydrated] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   useEffect(() => { setHydrated(true); }, []);
 
-  const toggle = (index) => setActive((current) => current === index ? null : index);
+  const toggle = (index) => {
+    setHasInteracted(true);
+    setActive((current) => current === index ? null : index);
+  };
   const onKeyDown = (event, index) => {
     let next;
     if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % CAPABILITIES.length;
@@ -60,7 +64,7 @@ export default function CapabilitiesAccordion({ className = "" }) {
   };
 
   return (
-    <div className={`capabilities-accordion ${className}`} data-testid="capabilities-accordion">
+    <div className={`capabilities-accordion ${className}`} data-testid="capabilities-accordion" data-interacted={hasInteracted ? "true" : undefined}>
       {CAPABILITIES.map(({ label, title, text, image }, index) => {
         const expanded = active === index;
         const summaryId = `${id}-capability-${index}`;

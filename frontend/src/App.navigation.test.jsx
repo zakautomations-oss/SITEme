@@ -24,6 +24,7 @@ vi.mock("./pages/Services", () => ({
 let scrollCalls;
 let anchorCalls;
 let originalScrollIntoView;
+let originalStartViewTransition;
 function holdProcessPage() {
   let release;
   loading.process = new Promise((resolve) => { release = resolve; });
@@ -49,6 +50,7 @@ beforeEach(() => {
   }));
   vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
   originalScrollIntoView = Object.getOwnPropertyDescriptor(Element.prototype, "scrollIntoView");
+  originalStartViewTransition = Object.getOwnPropertyDescriptor(document, "startViewTransition");
   Object.defineProperty(Element.prototype, "scrollIntoView", {
     configurable: true,
     value: vi.fn(function () { anchorCalls.push(this); }),
@@ -58,6 +60,8 @@ afterEach(() => {
   vi.unstubAllGlobals();
   if (originalScrollIntoView) Object.defineProperty(Element.prototype, "scrollIntoView", originalScrollIntoView);
   else delete Element.prototype.scrollIntoView;
+  if (originalStartViewTransition) Object.defineProperty(document, "startViewTransition", originalStartViewTransition);
+  else delete document.startViewTransition;
 });
 
 describe("App route scroll and focus", () => {
@@ -75,15 +79,22 @@ describe("App route scroll and focus", () => {
     renderApp();
     await screen.findByRole("heading", { name: "Home fixture" });
     const originalMain = screen.getByRole("main");
+    const originalHeader = screen.getByTestId("site-nav");
     const release = holdProcessPage();
     await user.click(within(screen.getByRole("navigation", { name: "Footer navigation" })).getByRole("link", { name: "Process" }));
-    expect(await screen.findByText("Loading page…")).toBeVisible();
-    // The keyed boundary really remounted, reproducing the original regression.
-    expect(originalMain.isConnected).toBe(false);
+    // The outgoing page remains readable while the destination is suspended.
+    expect(screen.getByRole("heading", { name: "Home fixture" })).toBeVisible();
+    expect(screen.getByRole("status")).toHaveTextContent("Loading page…");
+    expect(originalMain).toHaveAttribute("aria-busy", "true");
+    expect(originalMain.isConnected).toBe(true);
     expect(window.scrollTo).not.toHaveBeenCalled();
     await release();
     expect(await screen.findByRole("heading", { name: "Process fixture" })).toBeVisible();
     await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
+    expect(screen.getByRole("main")).toBe(originalMain);
+    expect(originalMain).toHaveAttribute("aria-busy", "false");
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByTestId("site-nav")).toBe(originalHeader);
     expect(window.scrollTo).toHaveBeenCalledExactlyOnceWith({ top: 0, left: 0, behavior: "instant" });
     expect(scrollCalls).toEqual([{ options: { top: 0, left: 0, behavior: "instant" }, heading: "Process fixture" }]);
   });
@@ -94,7 +105,8 @@ describe("App route scroll and focus", () => {
     await screen.findByRole("heading", { name: "Home fixture" });
     const release = holdProcessPage();
     await user.click(screen.getByRole("link", { name: "Jump to the second process step" }));
-    expect(await screen.findByText("Loading page…")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Home fixture" })).toBeVisible();
+    expect(screen.getByRole("status")).toHaveTextContent("Loading page…");
     expect(anchorCalls).toHaveLength(0);
     expect(window.scrollTo).not.toHaveBeenCalled();
     await release();
@@ -102,5 +114,35 @@ describe("App route scroll and focus", () => {
     await waitFor(() => expect(anchorCalls).toEqual([document.getElementById("step-02")]));
     expect(anchorCalls[0].isConnected).toBe(true);
     expect(window.scrollTo).not.toHaveBeenCalled();
+  });
+
+  it("holds the native transition until the real suspended route commits, scrolls, and receives focus", async () => {
+    const user = userEvent.setup();
+    let updateDone;
+    const finished = new Promise(() => {});
+    const transitionComplete = vi.fn();
+    Object.defineProperty(document, "startViewTransition", {
+      configurable: true,
+      value: vi.fn((update) => {
+        updateDone = Promise.resolve().then(update).then(() => {
+          transitionComplete({ heading: document.querySelector("main h1")?.textContent, focused: document.activeElement.id });
+        });
+        return { ready: updateDone, finished, skipTransition: vi.fn() };
+      }),
+    });
+    renderApp();
+    await screen.findByRole("heading", { name: "Home fixture" });
+    const originalHeader = screen.getByTestId("site-nav");
+    const release = holdProcessPage();
+    await user.click(within(screen.getByRole("navigation", { name: "Footer navigation" })).getByRole("link", { name: "Process" }));
+    expect(screen.getByRole("heading", { name: "Home fixture" })).toBeVisible();
+    expect(screen.getByRole("main")).toHaveAttribute("aria-busy", "true");
+    expect(transitionComplete).not.toHaveBeenCalled();
+    await release();
+    await act(async () => { await updateDone; });
+    expect(transitionComplete).toHaveBeenCalledExactlyOnceWith({ heading: "Process fixture", focused: "main" });
+    expect(screen.getByTestId("site-nav")).toBe(originalHeader);
+    expect(scrollCalls).toEqual([{ options: { top: 0, left: 0, behavior: "instant" }, heading: "Process fixture" }]);
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });

@@ -8,7 +8,7 @@ const stages = [["step-01","Book a call"],["step-02","Clarity session"],["step-0
 
 export default function Services() {
   return <div data-testid="page-services">
-    <PageHero title="A clear plan. A working system." text="From your first conversation to live traffic, you’ll know what we’re building and how to evaluate it." image="workflow" imageAlt="An open notebook ready for a working plan">
+    <PageHero title={<>A clear plan.<br />A working system.</>} text="From your first conversation to live traffic, you’ll know what we’re building and how to evaluate it.">
       <a className="button" href="#step-01" data-testid="process-01-cta">{BOOKING_LABEL}<ArrowRight size={17} aria-hidden="true" /></a>
     </PageHero>
     <nav className="process-index site-container" aria-label="On this page">{stages.map(([id,label],i)=><a key={id} href={`#${id}`} data-testid={`process-index-0${i+1}`}>{label}<ArrowRight size={15} aria-hidden="true" /></a>)}</nav>
