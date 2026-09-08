@@ -1,5 +1,5 @@
 @font-face{font-family:Geist;font-style:normal;font-weight:400 700;font-display:swap;src:url("/fonts/geist-latin.woff2") format("woff2")}
-@font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:500 700;font-display:swap;src:url("/fonts/bricolage-latin.woff2") format("woff2")}
+@font-face{font-family:"Cabinet Grotesk";font-style:normal;font-weight:100 900;font-display:swap;src:url("/fonts/cabinet-grotesk-variable.woff2") format("woff2")}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,7 +37,7 @@ button{cursor:pointer}
 button:disabled{cursor:not-allowed}
 img{max-width:100%;display:block}
 h1,h2,h3,p,ul,ol,dl,dd{margin:0}
-h1,h2,h3{font-family:"Bricolage Grotesque",Geist,ui-sans-serif,sans-serif;font-weight:600;letter-spacing:-.045em}
+h1,h2,h3{font-family:"Cabinet Grotesk",Geist,ui-sans-serif,sans-serif;font-weight:500;letter-spacing:-.035em}
 h1,h2,h3{overflow-wrap:break-word}
 ul,ol{padding:0;list-style:none}
 ::selection{background:var(--accent);color:var(--accent-ink)}
@@ -158,7 +158,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px soli
 .input::placeholder{color:var(--muted);opacity:1}
 .input:focus{border-color:var(--accent)}
 .field{margin-bottom:22px}
-.serif,.font-serif{font-family:"Bricolage Grotesque",Geist,sans-serif}
+.serif,.font-serif{font-family:"Cabinet Grotesk",Geist,sans-serif}
 .mono{font-family:Geist,ui-sans-serif,sans-serif;font-variant-numeric:tabular-nums}
 .rule-top{border-top:1px solid var(--line)}
 .rule-bottom{border-bottom:1px solid var(--line)}

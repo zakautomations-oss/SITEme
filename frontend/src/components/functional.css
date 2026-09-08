@@ -11,7 +11,7 @@
 .header-inner { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand-lockup { display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--text); text-decoration: none; }
 .brand-lockup img { width: 30px; height: 30px; object-fit: contain; }
-.brand-lockup > span { font-family: "Bricolage Grotesque", sans-serif; font-size: 23px; font-weight: 600; letter-spacing: -.06em; }
+.brand-lockup > span { font-family: "Cabinet Grotesk", sans-serif; font-size: 23px; font-weight: 600; letter-spacing: -.06em; }
 .brand-period { color: var(--accent); }
 .desktop-navigation { display: none; align-items: center; gap: 24px; white-space: nowrap; }
 .nav-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 14px; color: var(--muted); background: transparent; border: 0; text-decoration: none; transition: color 160ms ease; }
@@ -58,17 +58,17 @@
 .calendar-target[hidden] { display: none; }
 .calendar-state { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px; gap: 20px; text-align: center; background: var(--surface); }
 .calendar-state p { max-width: 30ch; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
-.calendar-state h3 { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-size: 25px; line-height: 1.15; }
+.calendar-state h3 { margin: 0; font-family: "Cabinet Grotesk", sans-serif; font-size: 25px; line-height: 1.15; }
 .calendar-skeleton { display: grid; gap: 12px; width: min(240px, 90%); }
 .calendar-skeleton span { display: block; height: 12px; border-radius: 3px; background: var(--line); }
 .calendar-skeleton span:first-child { width: 60%; margin-bottom: 12px; height: 20px; }
 .calendar-retry { min-height: 44px; color: var(--text); font-size: 14px; background: none; border: 0; text-decoration: underline; text-underline-offset: 4px; }
 .contact-page { color: var(--text); background: var(--surface); padding-bottom: 96px; }
 .contact-heading { padding-top: 88px; padding-bottom: 56px; }
-.contact-heading h1 { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-size: clamp(42px, 5.4vw, 72px); font-weight: 500; letter-spacing: -.045em; line-height: 1.04; }
+.contact-heading h1 { margin: 0; font-family: "Cabinet Grotesk", sans-serif; font-size: clamp(42px, 5.4vw, 72px); font-weight: 500; letter-spacing: -.045em; line-height: 1.04; }
 .contact-heading > p { max-width: 560px; margin-top: 24px; font-size: 18px; line-height: 1.6; color: var(--muted); }
 .contact-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; padding-top: 40px; border-top: 1px solid var(--line); }
-.contact-details h2 { margin: 0 0 16px; font-family: "Bricolage Grotesque", sans-serif; font-size: 28px; line-height: 1.15; font-weight: 500; letter-spacing: -.025em; }
+.contact-details h2 { margin: 0 0 16px; font-family: "Cabinet Grotesk", sans-serif; font-size: 28px; line-height: 1.15; font-weight: 500; letter-spacing: -.025em; }
 .contact-details > p { max-width: 34ch; margin: 0; color: var(--muted); font-size: 16px; line-height: 1.65; }
 .contact-direct { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 28px 0 16px; font-size: 15px; }
 .contact-direct a { min-height: 30px; color: var(--text); overflow-wrap: anywhere; }
@@ -96,7 +96,7 @@
 .contact-data-note { max-width: 50ch; margin-top: 16px; }
 .contact-success { padding: 32px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-raised); outline-color: var(--accent); }
 .contact-success > svg { color: var(--accent); margin-bottom: 28px; }
-.contact-success h2 { margin: 0; font-family: "Bricolage Grotesque", sans-serif; font-size: 32px; line-height: 1.15; font-weight: 500; letter-spacing: -.03em; }
+.contact-success h2 { margin: 0; font-family: "Cabinet Grotesk", sans-serif; font-size: 32px; line-height: 1.15; font-weight: 500; letter-spacing: -.03em; }
 .contact-success p { margin: 18px 0 28px; max-width: 46ch; color: var(--muted); font-size: 16px; line-height: 1.6; }
 [data-theme="dark"] .contact-page { --control-border: #707588; }
 @media (min-width: 640px) {

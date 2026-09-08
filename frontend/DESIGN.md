@@ -1,14 +1,14 @@
 # Ackra visual system
 
-Ackra serves business owners who want useful, managed AI agents. The design keeps the existing logo, violet identity, navigation names, routes, and contact fields. It uses a calm editorial layout, direct language, and practical workflow explanations.
+Ackra builds custom AI systems for businesses, including connected workflows and customer-facing agents. The design keeps the existing logo, violet identity, navigation names, routes, and contact fields. It uses a calm editorial layout, direct language, and practical workflow explanations.
 
 ## Foundations
 
-- Geist for body text and controls; Bricolage Grotesque for headings. Both fonts are self-hosted variable WOFF2 files, with their licenses in `public/fonts`.
+- Geist for body text and controls; Cabinet Grotesk for headings. Both fonts are self-hosted variable WOFF2 files, with their licenses in `public/fonts`.
 - Semantic light and dark colors live in `src/index.css`. Components use surface, text, muted, accent, line, error, and success tokens. Control borders are independently calibrated for contrast in `functional.css`.
 - Corners are 4px. Content is capped at 1240px. Mobile side margins are 20px, falling to 16px at the smallest breakpoint.
 - Page content uses layer 10, the header and its menus layer 40, and the skip link layer 100. The fixed header is 72px high.
-- Motion is limited to short entrance and hover transitions. Reduced-motion preference disables them. Content remains visible before JavaScript loads.
+- Home uses GSAP word emphasis and a pinned process introduction on desktop viewports at least 1024px wide and 700px tall. Both word colors retain readable contrast in either theme. The motion bundle loads only when those dimensions and the no-reduced-motion preference match. All triggers and observers revert on route exit or media changes. The integration marquee has an explicit pause control and a static reduced-motion fallback. Content remains visible before JavaScript loads.
 
 ## Content and interactions
 
@@ -20,7 +20,7 @@ Forms need visible labels, keyboard focus, preserved drafts on error, and an ann
 
 ## Images and licenses
 
-The computational lattice, workflow tabletop, and studio images in `public/images` were generated for this redesign in September 2026. They are editorial illustrations, not photos of Ackra products, employees, clients, or offices. Each has 640px, 960px, and 1440px WebP variants. Keep descriptive alt text and responsive sizes when reusing them.
+The computational lattice, workflow tabletop, and studio images in `public/images` were generated for this redesign in September 2026. They are editorial illustrations, not photos of Ackra products, employees, clients, or offices. Each has 640px, 960px, and 1440px WebP variants; the computational lattice also has an 800px variant for smaller screens. Keep descriptive alt text and responsive sizes when reusing them.
 
 The primary image uses interconnected computational geometry to represent a broad AI systems company. Avoid telephone-led hero imagery: voice agents are one capability within Ackra's wider systems and automation offering.
 
@@ -29,3 +29,9 @@ HubSpot, Notion, Stripe, Zapier, and Google Sheets symbols were sourced from the
 ## Verification
 
 Run the component, API, production build, and HTTP checks documented in `README.md`. Browser-check key interactions at desktop and mobile widths, both themes, and a short landscape viewport. Lighthouse is a useful diagnostic; scores vary by device, network, and third-party booking content.
+
+## Homepage composition
+
+The editorial split uses a two-line headline, quiet computational artwork, and exactly two hero actions. Four horizontal native disclosure panels become stacked disclosures below 1024px. The outcome grid contains two full cells, with dense placement and a single-column mobile layout. The closing invitation uses one small editorial image within its heading. Section spacing varies from 72px on phones to 120px on desktop. No decorative badges, arbitrary metrics, invented customers, or stock testimonial content are used.
+
+All CSS is emitted in the initial stylesheet so prerendered pages do not shift when a lazy route hydrates. Native disclosures remain usable without JavaScript. Cabinet Grotesk is the original, unmodified Fontshare variable WOFF2 under FFL 2.0; its license and provenance are stored alongside the font.

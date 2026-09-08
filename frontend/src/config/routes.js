@@ -2,8 +2,8 @@ import { SITE_URL } from "./site.js";
 
 export const PUBLIC_ROUTES = {
   "/": {
-    title: "Ackra AI | AI Agents Built For Your Business",
-    description: "Custom AI agents for the work that slows you down. Ackra AI builds and manages voice, text, and workflow automation for your business.",
+    title: "Ackra AI | Custom AI Systems for Your Business",
+    description: "Custom AI systems that connect your tools, automate complex workflows, and support your team. Built and managed by Ackra.",
   },
   "/services": {
     title: "Our Process | Ackra AI",
@@ -11,7 +11,7 @@ export const PUBLIC_ROUTES = {
   },
   "/about": {
     title: "About | Ackra AI",
-    description: "Meet Ackra AI, a New York studio building and managing custom AI agents for voice, text, reviews, and everyday business workflows.",
+    description: "Meet Ackra AI, a New York studio building custom AI systems, connected workflows, and agents around the way your business works.",
   },
   "/contact": {
     title: "Contact | Ackra AI",

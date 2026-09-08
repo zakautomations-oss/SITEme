@@ -6,6 +6,8 @@ export default defineConfig(({ isSsrBuild }) => ({
   build: {
     outDir: "dist",
     sourcemap: false,
+    // Prerendered pages need their complete styles before hydration.
+    cssCodeSplit: false,
     copyPublicDir: !isSsrBuild,
   },
   server: {

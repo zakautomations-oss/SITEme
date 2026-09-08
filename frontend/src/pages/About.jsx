@@ -6,10 +6,10 @@ import { Reveal } from "../components/AnimatedText";
 
 export default function About() {
   return <div data-testid="page-about">
-    <PageHero eyebrow="About Ackra" title="Good systems. Real people." text="We build and manage AI agents around the way your business works, with people accountable for the result." image="studio" imageAlt="A quiet worktable seen through fluted glass"><BookingLink testId="about-cta" /></PageHero>
+    <PageHero title="Good systems. Real people." text="We build and manage AI systems around the way your business works, with people accountable for the result." image="studio" imageAlt="A quiet worktable seen through fluted glass"><BookingLink testId="about-cta" /></PageHero>
     <section className="section-space site-container about-story">
       <div><h2 className="section-title">The work doesn’t stop at launch.</h2><p className="section-intro">Ackra is a New York studio for businesses that want useful automation and a team to run it.</p></div>
-      <div className="prose"><p>A phone that needs answering. A customer waiting for a reply. An update that has to move between tools. Those everyday tasks are where we start.</p><p>We scope the work with you, build the agent, and stay involved as it handles real conversations and workflows. You get a system you can understand and a person you can reach.</p><Link to="/services" className="text-link">How it works <ArrowRight size={17} aria-hidden="true" /></Link></div>
+      <div className="prose"><p>We connect business tools, automate multi-step processes, and build agents that support customers and teams. The system starts with the way your business works.</p><p>We scope the work with you, build the system, and stay involved as it handles real conversations and workflows. You get a system you can understand and a person you can reach.</p><Link to="/services" className="text-link">How it works <ArrowRight size={17} aria-hidden="true" /></Link></div>
     </section>
     <section className="section-space principles-section site-container" aria-labelledby="principles-heading">
       <h2 className="section-title" id="principles-heading">Clear expectations. Shared ownership.</h2>
