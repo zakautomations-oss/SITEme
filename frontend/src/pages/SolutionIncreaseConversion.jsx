@@ -6,7 +6,7 @@ import { Reveal } from "../components/AnimatedText";
 
 export default function SolutionIncreaseConversion() {
   return <div data-testid="page-solution-conversion">
-    <PageHero eyebrow="Increase conversion" title="Be there when it matters." text="Answer enquiries, qualify interest, and make the next step easier for customers, even when your team is busy." image="hero" imageAlt="A black telephone handset ready for the next conversation"><BookingLink testId="solution-conversion-cta-top" /></PageHero>
+    <PageHero eyebrow="Increase conversion" title="Be there when it matters." text="Answer enquiries, qualify interest, and make the next step easier for customers, even when your team is busy." image="systems" imageAlt="Interwoven metallic strands forming an abstract computational structure"><BookingLink testId="solution-conversion-cta-top" /></PageHero>
     <section className="section-space site-container solution-intro"><h2 className="section-title">Keep a good conversation going.</h2><div className="prose"><p>A customer should not have to wait for a useful answer. We build agents that respond to enquiries, ask the right questions, and help people take the next step.</p><p>The goal is a better experience: clear information, relevant follow-ups, and a smooth handoff to your team.</p></div></section>
     <section className="section-space solution-capabilities"><div className="site-container"><h2 className="section-title">From first enquiry to next step.</h2><div className="usecase-grid">{[
       [Phone,"Voice pickup","Answer inbound calls, understand the enquiry, and help customers find an appointment."],

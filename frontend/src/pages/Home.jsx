@@ -5,9 +5,9 @@ import { Reveal } from "../components/AnimatedText";
 import { BookingLink, EditorialImage, ClosingSection } from "../components/PageElements";
 
 const agents = [
-  { icon: Phone, title: "Answer every opportunity.", text: "Voice agents that answer calls, qualify enquiries, and help customers book a time.", label: "Voice agents" },
+  { icon: Workflow, title: "Let your tools work together.", text: "Connect your CRM, calendar, inbox, and internal tools into workflows that run together.", label: "Workflow automation" },
   { icon: MessageSquare, title: "Keep the conversation moving.", text: "Helpful replies across text and web chat, with a clear handoff when someone needs your team.", label: "Text agents" },
-  { icon: Workflow, title: "Let your tools work together.", text: "Connect the details across your CRM, calendar, inbox, and internal workflows.", label: "Workflow automation" },
+  { icon: Phone, title: "Answer every opportunity.", text: "Voice agents that answer calls, qualify enquiries, and help customers book a time.", label: "Voice agents" },
   { icon: Star, title: "Make feedback part of the process.", text: "Ask customers for honest reviews and bring service issues to the right person.", label: "Review follow-ups" },
 ];
 const tools = [["hubspot", "HubSpot"], ["notion", "Notion"], ["stripe", "Stripe"], ["zapier", "Zapier"], ["googlesheets", "Google Sheets"]];
@@ -19,20 +19,20 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow">Built for the way you work</p>
           <h1>AI agents.<br /><span>Less busywork.</span></h1>
-          <p className="hero-description">Custom AI that answers customers, connects your tools, and gives your team time back. Built and managed by Ackra.</p>
+          <p className="hero-description">Custom AI systems that connect your tools, automate complex workflows, and support your team. Built and managed by Ackra.</p>
           <div className="hero-actions">
             <BookingLink testId="hero-cta-book" />
             <Link to="/services" data-testid="hero-cta-services" className="button button-secondary">How it works <ArrowRight aria-hidden="true" size={17} /></Link>
           </div>
         </div>
-        <EditorialImage name="hero" alt="Black telephone handset on a brushed metal desk" priority className="hero-image" />
+        <EditorialImage name="systems" alt="Interwoven metallic strands forming an abstract computational structure" priority className="hero-image" />
       </section>
       <section className="integration-section site-container" aria-label="Integrations">
         <p>Built around your existing tools.</p>
         <ul className="integration-logos">{tools.map(([slug, name]) => <li key={slug}><img src={`/brands/${slug}.svg`} alt={name} title={name} width="34" height="34" loading="lazy" /></li>)}</ul>
       </section>
       <section className="section-space site-container" aria-labelledby="home-solutions-heading">
-        <Reveal><h2 id="home-solutions-heading" className="section-title">Start with what’s slowing you down.</h2><p className="section-intro">A missed call. An overflowing inbox. The same update in three different tools. There’s a better way to handle it.</p></Reveal>
+        <Reveal><h2 id="home-solutions-heading" className="section-title">Start with what’s slowing you down.</h2><p className="section-intro">Disconnected tools. Repetitive admin. An overflowing inbox. Build a better way for your systems and your team to work together.</p></Reveal>
         <div className="solution-pair">
           <Link to="/solutions/reduce-workload" className="solution-panel">
             <div><span className="panel-label">For your team</span><h3>More time for<br />the work that matters.</h3><p>Take repetitive admin off your plate and keep the details moving.</p></div>

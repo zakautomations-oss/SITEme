@@ -20,7 +20,9 @@ Forms need visible labels, keyboard focus, preserved drafts on error, and an ann
 
 ## Images and licenses
 
-The handset, workflow tabletop, and studio images in `public/images` were generated for this redesign in September 2026. They are editorial illustrations of working environments, not photos of Ackra employees, clients, or offices. Each has 640px, 960px, and 1440px WebP variants. Keep descriptive alt text and responsive sizes when reusing them.
+The computational lattice, workflow tabletop, and studio images in `public/images` were generated for this redesign in September 2026. They are editorial illustrations, not photos of Ackra products, employees, clients, or offices. Each has 640px, 960px, and 1440px WebP variants. Keep descriptive alt text and responsive sizes when reusing them.
+
+The primary image uses interconnected computational geometry to represent a broad AI systems company. Avoid telephone-led hero imagery: voice agents are one capability within Ackra's wider systems and automation offering.
 
 HubSpot, Notion, Stripe, Zapier, and Google Sheets symbols were sourced from the official Simple Icons CDN (`cdn.simpleicons.org`) and remain their owners’ trademarks. Existing Ackra logo assets are preserved.
 

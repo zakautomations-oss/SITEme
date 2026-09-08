@@ -87,7 +87,7 @@ test("preview negotiates text compression and serves WebP with its image MIME ty
   }
   const plain = await fetch(origin + "/", { headers: { "Accept-Encoding": "br;q=0, gzip;q=0" } });
   assert.equal(plain.headers.get("content-encoding"), null);
-  const image = await fetch(origin + "/images/hero-640.webp");
+  const image = await fetch(origin + "/images/systems-640.webp");
   assert.equal(image.headers.get("content-type"), "image/webp");
 });
 
