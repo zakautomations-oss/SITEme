@@ -26,9 +26,9 @@ The homepage's interactive A follows the two open legs in `public/ackra-logo.svg
 
 ## Images and licenses
 
-The computational lattice, workflow tabletop, and studio images in `public/images` were generated for this redesign in September 2026. They are editorial illustrations, not photos of Ackra products, employees, clients, or offices. Each has 640px, 960px, and 1440px WebP variants; the computational lattice also has an 800px variant for smaller screens. Keep descriptive alt text and responsive sizes.
+The quiet lake, computational lattice, workflow tabletop, and studio images in `public/images` were generated for this redesign in September 2026. They are editorial illustrations, not photos of Ackra products, employees, clients, or offices. Each has 640px, 960px, and 1440px WebP variants; the computational lattice also has an 800px variant for smaller screens. Keep descriptive alt text and responsive sizes.
 
-Each editorial image has one placement across the site: the workflow tabletop in the homepage capability panel, the studio image in the homepage closing invitation, and the computational lattice in the conversion solution hero. Do not repeat these images on other pages. About, Process, and Reduce workload use typography-led openings; secondary invitations are text-led.
+Each editorial image has one placement across the site: the workflow tabletop in the homepage capability panel, the studio image in the homepage closing invitation, the computational lattice in the conversion solution hero, and the quiet lake in the Reduce workload hero. Do not repeat these images on other pages. About and Process use typography-led openings; secondary invitations are text-led.
 
 The branded A is the primary homepage artwork; the computational image remains on the conversion solution page. Avoid telephone-led hero imagery: voice agents are one capability within Ackra's wider systems and automation offering. AI Elements was evaluated for the interactive mark, but its Persona component exposes fixed Rive variants rather than custom logo geometry. The homepage therefore uses a small custom component instead of adding that runtime.
 
