@@ -20,7 +20,7 @@ export default function WebsiteAppDesign() {
   return <div className="design-page" data-testid="page-website-app-design">
     <section className="design-hero site-container" aria-labelledby="design-heading">
       <div className="design-section-label"><span className="design-label-dot" />Website & app development<span>Designed. Developed. Delivered.</span></div>
-      <h1 id="design-heading">Designed with purpose.<br /><span>Built from end to end.</span></h1>
+      <h1 id="design-heading">Designed with purpose.<br /><span>Built end to end.</span></h1>
       <div className="design-hero-bottom"><p>We take your website or app from the first idea to a working product. Strategy, design, development, integrations, testing, and launch — handled by one team, with a clear handover and ongoing support agreed around your needs.</p><a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="button" data-testid="design-hero-cta">Discuss your project <ArrowUpRight size={17} aria-hidden="true" /></a></div>
       <DesignShowcase />
     </section>
