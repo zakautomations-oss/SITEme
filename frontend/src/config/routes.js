@@ -6,8 +6,8 @@ export const PUBLIC_ROUTES = {
     description: "Custom AI systems that connect your tools, automate complex workflows, and support your team. Built and managed by Ackra.",
   },
   "/website-app-design": {
-    title: "Website & App Design | Ackra AI",
-    description: "Distinctive websites and intuitive apps, designed and built around your business. Ackra brings strategy, design, and engineering together from first idea to launch.",
+    title: "Website & App Development | Design & Build by Ackra AI",
+    description: "Websites and apps, designed and built end to end. Ackra handles strategy, design, development, integrations, testing, and launch with one team.",
   },
   "/services": {
     title: "Our Process | Ackra AI",

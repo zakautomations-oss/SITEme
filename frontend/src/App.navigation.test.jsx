@@ -88,7 +88,7 @@ describe("App route scroll and focus", () => {
     await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
     expect(screen.getByTestId("site-nav")).toBe(originalHeader);
     expect(screen.getByTestId("nav-link-design")).toHaveAttribute("aria-current", "page");
-    expect(document.title).toBe("Website & App Design | Ackra AI");
+    expect(document.title).toBe("Website & App Development | Design & Build by Ackra AI");
     expect(document.querySelector('link[rel="canonical"]').href).toBe("https://ackra.ai/website-app-design");
     expect(screen.getByTestId("footer-link-design")).toHaveAttribute("href", "/website-app-design");
   });

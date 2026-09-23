@@ -28,7 +28,7 @@ export default function Footer() {
           <h2>Explore</h2>
           <div>
             <Link to="/" data-testid="footer-link-home">Home</Link>
-            <Link to="/website-app-design" data-testid="footer-link-design">Website &amp; app design</Link>
+            <Link to="/website-app-design" data-testid="footer-link-design">Website &amp; app development</Link>
             <Link to="/services" data-testid="footer-link-services">Process</Link>
             <Link to="/about" data-testid="footer-link-about">About</Link>
             <Link to="/contact" data-testid="footer-link-contact">Contact</Link>

@@ -6,8 +6,8 @@ import { BOOKING_URL } from "../config/site";
 import "./design.css";
 
 const capabilities = [
-  { number: "01", title: "Websites with a point of view.", text: "A clear story, a distinctive identity, and an effortless path to action. We bring brand and business together in a site that feels entirely yours.", items: ["Brand & creative direction", "Content structure & user journeys", "Responsive design & development", "CMS, performance & technical SEO"] },
-  { number: "02", title: "Apps people want to use.", text: "Turn a complex idea into a product that feels natural. We work through the important journeys, then design the details that make everyday use a pleasure.", items: ["Product strategy & experience design", "Interactive prototypes & user flows", "Web & mobile app development", "Design systems & connected services"] },
+  { number: "01", title: "Websites with a point of view.", text: "A clear story, a distinctive identity, and an effortless path to action. We design, develop, and launch your site, with the content tools and integrations your business needs.", items: ["Brand & creative direction", "Content structure & user journeys", "Responsive design & development", "CMS, performance & technical SEO"] },
+  { number: "02", title: "Apps people want to use.", text: "Turn a complex idea into a working product. We map the journeys, design the interface, build the application, and connect the services behind it — then test and launch it with you.", items: ["Product strategy & experience design", "Interactive prototypes & user flows", "Web & mobile app development", "Design systems & connected services"] },
 ];
 const stages = [
   ["Find the right direction.", "We get close to your business, your audience, and the problem to solve. Together, we define the scope and what a successful launch needs to achieve.", "Brief, priorities & project scope"],
@@ -19,9 +19,9 @@ const stages = [
 export default function WebsiteAppDesign() {
   return <div className="design-page" data-testid="page-website-app-design">
     <section className="design-hero site-container" aria-labelledby="design-heading">
-      <div className="design-section-label"><span className="design-label-dot" />Website & app design<span>Designed. Developed. Delivered.</span></div>
-      <h1 id="design-heading">Make an impression.<br /><span>Build a better experience.</span></h1>
-      <div className="design-hero-bottom"><p>For businesses ready to invest in their next chapter. We turn ambitious ideas into distinctive websites and thoughtful apps, with one team taking care of strategy, design, and execution.</p><a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="button" data-testid="design-hero-cta">Discuss your project <ArrowUpRight size={17} aria-hidden="true" /></a></div>
+      <div className="design-section-label"><span className="design-label-dot" />Website & app development<span>Designed. Developed. Delivered.</span></div>
+      <h1 id="design-heading">Designed with purpose.<br /><span>Built from end to end.</span></h1>
+      <div className="design-hero-bottom"><p>We take your website or app from the first idea to a working product. Strategy, design, development, integrations, testing, and launch — handled by one team, with a clear handover and ongoing support agreed around your needs.</p><a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="button" data-testid="design-hero-cta">Discuss your project <ArrowUpRight size={17} aria-hidden="true" /></a></div>
       <DesignShowcase />
     </section>
     <section className="design-offering site-container" aria-labelledby="design-offering-heading">
