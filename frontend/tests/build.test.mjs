@@ -17,7 +17,7 @@ before(async () => {
 });
 after(() => server?.listening ? new Promise((done) => server.close(done)) : undefined);
 
-const paths = ["/", "/services", "/about", "/contact", "/solutions/reduce-workload", "/solutions/increase-conversion"];
+const paths = ["/", "/website-app-design", "/services", "/about", "/contact", "/solutions/reduce-workload", "/solutions/increase-conversion"];
 for (const path of paths) {
   test(`initial HTML contains the complete public page and route metadata: ${path}`, async () => {
     const response = await fetch(origin + path);
@@ -46,10 +46,17 @@ test("deep links preserve the three current process stages", async () => {
 });
 
 test("noncanonical paths redirect without losing query parameters", async () => {
-  for (const path of ["/services/", "/Services", "/SERVICES/", "/services.html", "/Solutions/Reduce-Workload/"]) {
+  for (const [path, canonical] of [
+    ["/services/", "/services"],
+    ["/Services", "/services"],
+    ["/SERVICES/", "/services"],
+    ["/services.html", "/services"],
+    ["/Solutions/Reduce-Workload/", "/solutions/reduce-workload"],
+    ["/Website-App-Design/", "/website-app-design"],
+    ["/website-app-design.html", "/website-app-design"],
+  ]) {
     const response = await fetch(origin + path + "?source=mail", { redirect: "manual" });
     assert.equal(response.status, 308, path);
-    const canonical = path.toLowerCase().includes("solutions") ? "/solutions/reduce-workload" : "/services";
     assert.equal(response.headers.get("location"), canonical + "?source=mail");
   }
 });

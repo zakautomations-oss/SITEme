@@ -10,6 +10,7 @@ const SOLUTIONS = [
 ];
 const LINKS = [
   { to: "/", label: "Home" },
+  { to: "/website-app-design", label: "Design & build", id: "design" },
   { to: "/services", label: "Process" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
@@ -142,7 +143,7 @@ export default function Navigation() {
           <div className="site-container mobile-navigation-inner">
             <div className="mobile-primary-links">
               {LINKS.map((link) => (
-                <NavLink key={link.to} to={link.to} end={link.to === "/"} data-testid={`nav-mobile-link-${link.label.toLowerCase()}`} onClick={() => setOpen(false)}>
+                <NavLink key={link.to} to={link.to} end={link.to === "/"} data-testid={`nav-mobile-link-${link.id || link.label.toLowerCase()}`} onClick={() => setOpen(false)}>
                   {link.label}
                 </NavLink>
               ))}
@@ -166,5 +167,5 @@ export default function Navigation() {
 }
 
 function NavItem({ link }) {
-  return <NavLink to={link.to} end={link.to === "/"} data-testid={`nav-link-${link.label.toLowerCase()}`} className={({ isActive }) => `nav-link ${isActive ? "is-active" : ""}`}>{link.label}</NavLink>;
+  return <NavLink to={link.to} end={link.to === "/"} data-testid={`nav-link-${link.id || link.label.toLowerCase()}`} className={({ isActive }) => `nav-link ${isActive ? "is-active" : ""}`}>{link.label}</NavLink>;
 }

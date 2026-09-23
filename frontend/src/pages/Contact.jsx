@@ -11,7 +11,7 @@ const labels = { name: "Name", email: "Email", phone: "Phone", company: "Company
 export function validateContact(form) {
   const errors = {};
   for (const key of ["name", "email", "message"]) {
-    if (!form[key].trim()) errors[key] = `Enter your ${key === "message" ? "workflow or message" : key}.`;
+    if (!form[key].trim()) errors[key] = `Enter your ${key === "message" ? "project or message" : key}.`;
   }
   for (const key of Object.keys(labels)) {
     if (form[key].trim().length > limits[key]) errors[key] = `${labels[key]} must be ${limits[key]} characters or fewer.`;
@@ -86,13 +86,13 @@ export default function Contact() {
   return (
     <div data-testid="page-contact" className="contact-page">
       <section className="site-container contact-heading">
-        <h1>What would you<br />like to hand off?</h1>
-        <p>Tell us about a workflow that takes too much time. We will discuss what an agent could do.</p>
+        <h1>What would you<br />like to build?</h1>
+        <p>A new website, a better app, or a system that makes work easier. Tell us what you have in mind.</p>
       </section>
       <section className="site-container contact-layout" aria-label="Contact Ackra">
         <aside className="contact-details">
           <h2>Start with a note.</h2>
-          <p>Share the tools you use, the work involved, and what you would like to change.</p>
+          <p>Share your goals, who you are building for, and what you would like to change.</p>
           <div className="contact-direct">
             <a href={`mailto:${CONTACT_EMAIL}`} data-testid="contact-email">{CONTACT_EMAIL}</a>
             <a href={`tel:${CONTACT_PHONE.replace(/[^+\d]/g, "")}`} data-testid="contact-phone">{CONTACT_PHONE}</a>
@@ -117,7 +117,7 @@ export default function Contact() {
             <>
               <p className="contact-required-note">Fields marked * are required.</p>
               <fieldset disabled={status === "loading"}>
-                <legend className="sr-only">Your contact details and workflow</legend>
+                <legend className="sr-only">Your contact details and project</legend>
                 <div className="contact-fields">
                   <Field id="name" label="Name" value={form.name} onChange={update("name")} autoComplete="name" placeholder="Your name" required error={errors.name} />
                   <Field id="email" label="Email" type="email" value={form.email} onChange={update("email")} autoComplete="email" placeholder="you@yourcompany.com" required error={errors.email} />
@@ -125,9 +125,9 @@ export default function Contact() {
                   <Field id="company" label="Company" value={form.company} onChange={update("company")} autoComplete="organization" placeholder="Your company" error={errors.company} />
                 </div>
                 <div className="field contact-message-field">
-                  <label htmlFor="message" className="field-label">Workflow that costs you the most time <span aria-hidden="true">*</span></label>
+                  <label htmlFor="message" className="field-label">Tell us about your project <span aria-hidden="true">*</span></label>
                   <textarea id="message" name="message" data-testid="contact-input-message" value={form.message} onChange={update("message")}
-                    rows={6} maxLength={limits.message} placeholder="Which tools are involved? How often does this work come up?" className="input"
+                    rows={6} maxLength={limits.message} placeholder="What are you building or improving? Tell us about your audience, goals, and any existing website, app, or tools." className="input"
                     required aria-invalid={Boolean(errors.message)} aria-describedby={`message-hint${errors.message ? " message-error" : ""}`} />
                   <p id="message-hint" className="field-hint">Up to 4,000 characters.</p>
                   {errors.message && <p id="message-error" className="field-error">{errors.message}</p>}

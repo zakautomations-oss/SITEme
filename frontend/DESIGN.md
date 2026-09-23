@@ -14,7 +14,7 @@ Ackra builds custom AI systems for businesses, including connected workflows and
 
 Keep claims specific and verifiable. Do not add fabricated clients, outcomes, testimonials, team biographies, or business statistics. The integration logos describe the tools that workflows can connect with; they are not customer endorsements.
 
-Use “Book a call” for booking actions. `src/config/site.js` owns the booking URL and 45-minute duration as well as public contact details. Public route names and metadata live in `src/config/routes.js`.
+Use “Book a call” for global booking actions. The website and app development page uses “Discuss your project” for its contextual booking invitation. `src/config/site.js` owns the booking URL and 45-minute duration as well as public contact details. Public route names and metadata live in `src/config/routes.js`.
 
 Forms need visible labels, keyboard focus, preserved drafts on error, and an announced success or error state. Navigation must remain usable in narrow and short viewports. The theme preference cycles system, light, and dark and is persisted locally.
 
@@ -45,3 +45,15 @@ The editorial split uses a two-line headline, the dimensional Ackra A, and exact
 Capability switching expands the desktop panel over 440ms and brings in its content after 160ms. Content keeps its final line width during expansion, avoiding compressed text reflow. The desktop panel has a shared 520px minimum height while open, and still grows for content. Mobile reveals use a short 220ms entrance. Only deliberate changes animate; initial disclosure content remains visible, closed content remains inaccessible, and reduced-motion changes are immediate.
 
 All CSS is emitted in the initial stylesheet so prerendered pages do not shift when a lazy route hydrates. Native disclosures remain usable without JavaScript. Cabinet Grotesk is the original, unmodified Fontshare variable WOFF2 under FFL 2.0; its license and provenance are stored alongside the font.
+
+## Website and app development
+
+The homepage introduces the development offering after the five AI capabilities and before the outcome panels. A standalone “Design & build” navigation link leads to `/website-app-design`, which explains websites, apps, and execution from strategy through launch. Service labels use “Website & app development” and the introductory copy explicitly covers strategy, design, development, integrations, testing, and launch. The existing URL stays stable. Contact welcomes these enquiries without changing its fields or submission contract. Engagement pricing remains private.
+
+The Alder / Rowe study is an original, illustrative website and client-portal concept for a fictional architecture practice. It is explicitly labeled as a concept, never presented as client work or a shipped application. Flat, high-resolution artwork replaces the earlier miniature HTML screens and floating device mockups. Desktop views show the complete website and a three-screen review flow; dedicated portrait artwork keeps both disciplines readable on mobile. Responsive WebP assets are local and use descriptive alt text. Full-study links open the complete artwork.
+
+The offering uses a restrained hierarchy: direct end-to-end headline, one study, concrete website/application scope, four delivery stages, and a project invitation. No ornamental counters, static link arrows, decorative grids, or repeated slogan sections. Design dials: variance 4, motion 2, density 4. The surrounding interface preserves Ackra typography, light/dark tokens, 4px geometry, routes, and existing AI service content. The concept's own visual identity uses neutral surfaces and a small cobalt functional accent.
+
+Website and App tabs support pointer input, arrow keys, Home and End, with unique IDs and linked panels. The artwork is illustrative and its pictured controls are not interactive product functionality. The actual tabs and full-study links are functional. Reduced motion disables control transitions.
+
+The `design-website-*` and `design-app-*` assets were generated with the built-in image-generation tool in September 2026. They depict a fictional architecture website and client approval app, not a real client commission. Desktop images have 800px and 1536px variants; portrait images have a 600px variant. The images are shared between the homepage offering and its dedicated page. Existing editorial imagery retains its original placements.

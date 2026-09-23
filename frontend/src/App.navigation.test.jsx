@@ -20,6 +20,11 @@ vi.mock("./pages/Services", () => ({
     return <><h1>Process fixture</h1><section id="step-02"><h2>Second process step</h2></section></>;
   },
 }));
+vi.mock("./pages/WebsiteAppDesign", () => ({
+  default: function DesignFixture() {
+    return <h1>Design fixture</h1>;
+  },
+}));
 
 let scrollCalls;
 let anchorCalls;
@@ -72,6 +77,20 @@ describe("App route scroll and focus", () => {
     expect(window.scrollTo).not.toHaveBeenCalled();
     expect(screen.getByRole("main")).not.toHaveFocus();
     expect(anchorCalls).toHaveLength(0);
+  });
+
+  it("opens the design route from the header and updates metadata and focus", async () => {
+    renderApp();
+    await screen.findByRole("heading", { name: "Home fixture" });
+    const originalHeader = screen.getByTestId("site-nav");
+    await userEvent.click(screen.getByTestId("nav-link-design"));
+    expect(await screen.findByRole("heading", { name: "Design fixture" })).toBeVisible();
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
+    expect(screen.getByTestId("site-nav")).toBe(originalHeader);
+    expect(screen.getByTestId("nav-link-design")).toHaveAttribute("aria-current", "page");
+    expect(document.title).toBe("Website & App Development | Design & Build by Ackra AI");
+    expect(document.querySelector('link[rel="canonical"]').href).toBe("https://ackra.ai/website-app-design");
+    expect(screen.getByTestId("footer-link-design")).toHaveAttribute("href", "/website-app-design");
   });
 
   it("scrolls footer navigation to the top and focuses the new main after the destination is ready", async () => {
