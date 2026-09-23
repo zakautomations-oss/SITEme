@@ -20,7 +20,7 @@ export default function WebsiteAppDesign() {
     <section className="design-hero site-container" aria-labelledby="design-heading">
       <p className="design-section-label">Website & app development</p>
       <h1 id="design-heading">Websites and apps.<br />Built end to end.</h1>
-      <p className="design-intro-copy">Strategy, design, development and launch. One team responsible for the complete product.</p>
+      <p className="design-intro-copy">Strategy, design, development and launch. Built for revenue, looks, and something never seen before.</p>
       <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="button" data-testid="design-hero-cta">Discuss your project <ArrowUpRight size={17} aria-hidden="true" /></a>
       <DesignShowcase />
     </section>
@@ -30,7 +30,7 @@ export default function WebsiteAppDesign() {
     </section>
     <section className="design-execution" aria-labelledby="design-execution-heading"><div className="site-container">
       <h2 id="design-execution-heading">From brief to launch</h2>
-      <p className="design-execution-copy">Clear decisions at each stage. A working product at the end.</p>
+      <p className="design-execution-copy">One team responsible for the complete product. Clear decisions at each stage. A working product at the end.</p>
       <ol className="design-stages">{stages.map(([title, text, outcome]) => <li key={title}><h3>{title}</h3><p>{text}</p><span className="design-stage-outcome">{outcome}</span></li>)}</ol>
     </div></section>
     <section className="design-closing site-container" aria-labelledby="design-closing-heading">
