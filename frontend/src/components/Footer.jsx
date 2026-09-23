@@ -13,7 +13,7 @@ export default function Footer() {
             <img src="/ackra-logo.svg" alt="" width="30" height="30" />
             <span>Ackra<span className="brand-period">.</span></span>
           </Link>
-          <p>Custom AI systems.<br />Built around your business.</p>
+          <p>AI systems, websites, and apps.<br />Built around your business.</p>
           <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" data-testid="footer-book" className="footer-book-link">
             {BOOKING_LABEL}<ArrowUpRight size={17} strokeWidth={1.6} aria-hidden="true" />
           </a>
@@ -28,6 +28,7 @@ export default function Footer() {
           <h2>Explore</h2>
           <div>
             <Link to="/" data-testid="footer-link-home">Home</Link>
+            <Link to="/website-app-design" data-testid="footer-link-design">Website &amp; app design</Link>
             <Link to="/services" data-testid="footer-link-services">Process</Link>
             <Link to="/about" data-testid="footer-link-about">About</Link>
             <Link to="/contact" data-testid="footer-link-contact">Contact</Link>

@@ -10,6 +10,7 @@ const SOLUTIONS = [
 ];
 const LINKS = [
   { to: "/", label: "Home" },
+  { to: "/website-app-design", label: "Design" },
   { to: "/services", label: "Process" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },

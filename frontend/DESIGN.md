@@ -14,7 +14,7 @@ Ackra builds custom AI systems for businesses, including connected workflows and
 
 Keep claims specific and verifiable. Do not add fabricated clients, outcomes, testimonials, team biographies, or business statistics. The integration logos describe the tools that workflows can connect with; they are not customer endorsements.
 
-Use “Book a call” for booking actions. `src/config/site.js` owns the booking URL and 45-minute duration as well as public contact details. Public route names and metadata live in `src/config/routes.js`.
+Use “Book a call” for global booking actions. The Website & app design page uses “Discuss your project” for its contextual booking invitation. `src/config/site.js` owns the booking URL and 45-minute duration as well as public contact details. Public route names and metadata live in `src/config/routes.js`.
 
 Forms need visible labels, keyboard focus, preserved drafts on error, and an announced success or error state. Navigation must remain usable in narrow and short viewports. The theme preference cycles system, light, and dark and is persisted locally.
 
@@ -45,3 +45,11 @@ The editorial split uses a two-line headline, the dimensional Ackra A, and exact
 Capability switching expands the desktop panel over 440ms and brings in its content after 160ms. Content keeps its final line width during expansion, avoiding compressed text reflow. The desktop panel has a shared 520px minimum height while open, and still grows for content. Mobile reveals use a short 220ms entrance. Only deliberate changes animate; initial disclosure content remains visible, closed content remains inaccessible, and reduced-motion changes are immediate.
 
 All CSS is emitted in the initial stylesheet so prerendered pages do not shift when a lazy route hydrates. Native disclosures remain usable without JavaScript. Cabinet Grotesk is the original, unmodified Fontshare variable WOFF2 under FFL 2.0; its license and provenance are stored alongside the font.
+
+## Website and app design
+
+The homepage introduces the design offering after the five AI capabilities and before the outcome panels. A standalone Design navigation link leads to `/website-app-design`, which explains websites, apps, and execution from strategy through launch. Contact welcomes these enquiries without changing its fields or submission contract. Engagement pricing remains private.
+
+The Still interface study demonstrates the offering through original HTML/CSS website and mobile compositions. Still is a fictional retreat concept, explicitly labeled as a concept exploration and not client work. Its serif typography, sage details, and paper surfaces belong to the concept; the surrounding Ackra interface retains its existing fonts, tokens, and geometry. Website and App tabs support pointer input, arrow keys, Home, and End, with unique IDs, linked panels, and reduced-motion support. Illustrative controls inside the study are decorative, not interactive product functionality.
+
+The dedicated `still-retreat-640.webp` and `still-retreat-960.webp` photography was generated for this study in September 2026. It depicts a fictional timber-and-glass lakeside cabin, not a real client property. It is used only inside the Still study, which is shared between the homepage introduction and the design page. The existing editorial photos retain their original placements.
