@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { render } from "../.prerender/entry-server.js";
+import { render, renderAppStudy } from "../.prerender/entry-server.js";
 import { PAGE_PATHS, PUBLIC_ROUTES, getRouteMeta } from "../src/config/routes.js";
 import { SITE_URL, SITE_NAME, CONTACT_EMAIL, CONTACT_PHONE_HREF } from "../src/config/site.js";
 
@@ -56,5 +56,24 @@ for (const pathname of [...PAGE_PATHS, "/404"]) {
 }
 
 const urls = Object.keys(PUBLIC_ROUTES).map((path) => `  <url><loc>${SITE_URL}${path}</loc></url>`).join("\n");
+
+// The full app study uses the same native preview as the site, without a JS bundle.
+const studyCss = await readFile(resolve("src/components/AppDesignPreview.css"), "utf8");
+await mkdir(resolve("dist/studies"), { recursive: true });
+await writeFile(resolve("dist/studies/alder-rowe-app.html"), `<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Alder / Rowe — App design concept by Ackra</title><meta name="robots" content="noindex, follow" />
+<style>
+@font-face{font-family:Geist;font-style:normal;font-weight:400 700;font-display:swap;src:url("/fonts/geist-latin.woff2") format("woff2")}
+*{box-sizing:border-box}body{margin:0;background:#e9edf0;color:#161a20;font-family:Geist,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.study-header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 4vw;max-width:1680px;margin:auto}
+.study-header h1{font-size:22px;font-weight:500;margin:0;letter-spacing:-.03em}.study-header p{font-size:12px;color:#59606a;margin:5px 0 0}
+.study-header a{color:inherit;font-size:13px;text-underline-offset:4px}.study-header a:focus-visible{outline:2px solid #1251ce;outline-offset:5px}
+.study-main{max-width:1680px;margin:0 auto;padding:0 2vw 32px}
+@media(max-width:599px){.study-header{align-items:flex-start;padding:22px 20px;gap:16px}.study-header h1{font-size:19px}.study-header a{max-width:100px;line-height:1.5}.study-main{padding:0 12px 24px}}
+${studyCss}
+</style></head><body><header class="study-header"><div><h1>Alder / Rowe</h1><p>Concept study · Fictional practice</p></div><a href="/website-app-design">Back to design &amp; build</a></header><main class="study-main">${renderAppStudy()}</main></body></html>`);
+console.log("Prerendered /studies/alder-rowe-app.html");
+
 await writeFile(resolve("dist/sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 await writeFile(resolve("dist/robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);

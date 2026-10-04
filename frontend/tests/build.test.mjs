@@ -45,6 +45,30 @@ test("deep links preserve the three current process stages", async () => {
   dom.window.close();
 });
 
+test("the full app study renders native interface content and serves its photographs", async () => {
+  const response = await fetch(origin + "/studies/alder-rowe-app.html");
+  assert.equal(response.status, 200);
+  const dom = new JSDOM(await response.text());
+  const document = dom.window.document;
+  assert.ok(document.querySelector('meta[name="robots"]').content.includes("noindex"));
+  assert.equal(document.querySelectorAll("script").length, 0);
+  assert.ok(document.querySelector("main").textContent.includes("Design review"));
+  assert.ok(document.querySelector("main").textContent.includes("Material palette"));
+  const preview = document.querySelector('main [role="img"]');
+  assert.ok(preview?.getAttribute("aria-label"));
+  assert.equal(preview.querySelector('button, a, input, select, textarea, [tabindex]'), null, "the illustrative preview must not expose nonfunctional controls");
+  const sources = [...document.querySelectorAll("main img")].map((image) => image.getAttribute("src"));
+  assert.ok(sources.includes("/images/app-courtyard.webp"));
+  assert.ok(sources.includes("/images/app-materials.webp"));
+  assert.ok(sources.every((source) => !source.includes("design-app-")), "UI text must not be baked into a raster screenshot");
+  for (const source of new Set(sources)) {
+    const image = await fetch(origin + source);
+    assert.equal(image.status, 200, source);
+    assert.equal(image.headers.get("content-type"), "image/webp");
+  }
+  dom.window.close();
+});
+
 test("noncanonical paths redirect without losing query parameters", async () => {
   for (const [path, canonical] of [
     ["/services/", "/services"],

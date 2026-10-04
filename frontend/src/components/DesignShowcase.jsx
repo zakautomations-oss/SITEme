@@ -1,5 +1,6 @@
 import React, { useId, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
+import AppDesignPreview from "./AppDesignPreview";
 import "./DesignShowcase.css";
 
 const views = [
@@ -22,14 +23,7 @@ const views = [
     label: "App design",
     title: "Client project portal",
     detail: "A companion app for reviewing drawings and materials. Clients can see what needs a decision and approve selections.",
-    alt: "Alder / Rowe client portal concept with project drawings and material selections, clearly marked as approved or awaiting review.",
-    artwork: {
-      src: "/images/design-app-refined-1536.webp",
-      srcSet: "/images/design-app-refined-800.webp 800w, /images/design-app-refined-1536.webp 1536w",
-      mobileSrc: "/images/design-app-mobile-hd.webp",
-      mobileWidth: 1024,
-      mobileHeight: 1536,
-    },
+    studyHref: "/studies/alder-rowe-app.html",
   },
 ];
 
@@ -61,13 +55,13 @@ export default function DesignShowcase({ compact = false }) {
       </div>
       {views.map((view, index) => (
         <div key={view.id} role="tabpanel" id={`${id}-${view.id}-panel`} aria-labelledby={`${id}-${view.id}-tab`} tabIndex={0} hidden={active !== index}>
-          <picture className="design-artwork">
+          {view.id === "app" ? <AppDesignPreview /> : <picture className="design-artwork">
             <source media="(max-width: 599px)" srcSet={view.artwork.mobileSrc} width={view.artwork.mobileWidth} height={view.artwork.mobileHeight} />
             <img src={view.artwork.src} srcSet={view.artwork.srcSet} sizes="(min-width: 1320px) 1240px, (min-width: 768px) calc(100vw - 80px), calc(100vw - 40px)" width="1536" height="1024" alt={view.alt} loading={compact || index > 0 ? "lazy" : "eager"} decoding="async" />
-          </picture>
+          </picture>}
           <div className="design-showcase-caption">
             <div><h3>{view.title}</h3><p>{view.detail}</p></div>
-            <a href={view.artwork.src} target="_blank" rel="noopener noreferrer" className="design-study-link">View full {view.id === "website" ? "website" : "app"} study <ArrowUpRight size={16} aria-hidden="true" /></a>
+            <a href={view.studyHref || view.artwork.src} target="_blank" rel="noopener noreferrer" className="design-study-link">View full {view.id === "website" ? "website" : "app"} study <ArrowUpRight size={16} aria-hidden="true" /></a>
           </div>
         </div>
       ))}

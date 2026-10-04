@@ -1,8 +1,13 @@
 import React from "react";
 import { PassThrough } from "node:stream";
-import { renderToPipeableStream } from "react-dom/server";
+import { renderToPipeableStream, renderToStaticMarkup } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import App from "./App";
+import AppDesignPreview from "./components/AppDesignPreview";
+
+export function renderAppStudy() {
+  return renderToStaticMarkup(<AppDesignPreview />);
+}
 
 export function render(pathname) {
   return new Promise((resolve, reject) => {
