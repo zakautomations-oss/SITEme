@@ -9,24 +9,24 @@ describe("capabilities accordion", () => {
   it("starts with supply chain expanded and includes custom projects after the existing services", () => {
     render(<CapabilitiesAccordion />);
     expect(screen.getAllByRole("button").map((button) => button.textContent)).toEqual([
-      "Supply chain agents", "Text agents", "Voice agents", "Custom projects",
+      "Supply chain agents", "Conversational Agents", "Custom projects",
     ]);
     expect(screen.getByRole("button", { name: "Supply chain agents" })).toHaveAttribute("aria-expanded", "true");
     expect(screen.getAllByRole("region")).toHaveLength(1);
     expect(screen.getByRole("region", { name: "Supply chain agents" })).toHaveTextContent("Agents that coordinate procurement, inventory, and logistics across your existing systems, with clear escalation paths for your team.");
-    expect(screen.getByText("Helpful replies across text and web chat, with a clear handoff when someone needs your team.")).not.toBeVisible();
+    expect(screen.getByText("Voice, text, and web chat agents that handle enquiries, qualify opportunities, and coordinate bookings, with clear handoffs to your team.")).not.toBeVisible();
   });
 
   it("opens a panel on click, closes the previous panel, and supports collapsing all", async () => {
     render(<CapabilitiesAccordion />);
-    const voice = screen.getByRole("button", { name: "Voice agents" });
-    await userEvent.click(voice);
-    expect(voice).toHaveAttribute("aria-expanded", "true");
+    const conversational = screen.getByRole("button", { name: "Conversational Agents" });
+    await userEvent.click(conversational);
+    expect(conversational).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByRole("button", { name: "Supply chain agents" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getAllByRole("region")).toHaveLength(1);
-    expect(screen.getByRole("region", { name: "Voice agents" })).toHaveTextContent("Voice agents that answer calls, qualify enquiries, and help customers book a time.");
-    await userEvent.click(voice);
-    expect(voice).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("region", { name: "Conversational Agents" })).toHaveTextContent("Voice, text, and web chat agents that handle enquiries, qualify opportunities, and coordinate bookings, with clear handoffs to your team.");
+    await userEvent.click(conversational);
+    expect(conversational).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Custom projects" }));
     expect(screen.getAllByRole("region")).toHaveLength(1);
@@ -38,14 +38,14 @@ describe("capabilities accordion", () => {
     const user = userEvent.setup();
     screen.getByRole("button", { name: "Supply chain agents" }).focus();
     await user.keyboard("{ArrowRight}");
-    const text = screen.getByRole("button", { name: "Text agents" });
-    expect(text).toHaveFocus();
-    expect(text).toHaveAttribute("aria-expanded", "false");
+    const conversational = screen.getByRole("button", { name: "Conversational Agents" });
+    expect(conversational).toHaveFocus();
+    expect(conversational).toHaveAttribute("aria-expanded", "false");
     await user.keyboard("{Enter}");
-    expect(text).toHaveAttribute("aria-expanded", "true");
-    expect(text).toHaveFocus();
+    expect(conversational).toHaveAttribute("aria-expanded", "true");
+    expect(conversational).toHaveFocus();
     await user.keyboard(" ");
-    expect(text).toHaveAttribute("aria-expanded", "false");
+    expect(conversational).toHaveAttribute("aria-expanded", "false");
     await user.keyboard("{End}");
     expect(screen.getByRole("button", { name: "Custom projects" })).toHaveFocus();
     await user.keyboard("{Enter}");
@@ -64,7 +64,7 @@ describe("capabilities accordion", () => {
   it("provides native disclosures with all copy in server-rendered HTML", () => {
     const markup = renderToStaticMarkup(<CapabilitiesAccordion />);
     const document = new DOMParser().parseFromString(markup, "text/html");
-    expect(document.querySelectorAll("details")).toHaveLength(4);
+    expect(document.querySelectorAll("details")).toHaveLength(3);
     expect(document.querySelectorAll("details[open]")).toHaveLength(1);
     expect(document.querySelectorAll("summary[aria-expanded]")).toHaveLength(0);
     expect(document.querySelector("[data-interacted]")).toBeNull();
@@ -82,11 +82,11 @@ describe("capabilities accordion", () => {
     const accordion = screen.getByTestId("capabilities-accordion");
     // Hydration must not fade out content that was already readable in HTML.
     expect(accordion).not.toHaveAttribute("data-interacted");
-    const text = screen.getByRole("button", { name: "Text agents" });
+    const conversational = screen.getByRole("button", { name: "Conversational Agents" });
     const custom = screen.getByRole("button", { name: "Custom projects" });
     const supplyChain = screen.getByRole("button", { name: "Supply chain agents" });
 
-    await user.click(text);
+    await user.click(conversational);
     await user.click(custom);
     await user.click(supplyChain);
     expect(supplyChain).toHaveFocus();
@@ -110,7 +110,7 @@ describe("capabilities accordion", () => {
     render(<><CapabilitiesAccordion /><CapabilitiesAccordion /></>);
     const ids = [...document.querySelectorAll(".capabilities-accordion [id]")].map((element) => element.id);
     expect(new Set(ids).size).toBe(ids.length);
-    const buttons = screen.getAllByRole("button", { name: "Text agents" });
+    const buttons = screen.getAllByRole("button", { name: "Conversational Agents" });
     fireEvent.click(buttons[0]);
     expect(buttons[0]).toHaveAttribute("aria-expanded", "true");
     expect(buttons[1]).toHaveAttribute("aria-expanded", "false");

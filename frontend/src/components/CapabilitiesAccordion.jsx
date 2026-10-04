@@ -14,14 +14,9 @@ const CAPABILITIES = [
     },
   },
   {
-    label: "Text agents",
+    label: "Conversational Agents",
     title: "Keep the conversation moving.",
-    text: "Helpful replies across text and web chat, with a clear handoff when someone needs your team.",
-  },
-  {
-    label: "Voice agents",
-    title: "Answer every opportunity.",
-    text: "Voice agents that answer calls, qualify enquiries, and help customers book a time.",
+    text: "Voice, text, and web chat agents that handle enquiries, qualify opportunities, and coordinate bookings, with clear handoffs to your team.",
   },
   {
     label: "Custom projects",
@@ -98,7 +93,7 @@ export default function CapabilitiesAccordion({ className = "" }) {
                   <img
                     src={image.src}
                     srcSet={image.srcSet}
-                    sizes="(max-width: 767px) calc(100vw - 88px), (max-width: 1023px) calc(100vw - 128px), 560px"
+                    sizes="(max-width: 767px) calc(100vw - 88px), (max-width: 1023px) calc(100vw - 128px), 748px"
                     alt={image.alt}
                     width="960"
                     height="720"
