@@ -16,7 +16,7 @@ Keep claims specific and verifiable. Do not add fabricated clients, outcomes, te
 
 Use “Book a call” for global booking actions. The website and app development page uses “Discuss your project” for its contextual booking invitation. `src/config/site.js` owns the booking URL and 45-minute duration as well as public contact details. Public route names and metadata live in `src/config/routes.js`.
 
-Forms need visible labels, keyboard focus, preserved drafts on error, and an announced success or error state. Navigation must remain usable in narrow and short viewports. The theme preference cycles system, light, and dark and is persisted locally.
+Forms need visible labels, keyboard focus, preserved drafts on error, and an announced success or error state. Navigation must remain usable in narrow and short viewports. The theme toggle switches directly between light and dark and persists the choice locally. New visitors and legacy system preferences resolve the device appearance once into a fixed light or dark choice; there is no system option or computer icon.
 
 The header and page shell persist across routes. Ordinary public-page links use native View Transitions where available: a short content crossfade with a steady header. Hover and keyboard focus prefetch only page code. Slow destinations retain readable outgoing content and show a delayed, indeterminate progress line with an accessible loading status. The snapshot hold ends after 650ms even if loading continues; focus and scroll move after the destination commits. Modified clicks, downloads, external links, and hashes retain their normal behavior. Reduced motion bypasses the crossfade and uses a static loading cue.
 

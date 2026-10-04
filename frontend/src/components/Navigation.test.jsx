@@ -1,6 +1,6 @@
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import Navigation from "./Navigation";
@@ -48,23 +48,38 @@ describe("navigation controls", () => {
     expect(screen.queryByTestId("nav-solutions-menu")).not.toBeInTheDocument();
   });
 
-  it("cycles and persists theme preferences, following system changes only in system mode", async () => {
-    navigation();
+  it("switches directly between light and dark and restores the saved selection", async () => {
+    const view = navigation();
     const toggle = screen.getByTestId("theme-toggle");
     expect(document.documentElement.dataset.theme).toBe("light");
+    expect(toggle).toHaveAccessibleName("Theme: light. Switch to dark theme");
     await userEvent.click(toggle);
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(localStorage.getItem("ackra-theme")).toBe("dark");
+    expect(toggle).toHaveAccessibleName("Theme: dark. Switch to light theme");
+    await userEvent.click(toggle);
+    expect(document.documentElement.dataset.theme).toBe("light");
     expect(localStorage.getItem("ackra-theme")).toBe("light");
     await userEvent.click(toggle);
+    view.unmount();
+    navigation();
     expect(document.documentElement.dataset.theme).toBe("dark");
-    dark = false;
-    mediaListeners.forEach((listener) => listener());
-    expect(document.documentElement.dataset.theme).toBe("dark");
-    await userEvent.click(toggle);
-    expect(localStorage.getItem("ackra-theme")).toBe("system");
-    expect(document.documentElement.dataset.theme).toBe("light");
-    dark = true;
-    mediaListeners.forEach((listener) => listener());
-    await waitFor(() => expect(document.documentElement.dataset.theme).toBe("dark"));
+    expect(screen.getByTestId("theme-toggle")).toHaveAccessibleName("Theme: dark. Switch to light theme");
+  });
+
+  it.each([false, true])("migrates a legacy system selection to a fixed theme (dark: %s)", async (systemDark) => {
+    localStorage.setItem("ackra-theme", "system");
+    dark = systemDark;
+    navigation();
+    const expected = systemDark ? "dark" : "light";
+    expect(document.documentElement.dataset.theme).toBe(expected);
+    expect(localStorage.getItem("ackra-theme")).toBe(expected);
+    expect(screen.getByTestId("theme-toggle").getAttribute("aria-label")).not.toContain("system");
+    await act(async () => {
+      dark = !systemDark;
+      mediaListeners.forEach((listener) => listener());
+    });
+    expect(document.documentElement.dataset.theme).toBe(expected);
   });
 
   it("closes open disclosures when clicking outside the header", async () => {
