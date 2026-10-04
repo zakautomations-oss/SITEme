@@ -6,6 +6,7 @@ import AckraMark from "../components/AckraMark";
 import { BOOKING_DURATION } from "../config/site";
 import CapabilitiesAccordion from "../components/CapabilitiesAccordion";
 import IntegrationMarquee from "../components/IntegrationMarquee";
+import DesignFeature from "../components/DesignFeature";
 import { useHomeMotionEnabled } from "../components/useHomeMotionEnabled";
 import "./home.css";
 
@@ -42,6 +43,7 @@ export default function Home() {
         </div>
         <CapabilitiesAccordion />
       </section>
+      <DesignFeature />
       <section className="home-outcomes home-chapter site-container" aria-labelledby="home-solutions-heading">
         <h2 id="home-solutions-heading" className="home-statement" aria-label={statement}><span aria-hidden="true">{statement.split(" ").map((word, index) => <React.Fragment key={`${word}-${index}`}><span className="statement-word">{word}</span>{" "}{index === 2 && <br />}</React.Fragment>)}</span></h2>
         <div className="solution-pair grid-flow-dense">

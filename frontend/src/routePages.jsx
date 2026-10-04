@@ -11,6 +11,7 @@ function page(importPage) {
 
 export const routePages = {
   "/": page(() => import("./pages/Home")),
+  "/website-app-design": page(() => import("./pages/WebsiteAppDesign")),
   "/services": page(() => import("./pages/Services")),
   "/about": page(() => import("./pages/About")),
   "/contact": page(() => import("./pages/Contact")),

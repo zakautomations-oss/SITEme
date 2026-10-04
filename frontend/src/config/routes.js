@@ -5,6 +5,10 @@ export const PUBLIC_ROUTES = {
     title: "Ackra AI | Custom AI Systems for Your Business",
     description: "Custom AI systems that connect your tools, automate complex workflows, and support your team. Built and managed by Ackra.",
   },
+  "/website-app-design": {
+    title: "Website & App Development | Design & Build by Ackra AI",
+    description: "Websites and apps, designed and built end to end. Ackra handles strategy, design, development, integrations, testing, and launch with one team.",
+  },
   "/services": {
     title: "Our Process | Ackra AI",
     description: "From the first conversation to a working AI agent. See how Ackra AI scopes, builds, tests, and maintains automation around your business.",
@@ -15,7 +19,7 @@ export const PUBLIC_ROUTES = {
   },
   "/contact": {
     title: "Contact | Ackra AI",
-    description: "Tell us which workflow is taking up your time, or book a 45-minute call to explore what an AI agent could do for your business.",
+    description: "Tell us about your website, app, or AI system. Book a 45-minute call with Ackra to discuss your goals and the right approach for your business.",
   },
   "/solutions/reduce-workload": {
     title: "Reduce Workload | Ackra AI",

@@ -4,9 +4,9 @@ import "./CapabilitiesAccordion.css";
 
 const CAPABILITIES = [
   {
-    label: "Workflow automation",
-    title: "Let your tools work together.",
-    text: "Connect your CRM, calendar, inbox, and internal tools into workflows that run together.",
+    label: "Operations agents",
+    title: "Connect your operations.",
+    text: "Agents that coordinate processes, resources, and decisions across your existing systems, with clear escalation paths for your team.",
     image: {
       src: "/images/workflow-960.webp",
       srcSet: "/images/workflow-640.webp 640w, /images/workflow-960.webp 960w, /images/workflow-1440.webp 1440w",
@@ -14,24 +14,14 @@ const CAPABILITIES = [
     },
   },
   {
-    label: "Text agents",
+    label: "Conversational Agents",
     title: "Keep the conversation moving.",
-    text: "Helpful replies across text and web chat, with a clear handoff when someone needs your team.",
+    text: "Voice, text, and web chat agents that handle enquiries, qualify opportunities, and coordinate bookings, with clear handoffs to your team.",
   },
   {
-    label: "Voice agents",
-    title: "Answer every opportunity.",
-    text: "Voice agents that answer calls, qualify enquiries, and help customers book a time.",
-  },
-  {
-    label: "Review follow-ups",
-    title: "Make feedback part of the process.",
-    text: "Ask customers for honest reviews and bring service issues to the right person.",
-  },
-  {
-    label: "Custom agents",
+    label: "Custom projects",
     title: "Built for your specific work.",
-    text: "Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.",
+    text: "Bespoke agents that use your company’s knowledge and tools to handle multi-step work and software with clear handoffs to your team.",
   },
 ];
 
@@ -103,7 +93,7 @@ export default function CapabilitiesAccordion({ className = "" }) {
                   <img
                     src={image.src}
                     srcSet={image.srcSet}
-                    sizes="(max-width: 767px) calc(100vw - 88px), (max-width: 1023px) calc(100vw - 128px), 560px"
+                    sizes="(max-width: 767px) calc(100vw - 88px), (max-width: 1023px) calc(100vw - 128px), 748px"
                     alt={image.alt}
                     width="960"
                     height="720"
