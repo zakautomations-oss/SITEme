@@ -45,22 +45,24 @@ test("deep links preserve the three current process stages", async () => {
   dom.window.close();
 });
 
-test("the full app study renders native interface content and serves its photographs", async () => {
-  const response = await fetch(origin + "/studies/alder-rowe-app.html");
+for (const study of [
+  { id: "app", text: ["Design review", "Material palette"], photographs: ["/images/app-courtyard.webp", "/images/app-materials.webp"] },
+  { id: "website", text: ["Architecture for", "the way we live.", "Courtyard House"], photographs: ["/images/app-courtyard.webp"] },
+]) {
+test(`the full ${study.id} study renders native interface content and serves its photographs`, async () => {
+  const response = await fetch(origin + `/studies/alder-rowe-${study.id}.html`);
   assert.equal(response.status, 200);
   const dom = new JSDOM(await response.text());
   const document = dom.window.document;
   assert.ok(document.querySelector('meta[name="robots"]').content.includes("noindex"));
   assert.equal(document.querySelectorAll("script").length, 0);
-  assert.ok(document.querySelector("main").textContent.includes("Design review"));
-  assert.ok(document.querySelector("main").textContent.includes("Material palette"));
+  for (const text of study.text) assert.ok(document.querySelector("main").textContent.includes(text), text);
   const preview = document.querySelector('main [role="img"]');
   assert.ok(preview?.getAttribute("aria-label"));
   assert.equal(preview.querySelector('button, a, input, select, textarea, [tabindex]'), null, "the illustrative preview must not expose nonfunctional controls");
   const sources = [...document.querySelectorAll("main img")].map((image) => image.getAttribute("src"));
-  assert.ok(sources.includes("/images/app-courtyard.webp"));
-  assert.ok(sources.includes("/images/app-materials.webp"));
-  assert.ok(sources.every((source) => !source.includes("design-app-")), "UI text must not be baked into a raster screenshot");
+  for (const photograph of study.photographs) assert.ok(sources.includes(photograph), photograph);
+  assert.ok(sources.every((source) => !/design-(app|website)-/.test(source)), "UI text must not be baked into a raster screenshot");
   for (const source of new Set(sources)) {
     const image = await fetch(origin + source);
     assert.equal(image.status, 200, source);
@@ -68,6 +70,7 @@ test("the full app study renders native interface content and serves its photogr
   }
   dom.window.close();
 });
+}
 
 test("noncanonical paths redirect without losing query parameters", async () => {
   for (const [path, canonical] of [

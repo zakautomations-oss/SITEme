@@ -4,9 +4,14 @@ import { renderToPipeableStream, renderToStaticMarkup } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import App from "./App";
 import AppDesignPreview from "./components/AppDesignPreview";
+import WebsiteDesignPreview from "./components/WebsiteDesignPreview";
 
 export function renderAppStudy() {
   return renderToStaticMarkup(<AppDesignPreview />);
+}
+
+export function renderWebsiteStudy() {
+  return renderToStaticMarkup(<WebsiteDesignPreview />);
 }
 
 export function render(pathname) {
