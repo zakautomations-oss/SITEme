@@ -4,9 +4,9 @@ import "./CapabilitiesAccordion.css";
 
 const CAPABILITIES = [
   {
-    label: "Supply chain agents",
-    title: "Connect your supply chain.",
-    text: "Agents that coordinate procurement, inventory, and logistics across your existing systems, with clear escalation paths for your team.",
+    label: "Operations agents",
+    title: "Connect your operations.",
+    text: "Agents that coordinate processes, resources, and decisions across your existing systems, with clear escalation paths for your team.",
     image: {
       src: "/images/workflow-960.webp",
       srcSet: "/images/workflow-640.webp 640w, /images/workflow-960.webp 960w, /images/workflow-1440.webp 1440w",
