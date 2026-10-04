@@ -6,14 +6,14 @@ import userEvent from "@testing-library/user-event";
 import CapabilitiesAccordion from "./CapabilitiesAccordion";
 
 describe("capabilities accordion", () => {
-  it("starts with workflow expanded and includes custom agents after the existing services", () => {
+  it("starts with supply chain expanded and includes custom projects after the existing services", () => {
     render(<CapabilitiesAccordion />);
     expect(screen.getAllByRole("button").map((button) => button.textContent)).toEqual([
-      "Workflow automation", "Text agents", "Voice agents", "Review follow-ups", "Custom agents",
+      "Supply chain agents", "Text agents", "Voice agents", "Custom projects",
     ]);
-    expect(screen.getByRole("button", { name: "Workflow automation" })).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Supply chain agents" })).toHaveAttribute("aria-expanded", "true");
     expect(screen.getAllByRole("region")).toHaveLength(1);
-    expect(screen.getByRole("region", { name: "Workflow automation" })).toHaveTextContent("Connect your CRM, calendar, inbox, and internal tools into workflows that run together.");
+    expect(screen.getByRole("region", { name: "Supply chain agents" })).toHaveTextContent("Agents that coordinate procurement, inventory, and logistics across your existing systems, with clear escalation paths for your team.");
     expect(screen.getByText("Helpful replies across text and web chat, with a clear handoff when someone needs your team.")).not.toBeVisible();
   });
 
@@ -22,21 +22,21 @@ describe("capabilities accordion", () => {
     const voice = screen.getByRole("button", { name: "Voice agents" });
     await userEvent.click(voice);
     expect(voice).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByRole("button", { name: "Workflow automation" })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("button", { name: "Supply chain agents" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getAllByRole("region")).toHaveLength(1);
     expect(screen.getByRole("region", { name: "Voice agents" })).toHaveTextContent("Voice agents that answer calls, qualify enquiries, and help customers book a time.");
     await userEvent.click(voice);
     expect(voice).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Custom agents" }));
+    await userEvent.click(screen.getByRole("button", { name: "Custom projects" }));
     expect(screen.getAllByRole("region")).toHaveLength(1);
-    expect(screen.getByRole("region", { name: "Custom agents" })).toHaveTextContent("Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.");
+    expect(screen.getByRole("region", { name: "Custom projects" })).toHaveTextContent("Bespoke agents that use your company’s knowledge and tools to handle multi-step work and software with clear handoffs to your team.");
   });
 
   it("supports Enter, Space, arrow keys, Home and End without moving focus into hidden content", async () => {
     render(<CapabilitiesAccordion />);
     const user = userEvent.setup();
-    screen.getByRole("button", { name: "Workflow automation" }).focus();
+    screen.getByRole("button", { name: "Supply chain agents" }).focus();
     await user.keyboard("{ArrowRight}");
     const text = screen.getByRole("button", { name: "Text agents" });
     expect(text).toHaveFocus();
@@ -47,29 +47,30 @@ describe("capabilities accordion", () => {
     await user.keyboard(" ");
     expect(text).toHaveAttribute("aria-expanded", "false");
     await user.keyboard("{End}");
-    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Custom projects" })).toHaveFocus();
     await user.keyboard("{Enter}");
-    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Custom projects" })).toHaveAttribute("aria-expanded", "true");
     await user.keyboard("{ArrowRight}");
-    expect(screen.getByRole("button", { name: "Workflow automation" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Supply chain agents" })).toHaveFocus();
     await user.keyboard("{ArrowUp}");
-    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Custom projects" })).toHaveFocus();
     await user.keyboard("{Home}");
-    expect(screen.getByRole("button", { name: "Workflow automation" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Supply chain agents" })).toHaveFocus();
     await user.keyboard("{ArrowLeft}");
-    expect(screen.getByRole("button", { name: "Custom agents" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Custom projects" })).toHaveFocus();
     expect(document.querySelectorAll('.capabilities-panel:not([open]) .capabilities-content :is(a, button, input, [tabindex="0"])')).toHaveLength(0);
   });
 
   it("provides native disclosures with all copy in server-rendered HTML", () => {
     const markup = renderToStaticMarkup(<CapabilitiesAccordion />);
     const document = new DOMParser().parseFromString(markup, "text/html");
-    expect(document.querySelectorAll("details")).toHaveLength(5);
+    expect(document.querySelectorAll("details")).toHaveLength(4);
     expect(document.querySelectorAll("details[open]")).toHaveLength(1);
     expect(document.querySelectorAll("summary[aria-expanded]")).toHaveLength(0);
     expect(document.querySelector("[data-interacted]")).toBeNull();
-    expect(document.body.textContent).toContain("Ask customers for honest reviews and bring service issues to the right person.");
-    expect(document.body.textContent).toContain("Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.");
+    expect(document.body.textContent).not.toContain("Review follow-ups");
+    expect(document.body.textContent).not.toContain("Ask customers for honest reviews and bring service issues to the right person.");
+    expect(document.body.textContent).toContain("Bespoke agents that use your company’s knowledge and tools to handle multi-step work and software with clear handoffs to your team.");
     document.querySelectorAll("summary").forEach((summary) => {
       expect(document.getElementById(summary.getAttribute("aria-controls"))).not.toBeNull();
     });
@@ -82,15 +83,15 @@ describe("capabilities accordion", () => {
     // Hydration must not fade out content that was already readable in HTML.
     expect(accordion).not.toHaveAttribute("data-interacted");
     const text = screen.getByRole("button", { name: "Text agents" });
-    const custom = screen.getByRole("button", { name: "Custom agents" });
-    const workflow = screen.getByRole("button", { name: "Workflow automation" });
+    const custom = screen.getByRole("button", { name: "Custom projects" });
+    const supplyChain = screen.getByRole("button", { name: "Supply chain agents" });
 
     await user.click(text);
     await user.click(custom);
-    await user.click(workflow);
-    expect(workflow).toHaveFocus();
+    await user.click(supplyChain);
+    expect(supplyChain).toHaveFocus();
     expect(screen.getAllByRole("region")).toHaveLength(1);
-    expect(screen.getByRole("region", { name: "Workflow automation" })).toBeVisible();
+    expect(screen.getByRole("region", { name: "Supply chain agents" })).toBeVisible();
     expect(accordion.querySelectorAll("details[open]")).toHaveLength(1);
     for (const closed of accordion.querySelectorAll("details:not([open])")) {
       expect(closed.querySelector('[role="region"]')).toHaveAttribute("hidden");
@@ -102,7 +103,7 @@ describe("capabilities accordion", () => {
     fireEvent.animationEnd(document.getElementById(custom.getAttribute("aria-controls")));
     await user.keyboard("{Enter}");
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
-    expect(workflow).toHaveFocus();
+    expect(supplyChain).toHaveFocus();
   });
 
   it("keeps identifiers independent if more than one accordion is mounted", () => {

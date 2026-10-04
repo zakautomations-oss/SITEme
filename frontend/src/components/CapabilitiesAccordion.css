@@ -187,11 +187,11 @@
       container-type: inline-size;
     }
 
-    /* Keep the final line lengths while the panel reveals them. Four borders
-       separate the five flex items, whose expanded weights total 7.75. */
+    /* Keep the final line lengths while the panel reveals them. Three borders
+       separate the four flex items, whose expanded weights total 6.75. */
     .capabilities-panel[open] > .capabilities-trigger,
     .capabilities-content {
-      width: calc((100cqw - 4px) * 3.75 / 7.75);
+      width: calc((100cqw - 3px) * 3.75 / 6.75);
     }
   }
 }

@@ -4,9 +4,9 @@ import "./CapabilitiesAccordion.css";
 
 const CAPABILITIES = [
   {
-    label: "Workflow automation",
-    title: "Let your tools work together.",
-    text: "Connect your CRM, calendar, inbox, and internal tools into workflows that run together.",
+    label: "Supply chain agents",
+    title: "Connect your supply chain.",
+    text: "Agents that coordinate procurement, inventory, and logistics across your existing systems, with clear escalation paths for your team.",
     image: {
       src: "/images/workflow-960.webp",
       srcSet: "/images/workflow-640.webp 640w, /images/workflow-960.webp 960w, /images/workflow-1440.webp 1440w",
@@ -24,14 +24,9 @@ const CAPABILITIES = [
     text: "Voice agents that answer calls, qualify enquiries, and help customers book a time.",
   },
   {
-    label: "Review follow-ups",
-    title: "Make feedback part of the process.",
-    text: "Ask customers for honest reviews and bring service issues to the right person.",
-  },
-  {
-    label: "Custom agents",
+    label: "Custom projects",
     title: "Built for your specific work.",
-    text: "Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.",
+    text: "Bespoke agents that use your company’s knowledge and tools to handle multi-step work and software with clear handoffs to your team.",
   },
 ];
 
