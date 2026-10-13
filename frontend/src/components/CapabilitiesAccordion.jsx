@@ -4,9 +4,9 @@ import "./CapabilitiesAccordion.css";
 
 const CAPABILITIES = [
   {
-    label: "Operations agents",
-    title: "Connect your operations.",
-    text: "Agents that coordinate processes, resources, and decisions across your existing systems, with clear escalation paths for your team.",
+    label: "Business automation",
+    title: "Keep everyday work moving.",
+    text: "AI that updates records, organises tasks, and keeps work moving between your business tools. Your team steps in when a task needs their judgement.",
     image: {
       src: "/images/workflow-960.webp",
       srcSet: "/images/workflow-640.webp 640w, /images/workflow-960.webp 960w, /images/workflow-1440.webp 1440w",
@@ -14,14 +14,14 @@ const CAPABILITIES = [
     },
   },
   {
-    label: "Conversational Agents",
+    label: "Customer conversations",
     title: "Keep the conversation moving.",
-    text: "Voice, text, and web chat agents that handle enquiries, qualify opportunities, and coordinate bookings, with clear handoffs to your team.",
+    text: "AI that answers calls, texts, and web chats, understands what customers need, and helps them book. More involved questions go to your team.",
   },
   {
     label: "Custom projects",
     title: "Built for your specific work.",
-    text: "Bespoke agents that use your company’s knowledge and tools to handle multi-step work and software with clear handoffs to your team.",
+    text: "Custom AI built for tasks specific to your business, using your company’s information and software. We agree on what it can handle and when your team takes over.",
   },
 ];
 

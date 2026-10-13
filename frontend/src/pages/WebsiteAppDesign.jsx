@@ -5,14 +5,14 @@ import { BOOKING_URL, CONTACT_EMAIL } from "../config/site";
 import "./design.css";
 
 const capabilities = [
-  { title: "Websites", text: "A distinct presence for your business, with the structure and technology to support it.", items: ["Content structure, visual identity and responsive design", "Development, content management and integrations", "Performance, technical SEO and launch preparation"] },
-  { title: "Applications", text: "Custom software built around the people using it and the work they need to get done.", items: ["Product scope, user journeys and interface design", "Web and mobile development, data and connected services", "Testing, release and operational handover"] },
+  { title: "Websites", text: "A distinctive website that helps people understand your business and take the next step.", items: ["Clear content, a distinctive look and layouts for every screen", "Development, tools to update your content and connections to your business software", "Fast loading, search engine setup and launch preparation"] },
+  { title: "Apps", text: "Custom software built around the people using it and the work they need to get done.", items: ["Product planning, clear navigation and interface design", "Web and mobile development, data storage and connections to other tools", "Testing, launch and guidance for your team"] },
 ];
 const stages = [
-  ["Scope", "Define the users, priorities and technical requirements. Agree the deliverables before work begins.", "Agreed brief & delivery plan"],
-  ["Design", "Resolve the structure, visual direction and key interactions in a prototype you can review.", "Approved design & prototype"],
-  ["Build", "Develop the product and its integrations. Review working releases and test the complete experience.", "Working product & release checks"],
-  ["Launch", "Deploy, verify the live experience and hand over the code, tools and documentation. Agree ongoing support.", "Live product & handover"],
+  ["Plan", "Agree on who it’s for, what it needs to do, and what we’ll deliver before work begins.", "Project brief & delivery plan"],
+  ["Design", "Review the layout, look, and main features in an interactive preview before development begins.", "Approved design & interactive preview"],
+  ["Build", "Build the website or app and connect it to the tools it needs. Review working versions and test the complete experience.", "Working product & final checks"],
+  ["Launch", "Launch the product, check that it works, and give your team the code, tools, and instructions. Agree on ongoing support.", "Live product & team guidance"],
 ];
 
 export default function WebsiteAppDesign() {
@@ -34,8 +34,8 @@ export default function WebsiteAppDesign() {
       <ol className="design-stages">{stages.map(([title, text, outcome]) => <li key={title}><h3>{title}</h3><p>{text}</p><span className="design-stage-outcome">{outcome}</span></li>)}</ol>
     </div></section>
     <section className="design-closing site-container" aria-labelledby="design-closing-heading">
-      <div><h2 id="design-closing-heading">Let’s discuss your project.</h2><p>Tell us what you’re building. We’ll help define the scope and the right approach.</p></div>
-      <div className="design-closing-actions"><a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="button" data-testid="design-bottom-cta">Discuss your project <ArrowUpRight size={17} aria-hidden="true" /></a><a href={`mailto:${CONTACT_EMAIL}`} className="design-contact-link">Email a project brief <ArrowRight size={15} aria-hidden="true" /></a></div>
+      <div><h2 id="design-closing-heading">Let’s discuss your project.</h2><p>Tell us what you’re building. We’ll help you decide what it needs and how to bring it to life.</p></div>
+      <div className="design-closing-actions"><a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="button" data-testid="design-bottom-cta">Discuss your project <ArrowUpRight size={17} aria-hidden="true" /></a><a href={`mailto:${CONTACT_EMAIL}`} className="design-contact-link">Email your project details <ArrowRight size={15} aria-hidden="true" /></a></div>
     </section>
   </div>;
 }

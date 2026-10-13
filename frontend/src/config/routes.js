@@ -3,19 +3,19 @@ import { SITE_URL } from "./site.js";
 export const PUBLIC_ROUTES = {
   "/": {
     title: "Ackra AI | Custom AI Systems for Your Business",
-    description: "Custom AI systems that connect your tools, automate complex workflows, and support your team. Built and managed by Ackra.",
+    description: "AI that handles repetitive tasks, keeps your business tools up to date, and helps customers get answers. Built and managed by Ackra.",
   },
   "/website-app-design": {
     title: "Website & App Development | Design & Build by Ackra AI",
-    description: "Websites and apps, designed and built end to end. Ackra handles strategy, design, development, integrations, testing, and launch with one team.",
+    description: "Websites and apps, from your first idea to launch. One Ackra team handles planning, design, development, testing, and launch.",
   },
   "/services": {
     title: "Our Process | Ackra AI",
-    description: "From the first conversation to a working AI agent. See how Ackra AI scopes, builds, tests, and maintains automation around your business.",
+    description: "From the first conversation to a working AI system. See how Ackra plans, builds, tests, and supports AI for your business.",
   },
   "/about": {
     title: "About | Ackra AI",
-    description: "Meet Ackra AI, a New York studio building custom AI systems, connected workflows, and agents around the way your business works.",
+    description: "Meet Ackra AI, a New York studio building AI to handle routine tasks, connect business tools, and help customers get answers.",
   },
   "/contact": {
     title: "Contact | Ackra AI",
@@ -23,11 +23,11 @@ export const PUBLIC_ROUTES = {
   },
   "/solutions/reduce-workload": {
     title: "Reduce Workload | Ackra AI",
-    description: "Give repetitive work a new home. Custom AI agents handle inbox triage, follow-ups, and cross-tool updates so your team can focus.",
+    description: "Spend less time on repetitive admin. AI sorts messages, follows up with customers, and updates your business tools so your team can focus.",
   },
   "/solutions/increase-conversion": {
-    title: "Increase Conversion | Ackra AI",
-    description: "Make more of every enquiry. AI agents respond, qualify, follow up, and help interested customers take the next step.",
+    title: "Win More Customers | Ackra AI",
+    description: "Answer enquiries, understand what customers need, and help them book an appointment. AI handles calls, texts, and web chats with your team’s support.",
   },
 };
 

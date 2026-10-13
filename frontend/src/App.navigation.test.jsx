@@ -100,7 +100,7 @@ describe("App route scroll and focus", () => {
     const originalMain = screen.getByRole("main");
     const originalHeader = screen.getByTestId("site-nav");
     const release = holdProcessPage();
-    await user.click(within(screen.getByRole("navigation", { name: "Footer navigation" })).getByRole("link", { name: "Process" }));
+    await user.click(within(screen.getByRole("navigation", { name: "Footer navigation" })).getByRole("link", { name: "How it works" }));
     // The outgoing page remains readable while the destination is suspended.
     expect(screen.getByRole("heading", { name: "Home fixture" })).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent("Loading page…");
@@ -153,7 +153,7 @@ describe("App route scroll and focus", () => {
     await screen.findByRole("heading", { name: "Home fixture" });
     const originalHeader = screen.getByTestId("site-nav");
     const release = holdProcessPage();
-    await user.click(within(screen.getByRole("navigation", { name: "Footer navigation" })).getByRole("link", { name: "Process" }));
+    await user.click(within(screen.getByRole("navigation", { name: "Footer navigation" })).getByRole("link", { name: "How it works" }));
     expect(screen.getByRole("heading", { name: "Home fixture" })).toBeVisible();
     expect(screen.getByRole("main")).toHaveAttribute("aria-busy", "true");
     expect(transitionComplete).not.toHaveBeenCalled();
