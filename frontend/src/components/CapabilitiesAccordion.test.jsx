@@ -13,8 +13,8 @@ describe("capabilities accordion", () => {
     ]);
     expect(screen.getByRole("button", { name: "Business automation" })).toHaveAttribute("aria-expanded", "true");
     expect(screen.getAllByRole("region")).toHaveLength(1);
-    expect(screen.getByRole("region", { name: "Business automation" })).toHaveTextContent("AI that updates records, organises tasks, and keeps work moving between your business tools. Your team steps in when a task needs their judgement.");
-    expect(screen.getByText("AI that answers calls, texts, and web chats, understands what customers need, and helps them book. More involved questions go to your team.")).not.toBeVisible();
+    expect(screen.getByRole("region", { name: "Business automation" })).toHaveTextContent("Keep customer records, order details, and repair updates in step with your existing tools. AI handles routine updates and flags anything your jewelry team needs to review.");
+    expect(screen.getByText("Answer questions about pieces using your product information, arrange consultations, and follow up after an enquiry. Available by phone, text, or web chat, with your team handling personal recommendations.")).not.toBeVisible();
   });
 
   it("opens a panel on click, closes the previous panel, and supports collapsing all", async () => {
@@ -24,13 +24,13 @@ describe("capabilities accordion", () => {
     expect(conversational).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByRole("button", { name: "Business automation" })).toHaveAttribute("aria-expanded", "false");
     expect(screen.getAllByRole("region")).toHaveLength(1);
-    expect(screen.getByRole("region", { name: "Customer conversations" })).toHaveTextContent("AI that answers calls, texts, and web chats, understands what customers need, and helps them book. More involved questions go to your team.");
+    expect(screen.getByRole("region", { name: "Customer conversations" })).toHaveTextContent("Answer questions about pieces using your product information, arrange consultations, and follow up after an enquiry. Available by phone, text, or web chat, with your team handling personal recommendations.");
     await userEvent.click(conversational);
     expect(conversational).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Custom projects" }));
     expect(screen.getAllByRole("region")).toHaveLength(1);
-    expect(screen.getByRole("region", { name: "Custom projects" })).toHaveTextContent("Custom AI built for tasks specific to your business, using your company’s information and software. We agree on what it can handle and when your team takes over.");
+    expect(screen.getByRole("region", { name: "Custom projects" })).toHaveTextContent("Connect the steps behind custom orders, repair requests, or trade enquiries. We build around your jewelry business and agree on which decisions stay with your team.");
   });
 
   it("supports Enter, Space, arrow keys, Home and End without moving focus into hidden content", async () => {
@@ -70,7 +70,7 @@ describe("capabilities accordion", () => {
     expect(document.querySelector("[data-interacted]")).toBeNull();
     expect(document.body.textContent).not.toContain("Review follow-ups");
     expect(document.body.textContent).not.toContain("Ask customers for honest reviews and bring service issues to the right person.");
-    expect(document.body.textContent).toContain("Custom AI built for tasks specific to your business, using your company’s information and software. We agree on what it can handle and when your team takes over.");
+    expect(document.body.textContent).toContain("Connect the steps behind custom orders, repair requests, or trade enquiries. We build around your jewelry business and agree on which decisions stay with your team.");
     document.querySelectorAll("summary").forEach((summary) => {
       expect(document.getElementById(summary.getAttribute("aria-controls"))).not.toBeNull();
     });

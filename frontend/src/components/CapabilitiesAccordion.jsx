@@ -5,23 +5,23 @@ import "./CapabilitiesAccordion.css";
 const CAPABILITIES = [
   {
     label: "Business automation",
-    title: "Keep everyday work moving.",
-    text: "AI that updates records, organises tasks, and keeps work moving between your business tools. Your team steps in when a task needs their judgement.",
+    title: "Keep orders and updates moving.",
+    text: "Keep customer records, order details, and repair updates in step with your existing tools. AI handles routine updates and flags anything your jewelry team needs to review.",
     image: {
-      src: "/images/workflow-960.webp",
-      srcSet: "/images/workflow-640.webp 640w, /images/workflow-960.webp 960w, /images/workflow-1440.webp 1440w",
-      alt: "Notebook, pen, and laptop arranged on a gray worktable",
+      src: "/images/jewelry-workbench-960.jpg",
+      srcSet: "/images/jewelry-workbench-640.jpg 640w, /images/jewelry-workbench-960.jpg 960w, /images/jewelry-workbench-1440.jpg 1440w",
+      alt: "Gold and silver rings beside a jeweler’s loupe and tools on a stone workbench",
     },
   },
   {
     label: "Customer conversations",
-    title: "Keep the conversation moving.",
-    text: "AI that answers calls, texts, and web chats, understands what customers need, and helps them book. More involved questions go to your team.",
+    title: "Turn interest into a conversation.",
+    text: "Answer questions about pieces using your product information, arrange consultations, and follow up after an enquiry. Available by phone, text, or web chat, with your team handling personal recommendations.",
   },
   {
     label: "Custom projects",
-    title: "Built for your specific work.",
-    text: "Custom AI built for tasks specific to your business, using your company’s information and software. We agree on what it can handle and when your team takes over.",
+    title: "Built around the way you sell.",
+    text: "Connect the steps behind custom orders, repair requests, or trade enquiries. We build around your jewelry business and agree on which decisions stay with your team.",
   },
 ];
 

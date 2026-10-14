@@ -33,14 +33,14 @@ function renderHead(pathname) {
     `<meta property="og:title" content="${escape(meta.title)}" />`,
     `<meta property="og:description" content="${escape(meta.description)}" />`,
     meta.canonical ? `<meta property="og:url" content="${escape(meta.canonical)}" />` : "",
-    `<meta property="og:image" content="${SITE_URL}/og-image.png" />`,
+    `<meta property="og:image" content="${SITE_URL}/ackra-social-neutral.png" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
-    `<meta property="og:image:alt" content="Ackra AI — AI Agents Built For Your Business" />`,
+    `<meta property="og:image:alt" content="Ackra wordmark on a dark background" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${escape(meta.title)}" />`,
     `<meta name="twitter:description" content="${escape(meta.description)}" />`,
-    `<meta name="twitter:image" content="${SITE_URL}/og-image.png" />`,
+    `<meta name="twitter:image" content="${SITE_URL}/ackra-social-neutral.png" />`,
     PUBLIC_ROUTES[pathname] ? `<script type="application/ld+json">${JSON.stringify(organization).replace(/</g, "\\u003c")}</script>` : "",
   ].filter(Boolean).join("\n    ");
 }

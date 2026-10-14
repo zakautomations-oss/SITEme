@@ -2,8 +2,8 @@ import { SITE_URL } from "./site.js";
 
 export const PUBLIC_ROUTES = {
   "/": {
-    title: "Ackra AI | Custom AI Systems for Your Business",
-    description: "AI that handles repetitive tasks, keeps your business tools up to date, and helps customers get answers. Built and managed by Ackra.",
+    title: "AI for Jewelry Businesses | Ackra AI",
+    description: "Custom AI for jewelry stores, brands, and online jewelers. Handle product enquiries, consultation bookings, order updates, and follow-ups with Ackra.",
   },
   "/website-app-design": {
     title: "Website & App Development | Design & Build by Ackra AI",
@@ -11,23 +11,23 @@ export const PUBLIC_ROUTES = {
   },
   "/services": {
     title: "Our Process | Ackra AI",
-    description: "From the first conversation to a working AI system. See how Ackra plans, builds, tests, and supports AI for your business.",
+    description: "See how Ackra plans, builds, and supports AI for your jewelry business, from understanding your enquiries and orders to testing with your team.",
   },
   "/about": {
     title: "About | Ackra AI",
-    description: "Meet Ackra AI, a New York studio building AI to handle routine tasks, connect business tools, and help customers get answers.",
+    description: "Ackra builds and manages AI for jewelry businesses, helping teams handle customer enquiries, appointments, and the work behind each sale.",
   },
   "/contact": {
     title: "Contact | Ackra AI",
-    description: "Tell us about your website, app, or AI system. Book a 45-minute call with Ackra to discuss your goals and the right approach for your business.",
+    description: "Discuss AI for your jewelry business, or a website or app for any industry. Book a 45-minute call with Ackra to talk through your goals.",
   },
   "/solutions/reduce-workload": {
-    title: "Reduce Workload | Ackra AI",
-    description: "Spend less time on repetitive admin. AI sorts messages, follows up with customers, and updates your business tools so your team can focus.",
+    title: "Reduce Jewelry Business Admin | Ackra AI",
+    description: "Reduce routine admin in your jewelry business. Connect customer records, order updates, repair enquiries, and follow-ups with custom AI from Ackra.",
   },
   "/solutions/increase-conversion": {
-    title: "Win More Customers | Ackra AI",
-    description: "Answer enquiries, understand what customers need, and help them book an appointment. AI handles calls, texts, and web chats with your team’s support.",
+    title: "Customer Enquiries & Bookings for Jewelers | Ackra AI",
+    description: "Help jewelry customers ask about pieces, book consultations, and follow up on quotes. AI handles routine conversations with your team’s support.",
   },
 };
 

@@ -4,6 +4,7 @@ import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Link, MemoryRouter } from "react-router-dom";
 import App from "./App";
+import DesignFeature from "./components/DesignFeature";
 
 const loading = vi.hoisted(() => ({ process: null }));
 
@@ -11,7 +12,7 @@ const loading = vi.hoisted(() => ({ process: null }));
 // Small route fixtures let the tests control when lazy page content becomes ready.
 vi.mock("./pages/Home", () => ({
   default: function HomeFixture() {
-    return <><h1>Home fixture</h1><Link to="/services#step-02">Jump to the second process step</Link></>;
+    return <><h1>Home fixture</h1><Link to="/services#step-02">Jump to the second process step</Link><DesignFeature /></>;
   },
 }));
 vi.mock("./pages/Services", () => ({
@@ -79,15 +80,15 @@ describe("App route scroll and focus", () => {
     expect(anchorCalls).toHaveLength(0);
   });
 
-  it("opens the design route from the header and updates metadata and focus", async () => {
+  it("keeps the general design offering accessible from home without a header tab", async () => {
     renderApp();
     await screen.findByRole("heading", { name: "Home fixture" });
     const originalHeader = screen.getByTestId("site-nav");
-    await userEvent.click(screen.getByTestId("nav-link-design"));
+    expect(screen.queryByTestId("nav-link-design")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByTestId("home-design-link"));
     expect(await screen.findByRole("heading", { name: "Design fixture" })).toBeVisible();
     await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
     expect(screen.getByTestId("site-nav")).toBe(originalHeader);
-    expect(screen.getByTestId("nav-link-design")).toHaveAttribute("aria-current", "page");
     expect(document.title).toBe("Website & App Development | Design & Build by Ackra AI");
     expect(document.querySelector('link[rel="canonical"]').href).toBe("https://ackra.ai/website-app-design");
     expect(screen.getByTestId("footer-link-design")).toHaveAttribute("href", "/website-app-design");
