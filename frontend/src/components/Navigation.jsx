@@ -22,8 +22,7 @@ function readThemePreference() {
     const stored = localStorage.getItem("ackra-theme");
     if (THEMES.includes(stored)) return stored;
   } catch { /* Theme works without storage. */ }
-  // Resolve a new or legacy system preference once, then retain a concrete theme.
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "light";
 }
 
 export function ThemeToggle() {

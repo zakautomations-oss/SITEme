@@ -67,19 +67,18 @@ describe("navigation controls", () => {
     expect(screen.getByTestId("theme-toggle")).toHaveAccessibleName("Theme: dark. Switch to light theme");
   });
 
-  it.each([false, true])("migrates a legacy system selection to a fixed theme (dark: %s)", async (systemDark) => {
-    localStorage.setItem("ackra-theme", "system");
+  it.each([[null, false], [null, true], ["system", false], ["system", true]])("defaults to light with preference %s and device dark mode %s", async (stored, systemDark) => {
+    if (stored) localStorage.setItem("ackra-theme", stored);
     dark = systemDark;
     navigation();
-    const expected = systemDark ? "dark" : "light";
-    expect(document.documentElement.dataset.theme).toBe(expected);
-    expect(localStorage.getItem("ackra-theme")).toBe(expected);
+    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(localStorage.getItem("ackra-theme")).toBe("light");
     expect(screen.getByTestId("theme-toggle").getAttribute("aria-label")).not.toContain("system");
     await act(async () => {
       dark = !systemDark;
       mediaListeners.forEach((listener) => listener());
     });
-    expect(document.documentElement.dataset.theme).toBe(expected);
+    expect(document.documentElement.dataset.theme).toBe("light");
   });
 
   it("closes open disclosures when clicking outside the header", async () => {
