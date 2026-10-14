@@ -1,5 +1,5 @@
 .home-page .home-hero{grid-template-columns:1.12fr 1fr;gap:40px;padding-block:82px;min-height:660px}
-.home-page .hero-copy h1{font-size:clamp(3rem,4.9vw,4.6rem);font-weight:500;line-height:1.04;letter-spacing:-.045em;white-space:nowrap}
+.home-page .hero-copy h1{font-size:clamp(3rem,4.6vw,4rem);font-weight:500;line-height:1.04;letter-spacing:-.045em;white-space:normal}
 .home-page .hero-copy h1 span{color:var(--muted)}
 .home-page .hero-description{max-width:41ch;font-size:1.05rem;margin-top:30px}
 .home-page .hero-actions{margin-top:34px}
@@ -70,17 +70,17 @@
  .integration-track{width:auto}
  .integration-group{flex-wrap:wrap;gap:18px 30px;padding:0}
 }
-@media(min-width:1440px){.home-page .hero-copy h1{font-size:4.25rem}.home-page .home-hero{gap:56px}}
+@media(min-width:1440px){.home-page .hero-copy h1{font-size:4rem}.home-page .home-hero{gap:56px}}
 @media(max-width:1100px){
  .home-page .home-hero{gap:26px;min-height:600px;padding-block:64px}
- .home-page .hero-copy h1{font-size:4.9vw}
+ .home-page .hero-copy h1{font-size:4.6vw}
  .home-process-layout{gap:70px}
  .home-page .solution-panel{padding:32px}
  .home-section-heading{gap:50px}
 }
 @media(max-width:1023px){
  .home-page .home-hero{grid-template-columns:1fr 1fr;min-height:520px}
- .home-page .hero-copy h1{font-size:4.65vw}
+ .home-page .hero-copy h1{font-size:4.35vw}
  .home-page .hero-description{font-size:.97rem;margin-top:24px}
  .home-page .hero-actions{gap:10px;margin-top:26px}
  .home-page .hero-actions .button{padding-inline:16px;font-size:.85rem}
@@ -96,7 +96,7 @@
 }
 @media(max-width:767px){
  .home-page .home-hero{grid-template-columns:1fr;gap:34px;padding-block:52px 36px;min-height:0}
- .home-page .hero-copy h1{font-size:clamp(2rem,10.8vw,4.6rem);line-height:1.08}
+ .home-page .hero-copy h1{font-size:clamp(1.8rem,9.2vw,4rem);line-height:1.08}
  .home-page .hero-description{font-size:1rem;margin-top:24px;max-width:43ch}
  .home-page .hero-actions{margin-top:27px}
  .home-page .hero-actions .button{padding-inline:18px;font-size:.9rem}
