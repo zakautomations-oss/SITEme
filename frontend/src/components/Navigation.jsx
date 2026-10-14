@@ -1,27 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { ArrowUpRight, ChevronDown, Menu, Monitor, Moon, Sun, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
 import { BOOKING_LABEL, BOOKING_URL } from "../config/site";
 import "./functional.css";
 
 const SOLUTIONS = [
   { to: "/solutions/reduce-workload", label: "Reduce workload" },
-  { to: "/solutions/increase-conversion", label: "Increase conversion" },
+  { to: "/solutions/increase-conversion", label: "Win more customers" },
 ];
 const LINKS = [
   { to: "/", label: "Home" },
-  { to: "/services", label: "Process" },
+  { to: "/services", label: "How it works", id: "process" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
-const THEMES = ["system", "light", "dark"];
+const THEMES = ["light", "dark"];
 
 function readThemePreference() {
-  if (typeof window === "undefined") return "system";
+  if (typeof window === "undefined") return "light";
   try {
     const stored = localStorage.getItem("ackra-theme");
-    return THEMES.includes(stored) ? stored : "system";
-  } catch { return "system"; }
+    if (THEMES.includes(stored)) return stored;
+  } catch { /* Theme works without storage. */ }
+  return "light";
 }
 
 export function ThemeToggle() {
@@ -29,29 +30,20 @@ export function ThemeToggle() {
   useEffect(() => { setPreference(readThemePreference()); }, []);
   useEffect(() => {
     if (!preference) return;
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const apply = () => {
-      const theme = preference === "system" ? (media.matches ? "dark" : "light") : preference;
-      document.documentElement.dataset.theme = theme;
-      document.documentElement.dataset.themePreference = preference;
-      window.dispatchEvent(new CustomEvent("ackra-theme-change", { detail: { preference, theme } }));
-    };
-    apply();
-    media.addEventListener("change", apply);
-    return () => media.removeEventListener("change", apply);
+    document.documentElement.dataset.theme = preference;
+    document.documentElement.dataset.themePreference = preference;
+    try { localStorage.setItem("ackra-theme", preference); } catch { /* Theme works without storage. */ }
+    window.dispatchEvent(new CustomEvent("ackra-theme-change", { detail: { preference, theme: preference } }));
   }, [preference]);
-  const current = preference || "system";
+  const current = preference || "light";
   const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
-  const Icon = current === "system" ? Monitor : current === "light" ? Sun : Moon;
+  const Icon = current === "light" ? Sun : Moon;
   return (
     <button
       type="button" className="theme-toggle" data-testid="theme-toggle"
       aria-label={`Theme: ${current}. Switch to ${next} theme`}
       title={`Theme: ${current}. Switch to ${next}`}
-      onClick={() => {
-        try { localStorage.setItem("ackra-theme", next); } catch { /* Theme works without storage. */ }
-        setPreference(next);
-      }}
+      onClick={() => setPreference(next)}
     >
       <Icon size={18} strokeWidth={1.6} aria-hidden="true" />
     </button>
@@ -142,7 +134,7 @@ export default function Navigation() {
           <div className="site-container mobile-navigation-inner">
             <div className="mobile-primary-links">
               {LINKS.map((link) => (
-                <NavLink key={link.to} to={link.to} end={link.to === "/"} data-testid={`nav-mobile-link-${link.label.toLowerCase()}`} onClick={() => setOpen(false)}>
+                <NavLink key={link.to} to={link.to} end={link.to === "/"} data-testid={`nav-mobile-link-${link.id || link.label.toLowerCase()}`} onClick={() => setOpen(false)}>
                   {link.label}
                 </NavLink>
               ))}
@@ -166,5 +158,5 @@ export default function Navigation() {
 }
 
 function NavItem({ link }) {
-  return <NavLink to={link.to} end={link.to === "/"} data-testid={`nav-link-${link.label.toLowerCase()}`} className={({ isActive }) => `nav-link ${isActive ? "is-active" : ""}`}>{link.label}</NavLink>;
+  return <NavLink to={link.to} end={link.to === "/"} data-testid={`nav-link-${link.id || link.label.toLowerCase()}`} className={({ isActive }) => `nav-link ${isActive ? "is-active" : ""}`}>{link.label}</NavLink>;
 }

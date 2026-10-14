@@ -17,7 +17,7 @@ before(async () => {
 });
 after(() => server?.listening ? new Promise((done) => server.close(done)) : undefined);
 
-const paths = ["/", "/services", "/about", "/contact", "/solutions/reduce-workload", "/solutions/increase-conversion"];
+const paths = ["/", "/website-app-design", "/services", "/about", "/contact", "/solutions/reduce-workload", "/solutions/increase-conversion"];
 for (const path of paths) {
   test(`initial HTML contains the complete public page and route metadata: ${path}`, async () => {
     const response = await fetch(origin + path);
@@ -45,11 +45,45 @@ test("deep links preserve the three current process stages", async () => {
   dom.window.close();
 });
 
+for (const study of [
+  { id: "app", text: ["Design review", "Material palette"], photographs: ["/images/app-courtyard.webp", "/images/app-materials.webp"] },
+  { id: "website", text: ["Architecture for", "the way we live.", "Courtyard House"], photographs: ["/images/app-courtyard.webp"] },
+]) {
+test(`the full ${study.id} study renders native interface content and serves its photographs`, async () => {
+  const response = await fetch(origin + `/studies/alder-rowe-${study.id}.html`);
+  assert.equal(response.status, 200);
+  const dom = new JSDOM(await response.text());
+  const document = dom.window.document;
+  assert.ok(document.querySelector('meta[name="robots"]').content.includes("noindex"));
+  assert.equal(document.querySelectorAll("script").length, 0);
+  for (const text of study.text) assert.ok(document.querySelector("main").textContent.includes(text), text);
+  const preview = document.querySelector('main [role="img"]');
+  assert.ok(preview?.getAttribute("aria-label"));
+  assert.equal(preview.querySelector('button, a, input, select, textarea, [tabindex]'), null, "the illustrative preview must not expose nonfunctional controls");
+  const sources = [...document.querySelectorAll("main img")].map((image) => image.getAttribute("src"));
+  for (const photograph of study.photographs) assert.ok(sources.includes(photograph), photograph);
+  assert.ok(sources.every((source) => !/design-(app|website)-/.test(source)), "UI text must not be baked into a raster screenshot");
+  for (const source of new Set(sources)) {
+    const image = await fetch(origin + source);
+    assert.equal(image.status, 200, source);
+    assert.equal(image.headers.get("content-type"), "image/webp");
+  }
+  dom.window.close();
+});
+}
+
 test("noncanonical paths redirect without losing query parameters", async () => {
-  for (const path of ["/services/", "/Services", "/SERVICES/", "/services.html", "/Solutions/Reduce-Workload/"]) {
+  for (const [path, canonical] of [
+    ["/services/", "/services"],
+    ["/Services", "/services"],
+    ["/SERVICES/", "/services"],
+    ["/services.html", "/services"],
+    ["/Solutions/Reduce-Workload/", "/solutions/reduce-workload"],
+    ["/Website-App-Design/", "/website-app-design"],
+    ["/website-app-design.html", "/website-app-design"],
+  ]) {
     const response = await fetch(origin + path + "?source=mail", { redirect: "manual" });
     assert.equal(response.status, 308, path);
-    const canonical = path.toLowerCase().includes("solutions") ? "/solutions/reduce-workload" : "/services";
     assert.equal(response.headers.get("location"), canonical + "?source=mail");
   }
 });

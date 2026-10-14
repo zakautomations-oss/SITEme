@@ -4,34 +4,24 @@ import "./CapabilitiesAccordion.css";
 
 const CAPABILITIES = [
   {
-    label: "Workflow automation",
-    title: "Let your tools work together.",
-    text: "Connect your CRM, calendar, inbox, and internal tools into workflows that run together.",
+    label: "Business automation",
+    title: "Keep orders and updates moving.",
+    text: "Keep customer records, order details, and repair updates in step with your existing tools. AI handles routine updates and flags anything your jewelry team needs to review.",
     image: {
-      src: "/images/workflow-960.webp",
-      srcSet: "/images/workflow-640.webp 640w, /images/workflow-960.webp 960w, /images/workflow-1440.webp 1440w",
-      alt: "Notebook, pen, and laptop arranged on a gray worktable",
+      src: "/images/jewelry-workbench-960.jpg",
+      srcSet: "/images/jewelry-workbench-640.jpg 640w, /images/jewelry-workbench-960.jpg 960w, /images/jewelry-workbench-1440.jpg 1440w",
+      alt: "Gold and silver rings beside a jeweler’s loupe and tools on a stone workbench",
     },
   },
   {
-    label: "Text agents",
-    title: "Keep the conversation moving.",
-    text: "Helpful replies across text and web chat, with a clear handoff when someone needs your team.",
+    label: "Customer conversations",
+    title: "Turn interest into a conversation.",
+    text: "Answer questions about pieces using your product information, arrange consultations, and follow up after an enquiry. Available by phone, text, or web chat, with your team handling personal recommendations.",
   },
   {
-    label: "Voice agents",
-    title: "Answer every opportunity.",
-    text: "Voice agents that answer calls, qualify enquiries, and help customers book a time.",
-  },
-  {
-    label: "Review follow-ups",
-    title: "Make feedback part of the process.",
-    text: "Ask customers for honest reviews and bring service issues to the right person.",
-  },
-  {
-    label: "Custom agents",
-    title: "Built for your specific work.",
-    text: "Bespoke agents that use your company’s knowledge and tools to handle multi-step work, with clear handoffs to your team.",
+    label: "Custom projects",
+    title: "Built around the way you sell.",
+    text: "Connect the steps behind custom orders, repair requests, or trade enquiries. We build around your jewelry business and agree on which decisions stay with your team.",
   },
 ];
 
@@ -103,7 +93,7 @@ export default function CapabilitiesAccordion({ className = "" }) {
                   <img
                     src={image.src}
                     srcSet={image.srcSet}
-                    sizes="(max-width: 767px) calc(100vw - 88px), (max-width: 1023px) calc(100vw - 128px), 560px"
+                    sizes="(max-width: 767px) calc(100vw - 88px), (max-width: 1023px) calc(100vw - 128px), 748px"
                     alt={image.alt}
                     width="960"
                     height="720"

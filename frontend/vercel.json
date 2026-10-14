@@ -8,6 +8,11 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/:path((?!website-app-design$)[wW][eE][bB][sS][iI][tT][eE]-[aA][pP][pP]-[dD][eE][sS][iI][gG][nN])",
+      "destination": "/website-app-design",
+      "permanent": true
+    },
+    {
       "source": "/:path((?!services$)[sS][eE][rR][vV][iI][cC][eE][sS])",
       "destination": "/services",
       "permanent": true
