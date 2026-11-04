@@ -26,6 +26,7 @@ export default function Home() {
     <div ref={pageRef} data-testid="page-home" className="home-page">
       <section ref={heroRef} className="home-hero site-container">
         <div className="hero-copy">
+          <p className="eyebrow hero-eyebrow"><span className="hero-eyebrow-dot" aria-hidden="true" />AI for jewelry businesses</p>
           <h1 className="max-w-6xl">Exceptional jewelry.<br /><span>An experience to match.</span></h1>
           <p className="hero-description">Answer product enquiries, book consultations, and keep customers updated on orders and repairs. Custom AI for jewelry stores, brands, and online jewelers. Built and managed by Ackra.</p>
           <div className="hero-actions">

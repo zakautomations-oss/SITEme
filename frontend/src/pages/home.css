@@ -6,6 +6,7 @@
 .home-page .hero-description{max-width:41ch;font-size:1.05rem;margin-top:30px;color:var(--text);font-weight:500}
 .home-page .hero-actions{margin-top:34px}
 .hero-media{overflow:visible}
+.hero-eyebrow{display:none}
 .home-page .hero-image{aspect-ratio:1.05;object-position:center;transition:transform .8s cubic-bezier(.2,.65,.3,1)}
 .hero-media:hover .hero-image{transform:scale(1.025)}
 .home-chapter{padding-block:120px}
@@ -96,12 +97,24 @@
  .inline-editorial-image{width:115px;height:67px}
 }
 @media(max-width:767px){
- .home-page .home-hero{grid-template-columns:1fr;gap:34px;padding-block:52px 36px;min-height:0}
+ .home-page .home-hero{grid-template-columns:1fr;gap:16px;padding-block:22px 28px;min-height:0}
+ /* Phone opening screen: label, headline, copy, one dominant action, and the
+    dimensional A kept inside the first viewport over a soft accent glow. */
+ .home-page{position:relative;isolation:isolate}
+ .home-page::before{content:"";position:absolute;inset:0 0 auto;height:min(100svh,760px);z-index:-1;pointer-events:none;background:radial-gradient(110% 70% at 50% 0%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 72%)}
+ .home-page .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;padding:6px 10px;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:var(--radius);background:color-mix(in srgb,var(--accent) 8%,var(--surface));font-size:.68rem;letter-spacing:.08em}
+ .hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
  /* 9vw keeps "An experience to match." on one line at weight 700 down to 320px. */
- .home-page .hero-copy h1{font-size:clamp(1.8rem,9vw,4rem);line-height:1.08}
- .home-page .hero-description{font-size:1rem;margin-top:24px;max-width:43ch}
- .home-page .hero-actions{margin-top:27px}
- .home-page .hero-actions .button{padding-inline:18px;font-size:.9rem}
+ .home-page .hero-copy h1{font-size:clamp(1.8rem,9vw,4rem);line-height:1.06}
+ .home-page .hero-description{font-size:.95rem;line-height:1.55;margin-top:16px;max-width:100%}
+ .home-page .hero-actions{margin-top:20px;gap:10px}
+ .home-page .hero-actions .button{padding-inline:16px;font-size:.9rem}
+ .home-page .hero-actions .button:first-child{flex:1 1 auto}
+ .home-page .hero-media{position:relative;display:flex;justify-content:center;isolation:isolate}
+ .home-page .hero-media::before{content:"";position:absolute;inset:-6% 0 -10%;z-index:-1;pointer-events:none;background:radial-gradient(55% 60% at 50% 58%,color-mix(in srgb,var(--accent) 24%,transparent),transparent 72%)}
+ .home-page .hero-media::after{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background-image:radial-gradient(color-mix(in srgb,var(--text) 14%,transparent) 1px,transparent 1.2px);background-size:22px 22px;-webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 100%);mask-image:radial-gradient(closest-side,#000 30%,transparent 100%)}
+ .home-page .ackra-mark{display:flex;justify-content:center}
+ .home-page .ackra-mark-stage{width:auto;height:clamp(150px,30vh,240px);height:clamp(150px,30svh,240px);aspect-ratio:1.14;max-height:none}
  .home-page .hero-image{aspect-ratio:1.4;max-height:420px;object-position:50% 52%}
  .home-chapter{padding-block:72px}
  .home-section-heading{grid-template-columns:1fr;gap:22px;margin-bottom:32px}
