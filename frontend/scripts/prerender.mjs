@@ -23,6 +23,7 @@ function renderHead(pathname) {
     address: { "@type": "PostalAddress", addressLocality: "New York", addressRegion: "NY", addressCountry: "US" },
   };
   return [
+    PUBLIC_ROUTES[pathname] ? googleTag : "",
     `<title>${escape(meta.title)}</title>`,
     `<meta name="description" content="${escape(meta.description)}" />`,
     `<meta name="robots" content="${escape(meta.robots)}" />`,
@@ -44,6 +45,15 @@ function renderHead(pathname) {
     PUBLIC_ROUTES[pathname] ? `<script type="application/ld+json">${JSON.stringify(organization).replace(/</g, "\\u003c")}</script>` : "",
   ].filter(Boolean).join("\n    ");
 }
+
+const googleTag = `<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18560302392"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'AW-18560302392');
+</script>`;
 
 for (const pathname of [...PAGE_PATHS, "/404"]) {
   const appHtml = await render(pathname);
@@ -67,6 +77,7 @@ for (const study of [
   await writeFile(resolve(`dist/studies/alder-rowe-${study.id}.html`), `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Alder / Rowe — ${study.title} design concept by Ackra</title><meta name="robots" content="noindex, follow" />
+${googleTag}
 <style>
 @font-face{font-family:Geist;font-style:normal;font-weight:400 700;font-display:swap;src:url("/fonts/geist-latin.woff2") format("woff2")}
 *{box-sizing:border-box}body{margin:0;background:#e9edf0;color:#161a20;font-family:Geist,Arial,sans-serif;-webkit-font-smoothing:antialiased}

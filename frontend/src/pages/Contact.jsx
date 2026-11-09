@@ -50,13 +50,25 @@ export default function Contact() {
     const controller = new AbortController();
     requestRef.current = controller;
     try {
-      await axios.post("/api/contact", {
+      const response = await axios.post("/api/contact", {
         name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim() || null,
         company: form.company.trim() || null, message: form.message.trim(), website: form.website,
       }, { timeout: 15000, signal: controller.signal });
       if (controller.signal.aborted) return;
       setStatus("success");
       setForm(initial);
+      // The API returns a decoy success when the honeypot is filled.
+      if (response.data?.id && !form.website.trim()) {
+        try {
+          window.gtag?.("event", "conversion", {
+            send_to: "AW-18560302392/yex2CPnbw7MdELj6npJF",
+            value: 1.0,
+            currency: "USD",
+          });
+        } catch {
+          // Tracking failures must not interrupt confirmation of a saved note.
+        }
+      }
     } catch (failure) {
       if (controller.signal.aborted) return;
       setStatus("error");

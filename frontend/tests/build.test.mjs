@@ -18,6 +18,13 @@ before(async () => {
 after(() => server?.listening ? new Promise((done) => server.close(done)) : undefined);
 
 const paths = ["/", "/website-app-design", "/services", "/about", "/contact", "/solutions/reduce-workload", "/solutions/increase-conversion"];
+function checkGoogleTag(document) {
+  const loader = document.head.querySelectorAll('script[src="https://www.googletagmanager.com/gtag/js?id=AW-18560302392"]');
+  assert.equal(loader.length, 1);
+  assert.ok(loader[0].hasAttribute("async"));
+  assert.match(loader[0].nextElementSibling.textContent, /gtag\('config', 'AW-18560302392'\)/);
+}
+
 for (const path of paths) {
   test(`initial HTML contains the complete public page and route metadata: ${path}`, async () => {
     const response = await fetch(origin + path);
@@ -25,6 +32,7 @@ for (const path of paths) {
     const html = await response.text();
     const dom = new JSDOM(html);
     const document = dom.window.document;
+    checkGoogleTag(document);
     assert.equal(document.querySelectorAll("main h1").length, 1);
     assert.ok(document.querySelector("main").textContent.trim().length > 200);
     assert.ok(!document.querySelector("main").textContent.includes("Loading page…"));
@@ -55,7 +63,8 @@ test(`the full ${study.id} study renders native interface content and serves its
   const dom = new JSDOM(await response.text());
   const document = dom.window.document;
   assert.ok(document.querySelector('meta[name="robots"]').content.includes("noindex"));
-  assert.equal(document.querySelectorAll("script").length, 0);
+  checkGoogleTag(document);
+  assert.equal(document.querySelectorAll("script").length, 2, "only the Google tag scripts are needed for a static study");
   for (const text of study.text) assert.ok(document.querySelector("main").textContent.includes(text), text);
   const preview = document.querySelector('main [role="img"]');
   assert.ok(preview?.getAttribute("aria-label"));
