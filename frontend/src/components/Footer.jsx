@@ -37,7 +37,7 @@ export default function Footer() {
           </div>
         </nav>
       </div>
-      <div className="site-container footer-bottom"><p>© {new Date().getFullYear()} Ackra AI</p></div>
+      <div className="site-container footer-bottom"><p data-testid="footer-legal-name">© {new Date().getFullYear()} ACKRA LLC</p></div>
     </footer>
   );
 }
