@@ -43,6 +43,11 @@
       "permanent": true
     },
     {
+      "source": "/:path((?!terms$)[tT][eE][rR][mM][sS])",
+      "destination": "/terms",
+      "permanent": true
+    },
+    {
       "source": "/:path((?!admin$)[aA][dD][mM][iI][nN])",
       "destination": "/admin",
       "permanent": true

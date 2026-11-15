@@ -33,6 +33,7 @@ export default function Footer() {
             <Link to="/about" data-testid="footer-link-about">About</Link>
             <Link to="/contact" data-testid="footer-link-contact">Contact</Link>
             <Link to="/privacy" data-testid="footer-link-privacy">Privacy</Link>
+            <Link to="/terms" data-testid="footer-link-terms">Terms</Link>
             <Link to="/solutions/reduce-workload">Reduce workload</Link>
             <Link to="/solutions/increase-conversion">Win more customers</Link>
           </div>
