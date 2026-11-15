@@ -13,6 +13,7 @@ const WebsiteAppDesign = routePages["/website-app-design"].Component;
 const Services = routePages["/services"].Component;
 const About = routePages["/about"].Component;
 const Contact = routePages["/contact"].Component;
+const Privacy = routePages["/privacy"].Component;
 const Admin = routePages["/admin"].Component;
 const SolutionReduceWorkload = routePages["/solutions/reduce-workload"].Component;
 const SolutionIncreaseConversion = routePages["/solutions/increase-conversion"].Component;
@@ -114,6 +115,7 @@ export default function App() {
                 <Route path="/services" element={<Services />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/solutions/reduce-workload" element={<SolutionReduceWorkload />} />
                 <Route path="/solutions/increase-conversion" element={<SolutionIncreaseConversion />} />

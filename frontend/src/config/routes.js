@@ -21,6 +21,10 @@ export const PUBLIC_ROUTES = {
     title: "Contact | Ackra AI",
     description: "Discuss AI for your jewelry business, or a website or app for any industry. Book a 45-minute call with Ackra to talk through your goals.",
   },
+  "/privacy": {
+    title: "Privacy Policy | Ackra AI",
+    description: "How ACKRA LLC handles personal information on this website and in the messaging service it runs for jewelry businesses, and how to ask for deletion.",
+  },
   "/solutions/reduce-workload": {
     title: "Reduce Jewelry Business Admin | Ackra AI",
     description: "Reduce routine admin in your jewelry business. Connect customer records, order updates, repair enquiries, and follow-ups with custom AI from Ackra.",

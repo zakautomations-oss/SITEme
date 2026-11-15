@@ -14,6 +14,7 @@ export const routePages = {
   "/website-app-design": page(() => import("./pages/WebsiteAppDesign")),
   "/services": page(() => import("./pages/Services")),
   "/about": page(() => import("./pages/About")),
+  "/privacy": page(() => import("./pages/Privacy")),
   "/contact": page(() => import("./pages/Contact")),
   "/admin": page(() => import("./pages/Admin")),
   "/solutions/reduce-workload": page(() => import("./pages/SolutionReduceWorkload")),
