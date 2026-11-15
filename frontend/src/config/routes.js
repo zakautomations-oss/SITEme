@@ -27,7 +27,7 @@ export const PUBLIC_ROUTES = {
   },
   "/terms": {
     title: "Terms of Service | Ackra AI",
-    description: "The terms for using the ACKRA LLC website and for messaging a jewelry business that uses the Ackra messaging service.",
+    description: "The terms for using the ACKRA LLC website, and how the Ackra messaging service works for people who message a business that uses it.",
   },
   "/solutions/reduce-workload": {
     title: "Reduce Jewelry Business Admin | Ackra AI",

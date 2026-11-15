@@ -12,7 +12,7 @@ export default function Terms() {
       <p className="body-note">ACKRA LLC, doing business as Ackra AI. Effective {EFFECTIVE_DATE}.</p>
 
       <div className="legal-body">
-        <p>These terms are between you and ACKRA LLC (“Ackra”, “we”). By using this website, or by messaging a business that uses Ackra, you agree to them.</p>
+        <p>These terms are between you and ACKRA LLC (“Ackra”, “we”). By using this website, you agree to them.</p>
 
         <h2>Who we are</h2>
         <p>Ackra builds and runs messaging assistants for jewelry businesses. You can reach us at {mail}.</p>
@@ -22,13 +22,13 @@ export default function Terms() {
           <li>This website.</li>
           <li>The Ackra messaging service, as you experience it when you message a business that uses Ackra on Messenger or Instagram.</li>
         </ul>
-        <p>Businesses that use Ackra do so under their own separate agreement with us. That agreement, not these terms, governs the relationship between Ackra and the business.</p>
+        <p>These terms do not cover a business’s own use of Ackra.</p>
 
         <h2>If you message a business that uses Ackra</h2>
-        <p>You do not need an account with us. Your relationship is with the business you messaged.</p>
+        <p>This section explains how the service works; it does not create an agreement between you and Ackra. You do not need an account with us. Your relationship is with the business you messaged.</p>
         <ul>
-          <li>Replies may be drafted by software. A person at the business reviews each draft before it is sent, unless the business has chosen to have replies sent on its behalf.</li>
-          <li>If you ask whether you are talking to software, the reply will say so.</li>
+          <li>Replies may be drafted by software. A person reviews each draft before it is sent, unless the business has chosen to have replies sent on its behalf.</li>
+          <li>Ackra is built so that if you ask whether you are talking to software, the reply says so.</li>
           <li>The business, not Ackra, is the seller. It is responsible for its products, its prices, and any promise made to you in the conversation.</li>
         </ul>
 
