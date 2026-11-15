@@ -17,7 +17,7 @@ before(async () => {
 });
 after(() => server?.listening ? new Promise((done) => server.close(done)) : undefined);
 
-const paths = ["/", "/website-app-design", "/services", "/about", "/contact", "/privacy", "/solutions/reduce-workload", "/solutions/increase-conversion"];
+const paths = ["/", "/website-app-design", "/services", "/about", "/contact", "/privacy", "/terms", "/solutions/reduce-workload", "/solutions/increase-conversion"];
 function checkGoogleTag(document) {
   const loader = document.head.querySelectorAll('script[src="https://www.googletagmanager.com/gtag/js?id=AW-18560302392"]');
   assert.equal(loader.length, 1);

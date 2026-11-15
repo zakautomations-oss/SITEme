@@ -26,6 +26,11 @@
     <changefreq>yearly</changefreq>
   </url>
   <url>
+    <loc>https://ackra.ai/terms</loc>
+    <priority>0.3</priority>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
     <loc>https://ackra.ai/solutions/reduce-workload</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>

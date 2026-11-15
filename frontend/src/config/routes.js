@@ -25,6 +25,10 @@ export const PUBLIC_ROUTES = {
     title: "Privacy Policy | Ackra AI",
     description: "How ACKRA LLC handles personal information on this website and in the messaging service it runs for jewelry businesses, and how to ask for deletion.",
   },
+  "/terms": {
+    title: "Terms of Service | Ackra AI",
+    description: "The terms for using the ACKRA LLC website and for messaging a jewelry business that uses the Ackra messaging service.",
+  },
   "/solutions/reduce-workload": {
     title: "Reduce Jewelry Business Admin | Ackra AI",
     description: "Reduce routine admin in your jewelry business. Connect customer records, order updates, repair enquiries, and follow-ups with custom AI from Ackra.",
