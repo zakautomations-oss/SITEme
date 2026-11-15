@@ -22,7 +22,10 @@ export function render(pathname) {
     output.on("data", (chunk) => chunks.push(chunk));
     output.on("end", () => {
       clearTimeout(timeout);
-      if (!failed) resolve(Buffer.concat(chunks).toString("utf8"));
+      // React 18 flushes its whole byte view when a multi-byte character does not
+      // fit at the end, which leaves NUL padding in the stream. Markup never
+      // contains a real NUL, so drop them.
+      if (!failed) resolve(Buffer.concat(chunks).toString("utf8").replace(/\0/g, ""));
     });
     output.on("error", reject);
     const { pipe, abort } = renderToPipeableStream(

@@ -30,6 +30,7 @@ for (const path of paths) {
     const response = await fetch(origin + path);
     assert.equal(response.status, 200);
     const html = await response.text();
+    assert.ok(!html.includes("\0"), "prerendered HTML must not contain NUL bytes");
     const dom = new JSDOM(html);
     const document = dom.window.document;
     checkGoogleTag(document);
