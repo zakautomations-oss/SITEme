@@ -38,6 +38,11 @@
       "permanent": true
     },
     {
+      "source": "/:path((?!privacy$)[pP][rR][iI][vV][aA][cC][yY])",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
       "source": "/:path((?!admin$)[aA][dD][mM][iI][nN])",
       "destination": "/admin",
       "permanent": true
