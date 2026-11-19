@@ -8,3 +8,5 @@ test_reports/
 zi4NaPl4
 zii4qeX5
 .emergent/
+.vercel
+.env*

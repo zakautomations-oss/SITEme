@@ -11,8 +11,11 @@ function page(importPage) {
 
 export const routePages = {
   "/": page(() => import("./pages/Home")),
+  "/website-app-design": page(() => import("./pages/WebsiteAppDesign")),
   "/services": page(() => import("./pages/Services")),
   "/about": page(() => import("./pages/About")),
+  "/privacy": page(() => import("./pages/Privacy")),
+  "/terms": page(() => import("./pages/Terms")),
   "/contact": page(() => import("./pages/Contact")),
   "/admin": page(() => import("./pages/Admin")),
   "/solutions/reduce-workload": page(() => import("./pages/SolutionReduceWorkload")),

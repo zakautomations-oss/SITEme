@@ -13,7 +13,7 @@ export default function Footer() {
             <img src="/ackra-logo.svg" alt="" width="30" height="30" />
             <span>Ackra<span className="brand-period">.</span></span>
           </Link>
-          <p>Custom AI systems.<br />Built around your business.</p>
+          <p>AI for jewelry businesses.<br />Websites and apps for every industry.</p>
           <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" data-testid="footer-book" className="footer-book-link">
             {BOOKING_LABEL}<ArrowUpRight size={17} strokeWidth={1.6} aria-hidden="true" />
           </a>
@@ -28,15 +28,18 @@ export default function Footer() {
           <h2>Explore</h2>
           <div>
             <Link to="/" data-testid="footer-link-home">Home</Link>
-            <Link to="/services" data-testid="footer-link-services">Process</Link>
+            <Link to="/website-app-design" data-testid="footer-link-design">Websites &amp; apps</Link>
+            <Link to="/services" data-testid="footer-link-services">How it works</Link>
             <Link to="/about" data-testid="footer-link-about">About</Link>
             <Link to="/contact" data-testid="footer-link-contact">Contact</Link>
+            <Link to="/privacy" data-testid="footer-link-privacy">Privacy</Link>
+            <Link to="/terms" data-testid="footer-link-terms">Terms</Link>
             <Link to="/solutions/reduce-workload">Reduce workload</Link>
-            <Link to="/solutions/increase-conversion">Increase conversion</Link>
+            <Link to="/solutions/increase-conversion">Win more customers</Link>
           </div>
         </nav>
       </div>
-      <div className="site-container footer-bottom"><p>© {new Date().getFullYear()} Ackra AI</p></div>
+      <div className="site-container footer-bottom"><p data-testid="footer-legal-name">© {new Date().getFullYear()} ACKRA LLC</p></div>
     </footer>
   );
 }

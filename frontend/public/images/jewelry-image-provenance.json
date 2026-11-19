@@ -1,0 +1,67 @@
+[
+  {
+    "name": "jewelry-workbench",
+    "prompt": "Use case: photorealistic-natural\nAsset type: editorial homepage photograph for a jewelry business services website; an illustrative setting, not a real company's workshop.\nPrimary request: a close editorial still life of a fine jeweler's consultation workbench with three elegant gold and silver rings, a jeweler's loupe and a few subtle precision tools on charcoal gray stone.\nStyle/medium: exceptional natural editorial photography, authentic physical objects and realistic fine detail.\nComposition/framing: landscape 4:3 image; close angled view, relaxed purposeful arrangement, tactile foreground, softly receding background, well-defined central subject with room to crop.\nLighting/mood: soft window daylight, gentle shadows, quiet professional craftsmanship.\nColor palette: charcoal, warm stone gray, silver, cream, restrained warm gold.\nMaterials/textures: natural stone, fine brushed and polished metal, subtle worn tool handles.\nConstraints: no people, no readable text, no logos, no watermark, no branding, no icons, no futuristic technology, no decorative sparkles. No split screen, no collage. A single full-bleed photograph.",
+    "source": "Generated with the built-in image generation tool",
+    "created": "2026-10-13",
+    "illustrative": true,
+    "originalDimensions": [
+      1448,
+      1086
+    ],
+    "exports": [
+      "jewelry-workbench-640.jpg",
+      "jewelry-workbench-960.jpg",
+      "jewelry-workbench-1440.jpg"
+    ]
+  },
+  {
+    "name": "jewelry-orders",
+    "prompt": "Use case: photorealistic-natural\nAsset type: editorial photograph illustrating organized order operations for a jewelry business services website; not a real company's premises.\nPrimary request: a beautifully organized jewelry order packing desk on a pale warm stone surface. A small open cream jewelry box with a delicate gold necklace, two additional neutral gray boxes, neatly folded tissue, blank ivory note cards, and an unobtrusive cropped edge of a closed silver laptop.\nStyle/medium: realistic premium editorial still-life photography, natural imperfect materials.\nComposition/framing: landscape 4:3 image, slightly overhead diagonal viewpoint, balanced uncluttered arrangement, close enough to see the jewelry, central composition suitable for website crops.\nLighting/mood: soft side window daylight, natural shadows, calm and efficient small jewelry business.\nColor palette: pale stone, cream, soft gray, restrained warm gold, subtle charcoal.\nConstraints: every card completely blank; no readable text anywhere; no people, labels, logos, watermarks, icons, or artificial glow. No split screen, no collage. A single full-bleed photograph.",
+    "source": "Generated with the built-in image generation tool",
+    "created": "2026-10-13",
+    "illustrative": true,
+    "originalDimensions": [
+      1448,
+      1086
+    ],
+    "exports": [
+      "jewelry-orders-640.jpg",
+      "jewelry-orders-960.jpg",
+      "jewelry-orders-1440.jpg"
+    ]
+  },
+  {
+    "name": "jewelry-showroom",
+    "prompt": "Use case: photorealistic-natural\nAsset type: editorial photograph illustrating a fine jewelry appointment experience for a jewelry business services website; a fictional illustrative interior.\nPrimary request: an intimate empty fine jewelry consultation setting. Focus on a refined dark gray velvet tray on a pale stone consultation table holding a carefully arranged pair of small gold earrings, two elegant rings, and a delicate necklace. Two understated upholstered consultation chairs and quiet glass vitrines softly blurred in the background.\nStyle/medium: premium natural interior and still-life photography, authentic materials and plausible fine jewelry.\nComposition/framing: landscape 4:3; close table-level angled view, jewelry tray in foreground, soft depth of field, restrained inviting interior.\nLighting/mood: luminous soft daylight, calm private appointment atmosphere.\nColor palette: charcoal velvet, cream upholstery, warm gray stone, silver, restrained warm gold.\nConstraints: empty room, no people, no readable text, no logos, no branding, no watermark, no icons, no sparkle effects. No split screen, no collage. A single full-bleed photograph.",
+    "source": "Generated with the built-in image generation tool",
+    "created": "2026-10-13",
+    "illustrative": true,
+    "originalDimensions": [
+      1448,
+      1086
+    ],
+    "exports": [
+      "jewelry-showroom-640.jpg",
+      "jewelry-showroom-960.jpg",
+      "jewelry-showroom-1440.jpg"
+    ]
+  },
+  {
+    "name": "ackra-social-neutral",
+    "source": "Edited from the existing Ackra social card with the built-in image generation tool",
+    "created": "2026-10-13",
+    "originalDimensions": [
+      1731,
+      909
+    ],
+    "exportDimensions": [
+      1200,
+      630
+    ],
+    "exports": [
+      "../ackra-social-neutral.png"
+    ],
+    "prompt": "Use case: precise-object-edit\nAsset type: neutral 1200x630 social sharing card for Ackra.\nInput image: existing Ackra social card; this is the edit target.\nPrimary request: preserve the existing Ackra identity and create a clean brand-only social share card. Keep the dark almost-black background and subtle purple atmospheric light. Retain the exact white bold Ackra wordmark, the purple period and purple short underline beneath its A. The ONLY text in the entire finished image must be \"Ackra.\" Remove all other existing text completely, including the top AI AGENCY / NEW YORK CITY line, both business-service lines, the timeline promise and ackra.ai.\nComposition: one large original-style Ackra. wordmark centered on the card horizontally and vertically, generous open space, 1200x630 landscape proportions.\nConstraints: do not add any slogans, labels, icons, jewelry, extra text, logos, promises, borders or watermarks. Preserve the typography and purple accent of the existing wordmark exactly. Only the background and a single Ackra. wordmark remain."
+  }
+]

@@ -1,5 +1,5 @@
 import React from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axios from "axios";
@@ -14,7 +14,11 @@ function fill(values = valid) {
   });
 }
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.stubGlobal("gtag", vi.fn());
+});
+afterEach(() => vi.unstubAllGlobals());
 describe("contact submission", () => {
   it("rejects blank and over-limit fields before sending, and preserves the field order", async () => {
     render(<Contact />);
@@ -22,6 +26,7 @@ describe("contact submission", () => {
     fireEvent.change(screen.getByTestId("contact-input-name"), { target: { value: "   " } });
     await userEvent.click(screen.getByTestId("contact-submit"));
     expect(axios.post).not.toHaveBeenCalled();
+    expect(window.gtag).not.toHaveBeenCalled();
     expect(screen.getByTestId("contact-input-name")).toHaveFocus();
     expect(screen.getByTestId("contact-input-name")).toHaveAttribute("aria-invalid", "true");
     expect(screen.getByText("Enter your name.")).toBeVisible();
@@ -41,11 +46,34 @@ describe("contact submission", () => {
     expect(axios.post).toHaveBeenCalledTimes(1);
     expect(axios.post).toHaveBeenCalledWith("/api/contact", { ...valid, phone: null, company: null }, expect.objectContaining({ timeout: 15000, signal: expect.any(AbortSignal) }));
     expect(screen.getByTestId("contact-submit")).toBeDisabled();
+    expect(window.gtag).not.toHaveBeenCalled();
     resolveRequest({ data: { id: "saved" } });
     await waitFor(() => expect(screen.getByTestId("contact-success")).toHaveFocus());
     await userEvent.click(screen.getByTestId("contact-send-another"));
     await waitFor(() => expect(screen.getByTestId("contact-input-name")).toHaveFocus());
     expect(screen.getByTestId("contact-input-name")).toHaveValue("");
+    expect(window.gtag).toHaveBeenCalledExactlyOnceWith("event", "conversion", {
+      send_to: "AW-18560302392/yex2CPnbw7MdELj6npJF", value: 1, currency: "USD",
+    });
+  });
+
+  it("excludes honeypot submissions even when the API returns success", async () => {
+    axios.post.mockResolvedValue({ data: { id: "decoy" } });
+    render(<Contact />);
+    fill({ ...valid, website: "bot.example" });
+    await userEvent.click(screen.getByTestId("contact-submit"));
+    expect(await screen.findByTestId("contact-success")).toBeVisible();
+    expect(window.gtag).not.toHaveBeenCalled();
+  });
+
+  it("confirms the saved note even if the analytics handler throws", async () => {
+    axios.post.mockResolvedValue({ data: { id: "saved" } });
+    window.gtag.mockImplementation(() => { throw new Error("Tracking blocked"); });
+    render(<Contact />);
+    fill();
+    await userEvent.click(screen.getByTestId("contact-submit"));
+    expect(await screen.findByTestId("contact-success")).toBeVisible();
+    expect(window.gtag).toHaveBeenCalledTimes(1);
   });
 
   it("keeps the draft and offers direct email when the request times out", async () => {
@@ -54,6 +82,7 @@ describe("contact submission", () => {
     fill();
     await userEvent.click(screen.getByTestId("contact-submit"));
     expect(await screen.findByRole("alert")).toHaveTextContent("Sending took too long");
+    expect(window.gtag).not.toHaveBeenCalled();
     expect(screen.getByTestId("contact-input-message")).toHaveValue(valid.message);
     expect(screen.getByTestId("contact-submit")).toBeEnabled();
     expect(screen.getByRole("alert").querySelector("a")).toHaveAttribute("href", "mailto:ackra@ackraai.com");

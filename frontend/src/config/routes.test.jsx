@@ -14,10 +14,12 @@ function MetaFixture() {
 describe("route metadata", () => {
   it("normalizes known pages without lowercasing asset names or invented routes", () => {
     expect(canonicalPath("/Services/")).toBe("/services");
+    expect(canonicalPath("/Website-App-Design/")).toBe("/website-app-design");
     expect(canonicalPath("/SOLUTIONS/REDUCE-WORKLOAD///")).toBe("/solutions/reduce-workload");
     expect(canonicalPath("/assets/ImageABC.png")).toBeNull();
     expect(canonicalPath("/services-extra")).toBeNull();
     expect(getRouteMeta("/Services/").title).toBe("Our Process | Ackra AI");
+    expect(getRouteMeta("/Website-App-Design/").canonical).toBe("https://ackra.ai/website-app-design");
   });
 
   it("replaces a noncanonical client URL while preserving query and anchor", async () => {

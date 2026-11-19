@@ -9,9 +9,12 @@ import { usePageNavigation } from "./components/usePageNavigation";
 import "./App.css";
 
 const Home = routePages["/"].Component;
+const WebsiteAppDesign = routePages["/website-app-design"].Component;
 const Services = routePages["/services"].Component;
 const About = routePages["/about"].Component;
 const Contact = routePages["/contact"].Component;
+const Privacy = routePages["/privacy"].Component;
+const Terms = routePages["/terms"].Component;
 const Admin = routePages["/admin"].Component;
 const SolutionReduceWorkload = routePages["/solutions/reduce-workload"].Component;
 const SolutionIncreaseConversion = routePages["/solutions/increase-conversion"].Component;
@@ -109,9 +112,12 @@ export default function App() {
               <div className={pathname === "/admin" ? "route-content" : "route-content route-entrance"}>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/website-app-design" element={<WebsiteAppDesign />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/solutions/reduce-workload" element={<SolutionReduceWorkload />} />
                 <Route path="/solutions/increase-conversion" element={<SolutionIncreaseConversion />} />

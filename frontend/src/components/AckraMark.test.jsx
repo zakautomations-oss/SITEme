@@ -186,13 +186,78 @@ describe("interactive Ackra mark", () => {
     expect(geometry(mark)).not.toBe(dragged);
   });
 
+  it("lets a mouse drag tilt the mark vertically", () => {
+    render(<AckraMark />);
+    const mark = stage();
+    const resting = geometry(mark);
+    fireEvent.pointerDown(mark, { button: 0, buttons: 1, clientX: 300, clientY: 200 });
+    fireEvent.pointerMove(mark, { buttons: 1, clientX: 300, clientY: 270 });
+    settleFrames();
+    expect(geometry(mark)).not.toBe(resting);
+  });
+
+  it("keeps the dragged orientation when the pointer leaves and returns to the center", () => {
+    render(<AckraMark />);
+    const mark = stage();
+    fireEvent.pointerDown(mark, { button: 0, buttons: 1, clientX: 200, clientY: 200 });
+    fireEvent.pointerMove(mark, { buttons: 1, clientX: 280, clientY: 220 });
+    settleFrames();
+    const dragged = geometry(mark);
+    fireEvent.pointerUp(mark, { buttons: 0, clientX: 280, clientY: 220 });
+    fireEvent.pointerLeave(mark);
+    settleFrames();
+    expect(geometry(mark)).toBe(dragged);
+    fireEvent.pointerMove(mark, { buttons: 0, clientX: 300, clientY: 280 });
+    settleFrames();
+    expect(geometry(mark)).toBe(dragged);
+  });
+
+  it("does not let another finger replace or finish the active drag", () => {
+    render(<AckraMark />);
+    const mark = stage();
+    fireEvent.pointerDown(mark, { pointerType: "touch", pointerId: 1, button: 0, buttons: 1, clientX: 200, clientY: 200 });
+    fireEvent.pointerMove(mark, { pointerType: "touch", pointerId: 1, buttons: 1, clientX: 280, clientY: 210 });
+    settleFrames();
+    const dragged = geometry(mark);
+    fireEvent.pointerDown(mark, { pointerType: "touch", pointerId: 2, isPrimary: false, button: 0, buttons: 1, clientX: 500, clientY: 300 });
+    fireEvent.pointerMove(mark, { pointerType: "touch", pointerId: 2, isPrimary: false, buttons: 1, clientX: 420, clientY: 300 });
+    settleFrames();
+    expect(geometry(mark)).toBe(dragged);
+    fireEvent.pointerUp(mark, { pointerType: "touch", pointerId: 2, isPrimary: false, buttons: 0 });
+    fireEvent.pointerMove(mark, { pointerType: "touch", pointerId: 1, buttons: 1, clientX: 320, clientY: 210 });
+    settleFrames();
+    expect(geometry(mark)).not.toBe(dragged);
+  });
+
+  it("ignores a second finger's click without consuming the drag's click suppression", () => {
+    render(<AckraMark />);
+    const mark = stage();
+    fireEvent.pointerDown(mark, { pointerType: "touch", pointerId: 1, button: 0, buttons: 1, clientX: 200, clientY: 200 });
+    fireEvent.pointerMove(mark, { pointerType: "touch", pointerId: 1, buttons: 1, clientX: 280, clientY: 210 });
+    settleFrames();
+    const dragged = geometry(mark);
+    fireEvent.pointerDown(mark, { pointerType: "touch", pointerId: 2, isPrimary: false, button: 0, buttons: 1, clientX: 400, clientY: 300 });
+    fireEvent.pointerUp(mark, { pointerType: "touch", pointerId: 2, isPrimary: false, buttons: 0 });
+    fireEvent(mark, new PointerEvent("click", { bubbles: true, pointerType: "touch", pointerId: 2, detail: 1 }));
+    fireEvent.pointerUp(mark, { pointerType: "touch", pointerId: 1, buttons: 0 });
+    fireEvent(mark, new PointerEvent("click", { bubbles: true, pointerType: "touch", pointerId: 1, detail: 1 }));
+    settleFrames();
+    expect(geometry(mark)).toBe(dragged);
+    fireEvent(mark, new PointerEvent("click", { bubbles: true, pointerType: "touch", pointerId: 2, detail: 1 }));
+    settleFrames();
+    expect(geometry(mark)).toBe(dragged);
+  });
+
   it("does not treat a hover as dragging after an uncaptured pointer leaves and is released outside", () => {
     render(<AckraMark />);
     const mark = stage();
-    fireEvent.pointerDown(mark, { button: 0, buttons: 1, clientX: 300, clientY: 150 });
-    fireEvent.pointerMove(mark, { buttons: 1, clientX: 300, clientY: 570 });
-    fireEvent.pointerLeave(mark, { buttons: 1, clientX: 300, clientY: 570 });
-    fireEvent.pointerUp(document.body, { buttons: 0, clientX: 300, clientY: 570 });
+    const resting = geometry(mark);
+    fireEvent.pointerDown(mark, { pointerType: "touch", button: 0, buttons: 1, clientX: 300, clientY: 150 });
+    fireEvent.pointerMove(mark, { pointerType: "touch", buttons: 1, clientX: 300, clientY: 570 });
+    settleFrames();
+    expect(geometry(mark)).toBe(resting);
+    fireEvent.pointerLeave(mark, { pointerType: "touch", buttons: 1, clientX: 300, clientY: 570 });
+    fireEvent.pointerUp(document.body, { pointerType: "touch", buttons: 0, clientX: 300, clientY: 570 });
     fireEvent.pointerMove(mark, { buttons: 0, clientX: 400, clientY: 150 });
     expect(mark.setPointerCapture).not.toHaveBeenCalled();
     settleFrames();

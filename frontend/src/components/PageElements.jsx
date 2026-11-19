@@ -10,7 +10,8 @@ export function BookingLink({ testId, className = "" }) {
 export function EditorialImage({ name, alt, priority = false, className = "" }) {
   const dimensions = name === "studio" ? { width: 1440, height: 960 } : { width: 1440, height: 1080 };
   const widths = name === "systems" ? [640, 800, 960, 1440] : [640, 960, 1440];
-  return <img className={`editorial-image ${className}`} src={`/images/${name}-960.webp`} srcSet={widths.map(width => `/images/${name}-${width}.webp ${width}w`).join(", ")} sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1280px) 45vw, 560px" {...dimensions} alt={alt} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : "auto"} decoding="async" />;
+  const format = name.startsWith("jewelry-") ? "jpg" : "webp";
+  return <img className={`editorial-image ${className}`} src={`/images/${name}-960.${format}`} srcSet={widths.map(width => `/images/${name}-${width}.${format} ${width}w`).join(", ")} sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1280px) 45vw, 560px" {...dimensions} alt={alt} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : "auto"} decoding="async" />;
 }
 export function ClosingSection({ title, text, testId }) {
   return <section className="closing-section site-container section-space"><Reveal className="closing-copy"><h2 className="section-title">{title}</h2><p className="section-intro">{text}</p><BookingLink testId={testId} /><p className="booking-detail">{BOOKING_DURATION} minutes to talk through your next step.</p></Reveal></section>;

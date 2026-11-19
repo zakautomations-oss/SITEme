@@ -22,11 +22,6 @@
  --line:#343641;--line-strong:#626574;--accent-surface:#25253e;--accent-surface-text:#d4d1ff;
  --error:#ffacb2;--success:#a6d4bb;
 }
-@media(prefers-color-scheme:dark){
- :root:not([data-theme="light"]):not([data-theme="dark"]){
- color-scheme:dark;--surface:#111218;--surface-raised:#191b23;--surface-soft:#20232d;--text:#f1f2f5;--muted:#b0b3c1;--accent:#a6a3f6;--accent-ink:#171626;--line:#343641;--line-strong:#626574;--accent-surface:#25253e;--accent-surface-text:#d4d1ff;--error:#ffacb2;--success:#a6d4bb;
- }
-}
 *{box-sizing:border-box}
 html{background:var(--surface);scroll-padding-top:calc(var(--nav-height) + 24px)}
 body{margin:0;background:var(--surface);color:var(--text);font-family:Geist,ui-sans-serif,system-ui,sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
@@ -231,4 +226,5 @@ input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px soli
 @media(max-width:360px){.site-container{width:calc(100% - 32px)}.home-hero h1{font-size:2.45rem}.hero-actions{gap:8px}.hero-actions .button{padding:11px 13px}.page-hero h1{font-size:2.4rem}.process-overview,.delivery-timeline{grid-template-columns:1fr}.hero-description{font-size:.97rem}}
 @media(max-height:650px) and (min-width:768px){.home-hero{padding-block:32px;min-height:0}.hero-image{max-height:410px}.home-hero h1{font-size:3.4rem}.eyebrow{margin-bottom:14px}.hero-description{margin-top:18px}.hero-actions{margin-top:22px}}
 
+.legal-page{padding-block:80px 110px}.legal-page .body-note{margin-top:18px}.legal-body{max-width:68ch;margin-top:48px;color:var(--muted);line-height:1.8}.legal-body h2{color:var(--text);font-size:1.35rem;margin-top:48px;scroll-margin-top:7rem}.legal-body h3{color:var(--text);font-size:1rem;font-weight:500;margin-top:26px}.legal-body p,.legal-body ul{margin-top:14px}.legal-body ul{list-style:disc;padding-left:1.2em}.legal-body li+li{margin-top:6px}.legal-body a{color:var(--accent);text-underline-offset:4px;text-decoration:underline}
 .not-found{min-height:65dvh;padding-block:90px}.not-found h1{margin-top:20px}.not-found .section-intro{max-width:55ch}

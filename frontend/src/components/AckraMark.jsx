@@ -14,9 +14,11 @@ export default function AckraMark({ motionAreaRef }) {
   const stageRef = useRef(null);
   const current = useRef(REST);
   const target = useRef(REST);
+  const restingPose = useRef(REST);
   const frame = useRef(null);
   const reducedMotion = useRef(true);
   const pointer = useRef(null);
+  const clickPointer = useRef(null);
   const suppressClick = useRef(false);
 
   const stop = useCallback(() => {
@@ -32,6 +34,10 @@ export default function AckraMark({ motionAreaRef }) {
         stop();
         current.current = REST;
         target.current = REST;
+        restingPose.current = REST;
+        pointer.current = null;
+        clickPointer.current = null;
+        suppressClick.current = false;
         setPose(REST);
         view.current = 0;
       }
@@ -58,8 +64,8 @@ export default function AckraMark({ motionAreaRef }) {
       const destination = target.current;
       const settled = Math.abs(destination.yaw - previous.yaw) + Math.abs(destination.pitch - previous.pitch) < 0.001;
       const value = settled ? destination : {
-        yaw: previous.yaw + (destination.yaw - previous.yaw) * 0.18,
-        pitch: previous.pitch + (destination.pitch - previous.pitch) * 0.18,
+        yaw: previous.yaw + (destination.yaw - previous.yaw) * 0.24,
+        pitch: previous.pitch + (destination.pitch - previous.pitch) * 0.24,
       };
       current.current = value;
       setPose(value);
@@ -77,10 +83,10 @@ export default function AckraMark({ motionAreaRef }) {
       if (!bounds.width || !bounds.height) return;
       const x = clamp((event.clientX - bounds.left) / bounds.width - 0.5, -0.5, 0.5);
       const y = clamp((event.clientY - bounds.top) / bounds.height - 0.5, -0.5, 0.5);
-      aim({ yaw: VIEWS[view.current] + x * 0.64, pitch: REST.pitch - y * 0.24 });
+      aim({ yaw: clamp(restingPose.current.yaw + x * 1.1, -1.25, 1.25), pitch: clamp(restingPose.current.pitch - y * 0.48, -0.5, 0.5) });
     };
     const rest = () => {
-      if (!pointer.current && !reducedMotion.current) aim({ yaw: VIEWS[view.current], pitch: REST.pitch });
+      if (!pointer.current && !reducedMotion.current) aim(restingPose.current);
     };
     area.addEventListener("pointermove", followPointer, { passive: true });
     area.addEventListener("pointerleave", rest);
@@ -93,28 +99,35 @@ export default function AckraMark({ motionAreaRef }) {
   const rotate = (direction = 1) => {
     const next = (view.current + direction + VIEWS.length) % VIEWS.length;
     view.current = next;
-    aim({ yaw: VIEWS[next], pitch: REST.pitch });
+    restingPose.current = { yaw: VIEWS[next], pitch: REST.pitch };
+    aim(restingPose.current);
   };
 
   const move = (event) => {
     if (reducedMotion.current) return;
     const pressed = pointer.current;
     if (pressed) {
+      if (pressed.id !== event.pointerId) return;
       const dx = event.clientX - pressed.x;
       const dy = event.clientY - pressed.y;
-      if (!pressed.dragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+      const intendsDrag = event.pointerType === "touch"
+        ? Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)
+        : Math.hypot(dx, dy) > 6;
+      if (!pressed.dragging && intendsDrag) {
         pressed.dragging = true;
         event.currentTarget.setPointerCapture?.(event.pointerId);
       }
       if (pressed.dragging) {
         suppressClick.current = true;
-        aim({ yaw: clamp(pressed.yaw + dx * 0.007, -0.95, 0.95), pitch: clamp(pressed.pitch - dy * 0.002, -0.22, 0.28) });
+        aim({ yaw: clamp(pressed.yaw + dx * 0.009, -1.25, 1.25), pitch: clamp(pressed.pitch - dy * 0.004, -0.5, 0.5) });
       }
       return;
     }
   };
 
   const finishPointer = (event) => {
+    if (pointer.current?.id !== event.pointerId) return;
+    if (pointer.current.dragging) restingPose.current = target.current;
     pointer.current = null;
     if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
   };
@@ -129,19 +142,31 @@ export default function AckraMark({ motionAreaRef }) {
         aria-label="Rotate the Ackra mark"
         aria-describedby={`${id}-help`}
         onPointerDown={(event) => {
-          if (event.button !== 0) return;
+          if (event.button !== 0 || event.isPrimary === false || pointer.current) return;
+          clickPointer.current = event.pointerId;
           suppressClick.current = false;
-          pointer.current = { x: event.clientX, y: event.clientY, yaw: current.current.yaw, pitch: current.current.pitch, dragging: false };
+          if (reducedMotion.current) return;
+          pointer.current = { id: event.pointerId, x: event.clientX, y: event.clientY, yaw: current.current.yaw, pitch: current.current.pitch, dragging: false };
         }}
         onPointerMove={move}
         onPointerUp={finishPointer}
-        onPointerCancel={(event) => { finishPointer(event); suppressClick.current = false; }}
-        onLostPointerCapture={() => { pointer.current = null; }}
-        onPointerLeave={() => {
-          if (pointer.current && !pointer.current.dragging) pointer.current = null;
+        onPointerCancel={(event) => {
+          if (pointer.current?.id !== event.pointerId) return;
+          finishPointer(event);
+          clickPointer.current = null;
+          suppressClick.current = false;
+        }}
+        onLostPointerCapture={finishPointer}
+        onPointerLeave={(event) => {
+          if (pointer.current?.id === event.pointerId && !pointer.current.dragging) pointer.current = null;
         }}
         onClick={(event) => {
-          if (suppressClick.current && event.detail !== 0) { suppressClick.current = false; return; }
+          if (event.detail !== 0) {
+            const { pointerId: clickId, pointerType: clickType } = event.nativeEvent;
+            // Legacy mouse clicks may have no pointer metadata.
+            if (pointer.current || (clickType && clickId != null && clickId !== clickPointer.current)) return;
+            if (suppressClick.current) { suppressClick.current = false; return; }
+          }
           rotate();
         }}
         onKeyDown={(event) => {
@@ -149,7 +174,7 @@ export default function AckraMark({ motionAreaRef }) {
             event.preventDefault();
             rotate(event.key === "ArrowLeft" ? -1 : 1);
           }
-          if (event.key === "Escape") { view.current = 0; aim(REST); }
+          if (event.key === "Escape") { view.current = 0; restingPose.current = REST; aim(REST); }
         }}
       >
         <svg className="ackra-mark-art" viewBox="0 0 600 560" aria-hidden="true" focusable="false">

@@ -1,0 +1,39 @@
+.design-section-label{font-size:.83rem;font-weight:500;color:var(--muted);line-height:1.5}
+.design-feature{padding-block:50px 112px}
+.design-feature-intro{border-top:1px solid var(--line-strong);padding-top:32px}
+.design-feature h2{font-size:clamp(2.7rem,4.6vw,4rem);line-height:1.08;letter-spacing:-.045em;margin-top:22px}
+.design-intro-copy{color:var(--muted);font-size:1.05rem;max-width:52ch;margin-top:24px;line-height:1.75;text-wrap:pretty}
+.design-feature-intro .text-link{margin-top:24px}
+.design-hero{padding-top:64px}
+.design-hero h1{font-size:clamp(3rem,5.7vw,5rem);line-height:1.05;letter-spacing:-.045em;margin-top:24px}
+.design-hero>.button{margin-top:28px}
+.design-hero .design-showcase{margin-top:64px}
+.design-offering{padding-block:104px}
+.design-offering h2,.design-execution h2,.design-closing h2{font-size:clamp(2rem,3.2vw,2.8rem);line-height:1.12;letter-spacing:-.035em}
+.design-capabilities{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:40px}
+.design-capabilities article{border-top:1px solid var(--line-strong);padding-top:25px}
+.design-capabilities h3{font-size:1.75rem;line-height:1.2}
+.design-capabilities article>p{font-size:.97rem;color:var(--muted);margin-top:16px;max-width:48ch;text-wrap:pretty}
+.design-capabilities ul{margin-top:27px}
+.design-capabilities li{font-size:.85rem;padding-block:13px;border-top:1px solid var(--line)}
+.design-execution{background:var(--surface-raised);padding-block:80px}
+.design-execution-copy{color:var(--muted);margin-top:18px;font-size:.97rem}
+.design-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px;margin-top:40px}
+.design-stages>li{display:flex;flex-direction:column;border-top:1px solid var(--line-strong);padding-top:22px}
+.design-stages h3{font-size:1.45rem;line-height:1.25}
+.design-stages p{color:var(--muted);font-size:.87rem;line-height:1.8;margin-block:15px 24px}
+.design-stage-outcome{display:block;margin-top:auto;font-size:.76rem;color:var(--text);font-weight:500}
+.design-closing{display:flex;justify-content:space-between;align-items:center;gap:64px;padding-block:92px 104px}
+.design-closing p{font-size:.97rem;max-width:48ch;color:var(--muted);margin-top:20px}
+.design-closing-actions{flex-shrink:0}
+.design-contact-link{display:flex;align-items:center;gap:10px;width:fit-content;min-height:44px;font-size:.83rem;color:var(--muted);margin-top:12px;text-underline-offset:5px}
+.design-contact-link:hover{color:var(--accent);text-decoration:underline}
+@media(max-width:1000px){.design-capabilities{gap:40px}.design-stages{grid-template-columns:1fr 1fr;gap:36px 40px}.design-closing{gap:40px}}
+@media(max-width:767px){
+ .design-feature{padding-block:12px 72px}.design-feature-intro{padding-top:25px}.design-feature h2{font-size:clamp(2.5rem,8.5vw,3.5rem);margin-top:20px}.design-intro-copy{font-size:.96rem;margin-top:22px}.design-feature-intro .text-link{font-size:.88rem;margin-top:20px}
+ .design-hero{padding-top:40px}.design-section-label{font-size:.78rem}.design-hero h1{font-size:clamp(2.5rem,8.8vw,4rem);line-height:1.08;margin-top:22px}.design-hero>.button{margin-top:24px}.design-hero .design-showcase{margin-top:40px}
+ .design-offering{padding-block:72px}.design-offering h2,.design-execution h2,.design-closing h2{font-size:2.2rem}.design-capabilities{grid-template-columns:1fr;gap:36px;margin-top:32px}.design-capabilities article{padding-top:24px}.design-capabilities h3{font-size:1.7rem}.design-capabilities article>p{font-size:.94rem}.design-capabilities li{font-size:.82rem}.design-capabilities ul{margin-top:23px}
+ .design-execution{padding-block:64px}.design-execution-copy{font-size:.93rem;max-width:34ch}.design-stages{grid-template-columns:1fr;gap:28px;margin-top:32px}.design-stages p{margin-block:12px 18px;font-size:.9rem}.design-stage-outcome{font-size:.77rem}
+ .design-closing{align-items:start;flex-direction:column;gap:26px;padding-block:68px 76px}.design-closing p{font-size:.94rem}.design-closing h2{max-width:13ch}
+}
+@media(max-width:360px){.design-feature h2,.design-hero h1{font-size:2.2rem}}

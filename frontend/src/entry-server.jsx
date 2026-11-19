@@ -1,8 +1,18 @@
 import React from "react";
 import { PassThrough } from "node:stream";
-import { renderToPipeableStream } from "react-dom/server";
+import { renderToPipeableStream, renderToStaticMarkup } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import App from "./App";
+import AppDesignPreview from "./components/AppDesignPreview";
+import WebsiteDesignPreview from "./components/WebsiteDesignPreview";
+
+export function renderAppStudy() {
+  return renderToStaticMarkup(<AppDesignPreview />);
+}
+
+export function renderWebsiteStudy() {
+  return renderToStaticMarkup(<WebsiteDesignPreview />);
+}
 
 export function render(pathname) {
   return new Promise((resolve, reject) => {
@@ -12,7 +22,10 @@ export function render(pathname) {
     output.on("data", (chunk) => chunks.push(chunk));
     output.on("end", () => {
       clearTimeout(timeout);
-      if (!failed) resolve(Buffer.concat(chunks).toString("utf8"));
+      // React 18 flushes its whole byte view when a multi-byte character does not
+      // fit at the end, which leaves NUL padding in the stream. Markup never
+      // contains a real NUL, so drop them.
+      if (!failed) resolve(Buffer.concat(chunks).toString("utf8").replace(/\0/g, ""));
     });
     output.on("error", reject);
     const { pipe, abort } = renderToPipeableStream(

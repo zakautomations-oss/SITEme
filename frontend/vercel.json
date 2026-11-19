@@ -8,6 +8,11 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/:path((?!website-app-design$)[wW][eE][bB][sS][iI][tT][eE]-[aA][pP][pP]-[dD][eE][sS][iI][gG][nN])",
+      "destination": "/website-app-design",
+      "permanent": true
+    },
+    {
       "source": "/:path((?!services$)[sS][eE][rR][vV][iI][cC][eE][sS])",
       "destination": "/services",
       "permanent": true
@@ -30,6 +35,16 @@
     {
       "source": "/:path((?!solutions/increase-conversion$)[sS][oO][lL][uU][tT][iI][oO][nN][sS]/[iI][nN][cC][rR][eE][aA][sS][eE]-[cC][oO][nN][vV][eE][rR][sS][iI][oO][nN])",
       "destination": "/solutions/increase-conversion",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!privacy$)[pP][rR][iI][vV][aA][cC][yY])",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!terms$)[tT][eE][rR][mM][sS])",
+      "destination": "/terms",
       "permanent": true
     },
     {
