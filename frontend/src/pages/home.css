@@ -6,6 +6,21 @@
 .hero-media{overflow:visible}
 .home-page .hero-image{aspect-ratio:1.05;object-position:center;transition:transform .8s cubic-bezier(.2,.65,.3,1)}
 .hero-media:hover .hero-image{transform:scale(1.025)}
+@media(prefers-reduced-motion:no-preference){
+ /* Start in CSS so the prerendered hero fades in without waiting for hydration. */
+ @keyframes home-intro-reveal{
+  from{opacity:0;transform:translateY(12px);filter:blur(4px)}
+  to{opacity:1;transform:translateY(0);filter:blur(0)}
+ }
+ @keyframes home-intro-fade{from{opacity:0}to{opacity:1}}
+ .route-entrance .home-page .hero-copy h1{animation:home-intro-reveal 1500ms ease-out 100ms both}
+ .route-entrance .home-page .hero-description{animation:home-intro-reveal 1300ms ease-out 200ms both}
+ .route-entrance .home-page .hero-actions{animation:home-intro-reveal 1200ms ease-out 300ms both}
+ .route-entrance .home-page .hero-media{animation:home-intro-reveal 1700ms ease-out 400ms both}
+ .route-entrance .home-page .home-integrations{animation:home-intro-fade 1200ms ease-out 500ms both}
+ /* Reveal focused controls without restarting their entrance when focus leaves. */
+ .route-entrance .home-page :is(.hero-actions,.hero-media,.home-integrations):focus-within{opacity:1!important;transform:none!important;filter:none!important}
+}
 .home-chapter{padding-block:120px}
 .home-section-heading{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:46px}
 .home-section-heading .section-title{font-size:clamp(2.5rem,4.5vw,4rem);font-weight:500}
