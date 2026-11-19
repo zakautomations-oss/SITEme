@@ -8,9 +8,12 @@ import CapabilitiesAccordion from "../components/CapabilitiesAccordion";
 import IntegrationMarquee from "../components/IntegrationMarquee";
 import DesignFeature from "../components/DesignFeature";
 import { useHomeMotionEnabled } from "../components/useHomeMotionEnabled";
+import { useScrollReveal } from "../components/useScrollReveal";
 import "./home.css";
 
 const HomeMotion = lazy(() => import("../components/HomeMotion"));
+// Keep the pinned process container and its ancestors outside the reveal targets.
+const revealTargets = ".home-section-heading, .capabilities-panel, .design-feature-intro, .design-feature .design-showcase, .home-statement, .solution-panel, .home-process-intro > *, .home-process-steps > li, .home-closing > *";
 const process = [
   ["Talk through the work", "Tell us where your jewelry team loses time, from product enquiries to order updates and follow-ups.", "step-01"],
   ["Make a practical plan", "Choose the first tasks, the product and customer information they need, and when your team takes over.", "step-02"],
@@ -22,6 +25,7 @@ export default function Home() {
   const pageRef = useRef(null);
   const heroRef = useRef(null);
   const motionEnabled = useHomeMotionEnabled();
+  useScrollReveal(pageRef, revealTargets);
   return (
     <div ref={pageRef} data-testid="page-home" className="home-page">
       <section ref={heroRef} className="home-hero site-container">

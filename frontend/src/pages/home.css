@@ -17,6 +17,15 @@
  .app-shell:has(.home-page):has(:is(a,button,input,select,textarea):focus-visible){opacity:1!important}
 }
 .home-chapter{padding-block:120px}
+@media screen and (prefers-reduced-motion:no-preference){
+ /* Separate scale/translate preserve existing card hover transforms. */
+ @keyframes home-scroll-reveal{
+  from{opacity:0;scale:.975;translate:0 12px}
+  to{opacity:1;scale:1;translate:0 0}
+ }
+ .home-page [data-scroll-reveal="pending"]{opacity:0;scale:.975;translate:0 12px}
+ .home-page [data-scroll-reveal="revealing"]{animation:home-scroll-reveal 750ms cubic-bezier(.2,0,0,1) both}
+}
 .home-section-heading{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:46px}
 .home-section-heading .section-title{font-size:clamp(2.5rem,4.5vw,4rem);font-weight:500}
 .home-section-heading .section-intro{max-width:46ch;margin-top:0;padding-bottom:4px}
